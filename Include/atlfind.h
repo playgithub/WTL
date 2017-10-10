@@ -235,22 +235,22 @@ public:
 		::SendMessage(pT->m_hWnd, EM_GETSEL, (WPARAM)&nStartChar, (LPARAM)&nEndChar);
 		POINT point = pT->PosFromChar(nStartChar);
 		::ClientToScreen(pT->GetParent(), &point);
-		CRect rect;
+		RECT rect = { 0 };
 		::GetWindowRect(hWndDialog, &rect);
-		if(rect.PtInRect(point))
+		if(::PtInRect(&rect, point) != FALSE)
 		{
-			if(point.y > rect.Height())
+			if(point.y > (rect.bottom - rect.top))
 			{
-				rect.OffsetRect(0, point.y - rect.bottom - 20);
+				::OffsetRect(&rect, 0, point.y - rect.bottom - 20);
 			}
 			else
 			{
 				int nVertExt = GetSystemMetrics(SM_CYSCREEN);
-				if(point.y + rect.Height() < nVertExt)
-					rect.OffsetRect(0, 40 + point.y - rect.top);
+				if((point.y + (rect.bottom - rect.top)) < nVertExt)
+					::OffsetRect(&rect, 0, 40 + point.y - rect.top);
 			}
 
-			::MoveWindow(hWndDialog, rect.left, rect.top, rect.Width(), rect.Height(), TRUE);
+			::MoveWindow(hWndDialog, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, TRUE);
 		}
 	}
 
