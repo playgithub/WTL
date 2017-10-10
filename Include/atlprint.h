@@ -875,7 +875,7 @@ public:
 		}
 		else
 		{
-			CPaintDC dc(m_hWnd);
+			CPaintDC dc(this->m_hWnd);
 			pT->DoPrePaint(dc.m_hDC, rc);
 			pT->DoPaint(dc.m_hDC, rc);
 		}
@@ -887,7 +887,7 @@ public:
 	void DoPrePaint(CDCHandle dc, RECT& rc)
 	{
 		RECT rcClient = { 0 };
-		GetClientRect(&rcClient);
+		this->GetClientRect(&rcClient);
 		RECT rcArea = rcClient;
 		T* pT = static_cast<T*>(this);
 		pT;   // avoid level 4 warning
@@ -933,7 +933,7 @@ public:
 
 	CZoomPrintPreviewWindowImpl()  
 	{
-		SetScrollExtendedStyle(SCRL_DISABLENOSCROLL);
+		this->SetScrollExtendedStyle(SCRL_DISABLENOSCROLL);
 		InitZoom();
 	}
 
@@ -941,9 +941,9 @@ public:
 	void InitZoom()
 	{
 		m_bSized = false;	
-		m_nZoomMode = ZOOMMODE_OFF;
-		m_fZoomScaleMin = 1.0;
-		m_fZoomScale = 1.0;
+		this->m_nZoomMode = ZOOMMODE_OFF;
+		this->m_fZoomScaleMin = 1.0;
+		this->m_fZoomScale = 1.0;
 	}
 
 	BEGIN_MSG_MAP(CZoomPrintPreviewWindowImpl)
@@ -979,14 +979,14 @@ public:
 	LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
 		SIZE sizeClient = {GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
-		POINT ptOffset = m_ptOffset;
-		SIZE sizeAll = m_sizeAll;
-		SetScrollSize(sizeClient);
+		POINT ptOffset = this->m_ptOffset;
+		SIZE sizeAll = this->m_sizeAll;
+		this->SetScrollSize(sizeClient);
 		if(sizeAll.cx > 0)
-			ptOffset.x = ::MulDiv(ptOffset.x, m_sizeAll.cx, sizeAll.cx);
+			ptOffset.x = ::MulDiv(ptOffset.x, this->m_sizeAll.cx, sizeAll.cx);
 		if(sizeAll.cy > 0)
-			ptOffset.y = ::MulDiv(ptOffset.y, m_sizeAll.cy, sizeAll.cy);
-		SetScrollOffset(ptOffset);
+			ptOffset.y = ::MulDiv(ptOffset.y, this->m_sizeAll.cy, sizeAll.cy);
+		this->SetScrollOffset(ptOffset);
 		CScrollImpl< T >::OnSize(uMsg, wParam, lParam, bHandled);
 		if(!m_bSized)
 		{
@@ -1014,11 +1014,11 @@ public:
 			int nMapModeSav = dc.GetMapMode();
 			dc.SetMapMode(MM_ANISOTROPIC);
 			SIZE szWindowExt = { 0, 0 };
-			dc.SetWindowExt(m_sizeLogAll, &szWindowExt);
+			dc.SetWindowExt(this->m_sizeLogAll, &szWindowExt);
 			SIZE szViewportExt = { 0, 0 };
-			dc.SetViewportExt(m_sizeAll, &szViewportExt);
+			dc.SetViewportExt(this->m_sizeAll, &szViewportExt);
 			POINT ptViewportOrg = { 0, 0 };
-			dc.SetViewportOrg(-m_ptOffset.x, -m_ptOffset.y, &ptViewportOrg);
+			dc.SetViewportOrg(-this->m_ptOffset.x, -this->m_ptOffset.y, &ptViewportOrg);
 
 			pT->DoPrePaint(dc, rc);
 			pT->DoPaint(dc, rc);
@@ -1048,7 +1048,7 @@ public:
 	void DoPrePaint(CDCHandle dc, RECT& rc)
 	{
 		RECT rcClient = { 0 };
-		GetClientRect(&rcClient);
+		this->GetClientRect(&rcClient);
 		RECT rcArea = rcClient;
 		T* pT = static_cast<T*>(this);
 		pT;   // avoid level 4 warning
@@ -1057,7 +1057,7 @@ public:
 			rcArea.right = rcArea.left;
 		if (rcArea.top > rcArea.bottom)
 			rcArea.bottom = rcArea.top;
-		GetPageRect(rcArea, &rc);
+		this->GetPageRect(rcArea, &rc);
 		HBRUSH hbrOld = dc.SelectBrush(::GetSysColorBrush(COLOR_BTNSHADOW));
 		dc.PatBlt(rcClient.left, rcClient.top, rc.left - rcClient.left, rcClient.bottom - rcClient.top, PATCOPY);
 		dc.PatBlt(rc.left, rcClient.top, rc.right - rc.left, rc.top - rcClient.top, PATCOPY);
@@ -1073,13 +1073,13 @@ public:
 
 	void DoPaint(CDCHandle dc, RECT& rc)
 	{
-		CEnhMetaFileInfo emfinfo(m_meta);
+		CEnhMetaFileInfo emfinfo(this->m_meta);
 		ENHMETAHEADER* pmh = emfinfo.GetEnhMetaFileHeader();
-		int nOffsetX = MulDiv(m_sizeCurPhysOffset.cx, rc.right-rc.left, pmh->szlDevice.cx);
-		int nOffsetY = MulDiv(m_sizeCurPhysOffset.cy, rc.bottom-rc.top, pmh->szlDevice.cy);
+		int nOffsetX = MulDiv(this->m_sizeCurPhysOffset.cx, rc.right-rc.left, pmh->szlDevice.cx);
+		int nOffsetY = MulDiv(this->m_sizeCurPhysOffset.cy, rc.bottom-rc.top, pmh->szlDevice.cy);
 
 		dc.OffsetWindowOrg(-nOffsetX, -nOffsetY);
-		dc.PlayMetaFile(m_meta, &rc);
+		dc.PlayMetaFile(this->m_meta, &rc);
 	}
 };
 

@@ -166,7 +166,7 @@ public:
 	{
 		HIMAGELIST hImageListPrev = m_ImageList;
 		m_ImageList = hImageList;
-		if(((m_dwExtendedStyle & BMPBTN_AUTOSIZE) != 0) && ::IsWindow(m_hWnd))
+		if(((m_dwExtendedStyle & BMPBTN_AUTOSIZE) != 0) && ::IsWindow(this->m_hWnd))
 			SizeToImage();
 
 		return hImageListPrev;
@@ -212,7 +212,7 @@ public:
 		if(m_tip.IsWindow())
 		{
 			m_tip.Activate(TRUE);
-			m_tip.AddTool(m_hWnd, m_lpstrToolTipText);
+			m_tip.AddTool(this->m_hWnd, m_lpstrToolTipText);
 		}
 
 		return true;
@@ -229,8 +229,8 @@ public:
 
 		if(bUpdate)
 		{
-			Invalidate();
-			UpdateWindow();
+			this->Invalidate();
+			this->UpdateWindow();
 		}
 	}
 
@@ -249,12 +249,12 @@ public:
 
 	BOOL SizeToImage()
 	{
-		ATLASSERT(::IsWindow(m_hWnd) && (m_ImageList.m_hImageList != NULL));
+		ATLASSERT(::IsWindow(this->m_hWnd) && (m_ImageList.m_hImageList != NULL));
 		int cx = 0;
 		int cy = 0;
 		if(!m_ImageList.GetIconSize(cx, cy))
 			return FALSE;
-		return ResizeClient(cx, cy);
+		return this->ResizeClient(cx, cy);
 	}
 
 // Overrideables
@@ -267,7 +267,7 @@ public:
 		bool bHover = IsHoverMode();
 		bool bPressed = (m_fPressed == 1) || (IsCheckMode() && (m_fChecked == 1));
 		int nImage = -1;
-		if(!IsWindowEnabled())
+		if(!this->IsWindowEnabled())
 			nImage = m_nImage[_nImageDisabled];
 		else if(bPressed)
 			nImage = m_nImage[_nImagePushed];
@@ -287,7 +287,7 @@ public:
 		if(bAuto3D)
 		{
 			RECT rect = { 0 };
-			GetClientRect(&rect);
+			this->GetClientRect(&rect);
 
 			if(bPressed)
 				dc.DrawEdge(&rect, ((m_dwExtendedStyle & BMPBTN_AUTO3D_SINGLE) != 0) ? BDR_SUNKENOUTER : EDGE_SUNKEN, BF_RECT);
@@ -347,7 +347,7 @@ public:
 
 	LRESULT OnMouseMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
-		MSG msg = { m_hWnd, uMsg, wParam, lParam };
+		MSG msg = { this->m_hWnd, uMsg, wParam, lParam };
 		if(m_tip.IsWindow())
 			m_tip.RelayEvent(&msg);
 		bHandled = FALSE;
@@ -368,7 +368,7 @@ public:
 		}
 		else
 		{
-			CPaintDC dc(m_hWnd);
+			CPaintDC dc(this->m_hWnd);
 			pT->DoPaint(dc.m_hDC);
 		}
 		return 0;
@@ -377,8 +377,8 @@ public:
 	LRESULT OnFocus(UINT uMsg, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 	{
 		m_fFocus = (uMsg == WM_SETFOCUS) ? 1 : 0;
-		Invalidate();
-		UpdateWindow();
+		this->Invalidate();
+		this->UpdateWindow();
 		bHandled = FALSE;
 		return 1;
 	}
@@ -387,14 +387,14 @@ public:
 	{
 		LRESULT lRet = 0;
 		if(IsHoverMode())
-			SetCapture();
+			this->SetCapture();
 		else
-			lRet = DefWindowProc(uMsg, wParam, lParam);
-		if(::GetCapture() == m_hWnd)
+			lRet = this->DefWindowProc(uMsg, wParam, lParam);
+		if(::GetCapture() == this->m_hWnd)
 		{
 			m_fPressed = 1;
-			Invalidate();
-			UpdateWindow();
+			this->Invalidate();
+			this->UpdateWindow();
 		}
 		if(((m_dwExtendedStyle & BMPBTN_AUTOFIRE) != 0) && !IsCheckMode())
 		{
@@ -402,7 +402,7 @@ public:
 			int nDelay = 0;
 			if(::SystemParametersInfo(SPI_GETKEYBOARDDELAY, 0, &nDelay, 0))
 				nElapse += nDelay * 250;   // all milli-seconds
-			SetTimer(ID_TIMER_FIRST, nElapse);
+			this->SetTimer(ID_TIMER_FIRST, nElapse);
 		}
 		return lRet;
 	}
@@ -411,14 +411,14 @@ public:
 	{
 		LRESULT lRet = 0;
 		if(!IsHoverMode() && !IsCheckMode())
-			lRet = DefWindowProc(uMsg, wParam, lParam);
-		if(::GetCapture() != m_hWnd)
-			SetCapture();
+			lRet = this->DefWindowProc(uMsg, wParam, lParam);
+		if(::GetCapture() != this->m_hWnd)
+			this->SetCapture();
 		if(m_fPressed == 0)
 		{
 			m_fPressed = 1;
-			Invalidate();
-			UpdateWindow();
+			this->Invalidate();
+			this->UpdateWindow();
 		}
 		return lRet;
 	}
@@ -430,11 +430,11 @@ public:
 
 		LRESULT lRet = 0;
 		if(!IsHoverMode() && !IsCheckMode())
-			lRet = DefWindowProc(uMsg, wParam, lParam);
-		if(::GetCapture() == m_hWnd)
+			lRet = this->DefWindowProc(uMsg, wParam, lParam);
+		if(::GetCapture() == this->m_hWnd)
 		{
 			if((IsHoverMode() || IsCheckMode()) && (m_fPressed == 1))
-				GetParent().SendMessage(WM_COMMAND, MAKEWPARAM(GetDlgCtrlID(), BN_CLICKED), (LPARAM)m_hWnd);
+				this->GetParent().SendMessage(WM_COMMAND, MAKEWPARAM(this->GetDlgCtrlID(), BN_CLICKED), (LPARAM)this->m_hWnd);
 			::ReleaseCapture();
 		}
 		return lRet;
@@ -445,8 +445,8 @@ public:
 		if(m_fPressed == 1)
 		{
 			m_fPressed = 0;
-			Invalidate();
-			UpdateWindow();
+			this->Invalidate();
+			this->UpdateWindow();
 		}
 		bHandled = FALSE;
 		return 1;
@@ -454,33 +454,33 @@ public:
 
 	LRESULT OnEnable(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 	{
-		Invalidate();
-		UpdateWindow();
+		this->Invalidate();
+		this->UpdateWindow();
 		bHandled = FALSE;
 		return 1;
 	}
 
 	LRESULT OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled)
 	{
-		if(::GetCapture() == m_hWnd)
+		if(::GetCapture() == this->m_hWnd)
 		{
 			POINT ptCursor = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
-			ClientToScreen(&ptCursor);
+			this->ClientToScreen(&ptCursor);
 			RECT rect = { 0 };
-			GetWindowRect(&rect);
+			this->GetWindowRect(&rect);
 			unsigned int uPressed = ::PtInRect(&rect, ptCursor) ? 1 : 0;
 			if(m_fPressed != uPressed)
 			{
 				m_fPressed = uPressed;
-				Invalidate();
-				UpdateWindow();
+				this->Invalidate();
+				this->UpdateWindow();
 			}
 		}
 		else if(IsHoverMode() && m_fMouseOver == 0)
 		{
 			m_fMouseOver = 1;
-			Invalidate();
-			UpdateWindow();
+			this->Invalidate();
+			this->UpdateWindow();
 			StartTrackMouseLeave();
 		}
 		bHandled = FALSE;
@@ -492,8 +492,8 @@ public:
 		if(m_fMouseOver == 1)
 		{
 			m_fMouseOver = 0;
-			Invalidate();
-			UpdateWindow();
+			this->Invalidate();
+			this->UpdateWindow();
 		}
 		return 0;
 	}
@@ -505,8 +505,8 @@ public:
 		if((wParam == VK_SPACE) && (m_fPressed == 0))
 		{
 			m_fPressed = 1;
-			Invalidate();
-			UpdateWindow();
+			this->Invalidate();
+			this->UpdateWindow();
 		}
 		bHandled = FALSE;
 		return 1;
@@ -521,8 +521,8 @@ public:
 			m_fPressed = 0;
 			if((m_dwExtendedStyle & BMPBTN_AUTOCHECK) != 0)
 				SetCheck(!GetCheck(), false);
-			Invalidate();
-			UpdateWindow();
+			this->Invalidate();
+			this->UpdateWindow();
 		}
 		bHandled = FALSE;
 		return 1;
@@ -534,22 +534,22 @@ public:
 		switch(wParam)   // timer ID
 		{
 		case ID_TIMER_FIRST:
-			KillTimer(ID_TIMER_FIRST);
+			this->KillTimer(ID_TIMER_FIRST);
 			if(m_fPressed == 1)
 			{
-				GetParent().SendMessage(WM_COMMAND, MAKEWPARAM(GetDlgCtrlID(), BN_CLICKED), (LPARAM)m_hWnd);
+				this->GetParent().SendMessage(WM_COMMAND, MAKEWPARAM(this->GetDlgCtrlID(), BN_CLICKED), (LPARAM)this->m_hWnd);
 				int nElapse = 250;
 				int nRepeat = 40;
 				if(::SystemParametersInfo(SPI_GETKEYBOARDSPEED, 0, &nRepeat, 0))
 					nElapse = 10000 / (10 * nRepeat + 25);   // milli-seconds, approximated
-				SetTimer(ID_TIMER_REPEAT, nElapse);
+				this->SetTimer(ID_TIMER_REPEAT, nElapse);
 			}
 			break;
 		case ID_TIMER_REPEAT:
 			if(m_fPressed == 1)
-				GetParent().SendMessage(WM_COMMAND, MAKEWPARAM(GetDlgCtrlID(), BN_CLICKED), (LPARAM)m_hWnd);
-			else if(::GetCapture() != m_hWnd)
-				KillTimer(ID_TIMER_REPEAT);
+				this->GetParent().SendMessage(WM_COMMAND, MAKEWPARAM(this->GetDlgCtrlID(), BN_CLICKED), (LPARAM)this->m_hWnd);
+			else if(::GetCapture() != this->m_hWnd)
+				this->KillTimer(ID_TIMER_REPEAT);
 			break;
 		default:	// not our timer
 			break;
@@ -568,15 +568,15 @@ public:
 	void Init()
 	{
 		// We need this style to prevent Windows from painting the button
-		ModifyStyle(0, BS_OWNERDRAW);
+		this->ModifyStyle(0, BS_OWNERDRAW);
 
 		// create a tool tip
-		m_tip.Create(m_hWnd);
+		m_tip.Create(this->m_hWnd);
 		ATLASSERT(m_tip.IsWindow());
 		if(m_tip.IsWindow() && (m_lpstrToolTipText != NULL))
 		{
 			m_tip.Activate(TRUE);
-			m_tip.AddTool(m_hWnd, m_lpstrToolTipText);
+			m_tip.AddTool(this->m_hWnd, m_lpstrToolTipText);
 		}
 
 		if((m_ImageList.m_hImageList != NULL) && ((m_dwExtendedStyle & BMPBTN_AUTOSIZE) != 0))
@@ -588,7 +588,7 @@ public:
 		TRACKMOUSEEVENT tme = { 0 };
 		tme.cbSize = sizeof(tme);
 		tme.dwFlags = TME_LEAVE;
-		tme.hwndTrack = m_hWnd;
+		tme.hwndTrack = this->m_hWnd;
 		return ::TrackMouseEvent(&tme);
 	}
 
@@ -672,18 +672,18 @@ public:
 		lvi.iSubItem = 0;
 		lvi.mask = LVIF_STATE;
 		lvi.stateMask = LVIS_SELECTED;
-		GetItem(&lvi);
+		this->GetItem(&lvi);
 		// if item is not selected, don't do anything
 		if(!(lvi.state & LVIS_SELECTED))
 			return;
 		// new check state will be reverse of the current state,
-		BOOL bCheck = !GetCheckState(nCurrItem);
+		BOOL bCheck = !this->GetCheckState(nCurrItem);
 		int nItem = -1;
 		int nOldItem = -1;
-		while((nItem = GetNextItem(nOldItem, LVNI_SELECTED)) != -1)
+		while((nItem = this->GetNextItem(nOldItem, LVNI_SELECTED)) != -1)
 		{
 			if(nItem != nCurrItem)
-				SetCheckState(nItem, bCheck);
+				this->SetCheckState(nItem, bCheck);
 			nOldItem = nItem;
 		}
 	}
@@ -694,7 +694,7 @@ public:
 		T* pT = static_cast<T*>(this);
 		pT;   // avoid level 4 warning
 		ATLASSERT((pT->GetExtendedLVStyle() & LVS_EX_CHECKBOXES) != 0);
-		SetExtendedListViewStyle(pT->GetExtendedLVStyle());
+		this->SetExtendedListViewStyle(pT->GetExtendedLVStyle());
 	}
 
 // Message map and handlers
@@ -708,7 +708,7 @@ public:
 	LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
 	{
 		// first let list view control initialize everything
-		LRESULT lRet = DefWindowProc(uMsg, wParam, lParam);
+		LRESULT lRet = this->DefWindowProc(uMsg, wParam, lParam);
 		if(lRet == 0)
 		{
 			T* pT = static_cast<T*>(this);
@@ -723,7 +723,7 @@ public:
 		POINT ptMsg = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
 		LVHITTESTINFO lvh = { 0 };
 		lvh.pt = ptMsg;
-		if((HitTest(&lvh) != -1) && (lvh.flags == LVHT_ONITEMSTATEICON) && (::GetKeyState(VK_CONTROL) >= 0))
+		if((this->HitTest(&lvh) != -1) && (lvh.flags == LVHT_ONITEMSTATEICON) && (::GetKeyState(VK_CONTROL) >= 0))
 		{
 			T* pT = static_cast<T*>(this);
 			pT->CheckSelectedItems(lvh.iItem);
@@ -736,7 +736,7 @@ public:
 	{
 		if(wParam == VK_SPACE)
 		{
-			int nCurrItem = GetNextItem(-1, LVNI_FOCUSED);
+			int nCurrItem = this->GetNextItem(-1, LVNI_FOCUSED);
 			if((nCurrItem != -1)  && (::GetKeyState(VK_CONTROL) >= 0))
 			{
 				T* pT = static_cast<T*>(this);
@@ -859,8 +859,8 @@ public:
 		T* pT = static_cast<T*>(this);
 		pT->CalcLabelRect();
 
-		if(m_hWnd != NULL)
-			SetWindowText(lpstrLabel);   // Set this for accessibility
+		if(this->m_hWnd != NULL)
+			this->SetWindowText(lpstrLabel);   // Set this for accessibility
 
 		return true;
 	}
@@ -897,7 +897,7 @@ public:
 		if(m_tip.IsWindow())
 		{
 			m_tip.Activate(TRUE);
-			m_tip.AddTool(m_hWnd, m_lpstrHyperLink, &m_rcLink, 1);
+			m_tip.AddTool(this->m_hWnd, m_lpstrHyperLink, &m_rcLink, 1);
 		}
 
 		return true;
@@ -924,7 +924,7 @@ public:
 
 	int GetIdealHeight() const
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		if((m_lpstrLabel == NULL) && (m_lpstrHyperLink == NULL))
 			return -1;
 		if(!m_bPaintLabel)
@@ -932,7 +932,7 @@ public:
 
 		UINT uFormat = IsSingleLine() ? DT_SINGLELINE : DT_WORDBREAK;
 
-		CClientDC dc(m_hWnd);
+		CClientDC dc(this->m_hWnd);
 		RECT rect = { 0 };
 		GetClientRect(&rect);
 		HFONT hFontOld = dc.SelectFont(m_hFontNormal);
@@ -959,13 +959,13 @@ public:
 
 	bool GetIdealSize(int& cx, int& cy) const
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		if((m_lpstrLabel == NULL) && (m_lpstrHyperLink == NULL))
 			return false;
 		if(!m_bPaintLabel)
 			return false;
 
-		CClientDC dc(m_hWnd);
+		CClientDC dc(this->m_hWnd);
 		RECT rcClient = { 0 };
 		GetClientRect(&rcClient);
 		RECT rcAll = rcClient;
@@ -1053,7 +1053,7 @@ public:
 // Operations
 	BOOL SubclassWindow(HWND hWnd)
 	{
-		ATLASSERT(m_hWnd == NULL);
+		ATLASSERT(this->m_hWnd == NULL);
 		ATLASSERT(::IsWindow(hWnd));
 		if(m_hFontNormal == NULL)
 			m_hFontNormal = (HFONT)::SendMessage(hWnd, WM_GETFONT, 0, 0L);
@@ -1070,16 +1070,16 @@ public:
 
 	bool Navigate()
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		bool bRet = true;
 		if(IsNotifyButton())
 		{
-			NMHDR nmhdr = { m_hWnd, (UINT_PTR)GetDlgCtrlID(), NM_CLICK };
-			GetParent().SendMessage(WM_NOTIFY, GetDlgCtrlID(), (LPARAM)&nmhdr);
+			NMHDR nmhdr = { this->m_hWnd, (UINT_PTR)this->GetDlgCtrlID(), NM_CLICK };
+			this->GetParent().SendMessage(WM_NOTIFY, this->GetDlgCtrlID(), (LPARAM)&nmhdr);
 		}
 		else if(IsCommandButton())
 		{
-			GetParent().SendMessage(WM_COMMAND, MAKEWPARAM(GetDlgCtrlID(), BN_CLICKED), (LPARAM)m_hWnd);
+			this->GetParent().SendMessage(WM_COMMAND, MAKEWPARAM(this->GetDlgCtrlID(), BN_CLICKED), (LPARAM)this->m_hWnd);
 		}
 		else
 		{
@@ -1090,7 +1090,7 @@ public:
 			if(bRet)
 			{
 				m_bVisited = true;
-				Invalidate();
+				this->Invalidate();
 			}
 		}
 		return bRet;
@@ -1177,7 +1177,7 @@ public:
 
 	LRESULT OnMouseMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
-		MSG msg = { m_hWnd, uMsg, wParam, lParam };
+		MSG msg = { this->m_hWnd, uMsg, wParam, lParam };
 		if(m_tip.IsWindow() && IsUsingToolTip())
 			m_tip.RelayEvent(&msg);
 		bHandled = FALSE;
@@ -1205,7 +1205,7 @@ public:
 		}
 		else
 		{
-			CPaintDC dc(m_hWnd);
+			CPaintDC dc(this->m_hWnd);
 			pT->DoEraseBackground(dc.m_hDC);
 			pT->DoPaint(dc.m_hDC);
 		}
@@ -1216,7 +1216,7 @@ public:
 	LRESULT OnFocus(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 	{
 		if(m_bPaintLabel)
-			Invalidate();
+			this->Invalidate();
 		else
 			bHandled = FALSE;
 		return 0;
@@ -1233,8 +1233,8 @@ public:
 				if(!m_bHover)
 				{
 					m_bHover = true;
-					InvalidateRect(&m_rcLink);
-					UpdateWindow();
+					this->InvalidateRect(&m_rcLink);
+					this->UpdateWindow();
 					StartTrackMouseLeave();
 				}
 			}
@@ -1246,8 +1246,8 @@ public:
 				if(m_bHover)
 				{
 					m_bHover = false;
-					InvalidateRect(&m_rcLink);
-					UpdateWindow();
+					this->InvalidateRect(&m_rcLink);
+					this->UpdateWindow();
 				}
 			}
 			bHandled = FALSE;
@@ -1260,8 +1260,8 @@ public:
 		if(IsUnderlineHover() && m_bHover)
 		{
 			m_bHover = false;
-			InvalidateRect(&m_rcLink);
-			UpdateWindow();
+			this->InvalidateRect(&m_rcLink);
+			this->UpdateWindow();
 		}
 		return 0;
 	}
@@ -1271,15 +1271,15 @@ public:
 		POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
 		if(::PtInRect(&m_rcLink, pt))
 		{
-			SetFocus();
-			SetCapture();
+			this->SetFocus();
+			this->SetCapture();
 		}
 		return 0;
 	}
 
 	LRESULT OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/)
 	{
-		if(GetCapture() == m_hWnd)
+		if(GetCapture() == this->m_hWnd)
 		{
 			ReleaseCapture();
 			POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
@@ -1311,7 +1311,7 @@ public:
 	{
 		POINT pt = { 0, 0 };
 		GetCursorPos(&pt);
-		ScreenToClient(&pt);
+		this->ScreenToClient(&pt);
 		if(((m_lpstrHyperLink != NULL)  || IsCommandButton()) && ::PtInRect(&m_rcLink, pt))
 		{
 			return TRUE;
@@ -1322,8 +1322,8 @@ public:
 
 	LRESULT OnEnable(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 	{
-		Invalidate();
-		UpdateWindow();
+		this->Invalidate();
+		this->UpdateWindow();
 		return 0;
 	}
 
@@ -1352,8 +1352,8 @@ public:
 
 		if((BOOL)lParam)
 		{
-			Invalidate();
-			UpdateWindow();
+			this->Invalidate();
+			this->UpdateWindow();
 		}
 
 		return 0;
@@ -1377,17 +1377,17 @@ public:
 // Implementation
 	void Init()
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 
 		// Check if we should paint a label
 		const int cchBuff = 8;
 		TCHAR szBuffer[cchBuff] = { 0 };
-		if(::GetClassName(m_hWnd, szBuffer, cchBuff))
+		if(::GetClassName(this->m_hWnd, szBuffer, cchBuff))
 		{
 			if(lstrcmpi(szBuffer, _T("static")) == 0)
 			{
-				ModifyStyle(0, SS_NOTIFY);   // we need this
-				DWORD dwStyle = GetStyle() & 0x000000FF;
+				this->ModifyStyle(0, SS_NOTIFY);   // we need this
+				DWORD dwStyle = this->GetStyle() & 0x000000FF;
 				if((dwStyle == SS_ICON) || (dwStyle == SS_BLACKRECT) || (dwStyle == SS_GRAYRECT) || 
 						(dwStyle == SS_WHITERECT) || (dwStyle == SS_BLACKFRAME) || (dwStyle == SS_GRAYFRAME) || 
 						(dwStyle == SS_WHITEFRAME) || (dwStyle == SS_OWNERDRAW) || 
@@ -1414,18 +1414,18 @@ public:
 		}
 
 		// create a tool tip
-		m_tip.Create(m_hWnd);
+		m_tip.Create(this->m_hWnd);
 		ATLASSERT(m_tip.IsWindow());
 
 		// set label (defaults to window text)
 		if(m_lpstrLabel == NULL)
 		{
-			int nLen = GetWindowTextLength();
+			int nLen = this->GetWindowTextLength();
 			if(nLen > 0)
 			{
 				ATLTRY(m_lpstrLabel = new TCHAR[nLen + 1]);
 				if(m_lpstrLabel != NULL)
-					ATLVERIFY(GetWindowText(m_lpstrLabel, nLen + 1) > 0);
+					ATLVERIFY(this->GetWindowText(m_lpstrLabel, nLen + 1) > 0);
 			}
 		}
 
@@ -1441,7 +1441,7 @@ public:
 		else
 		{
 			m_tip.Activate(TRUE);
-			m_tip.AddTool(m_hWnd, m_lpstrHyperLink, &m_rcLink, 1);
+			m_tip.AddTool(this->m_hWnd, m_lpstrHyperLink, &m_rcLink, 1);
 		}
 
 		// set link colors
@@ -1504,14 +1504,14 @@ public:
 
 	bool CalcLabelRect()
 	{
-		if(!::IsWindow(m_hWnd))
+		if(!::IsWindow(this->m_hWnd))
 			return false;
 		if((m_lpstrLabel == NULL) && (m_lpstrHyperLink == NULL))
 			return false;
 
-		CClientDC dc(m_hWnd);
+		CClientDC dc(this->m_hWnd);
 		RECT rcClient = { 0 };
-		GetClientRect(&rcClient);
+		this->GetClientRect(&rcClient);
 		m_rcLink = rcClient;
 		if(!m_bPaintLabel)
 			return true;
@@ -1556,7 +1556,7 @@ public:
 			if(m_hFontLink != NULL)
 				hOldFont = dc.SelectFont(m_hFontLink);
 			LPTSTR lpstrText = (m_lpstrLabel != NULL) ? m_lpstrLabel : m_lpstrHyperLink;
-			DWORD dwStyle = GetStyle();
+			DWORD dwStyle = this->GetStyle();
 			UINT uFormat = DT_LEFT;
 			if (dwStyle & SS_CENTER)
 				uFormat = DT_CENTER;
@@ -1630,11 +1630,11 @@ public:
 
 	void DoEraseBackground(CDCHandle dc)
 	{
-		HBRUSH hBrush = (HBRUSH)GetParent().SendMessage(WM_CTLCOLORSTATIC, (WPARAM)dc.m_hDC, (LPARAM)m_hWnd);
+		HBRUSH hBrush = (HBRUSH)this->GetParent().SendMessage(WM_CTLCOLORSTATIC, (WPARAM)dc.m_hDC, (LPARAM)this->m_hWnd);
 		if(hBrush != NULL)
 		{
 			RECT rect = { 0 };
-			GetClientRect(&rect);
+			this->GetClientRect(&rect);
 			dc.FillRect(&rect, hBrush);
 		}
 	}
@@ -1656,7 +1656,7 @@ public:
 
 			// get label part rects
 			RECT rcClient = { 0 };
-			GetClientRect(&rcClient);
+			this->GetClientRect(&rcClient);
 
 			dc.SetBkMode(TRANSPARENT);
 			HFONT hFontOld = dc.SelectFont(m_hFontNormal);
@@ -1666,7 +1666,7 @@ public:
 			if(lpstrLeft != NULL)
 				dc.DrawText(lpstrLeft, cchLeft, &rcClient, DT_LEFT | uFormat);
 
-			COLORREF clrOld = dc.SetTextColor(IsWindowEnabled() ? (m_bVisited ? m_clrVisited : m_clrLink) : (::GetSysColor(COLOR_GRAYTEXT)));
+			COLORREF clrOld = dc.SetTextColor(this->IsWindowEnabled() ? (m_bVisited ? m_clrVisited : m_clrLink) : (::GetSysColor(COLOR_GRAYTEXT)));
 			if((m_hFontLink != NULL) && (!IsUnderlineHover() || (IsUnderlineHover() && m_bHover)))
 				dc.SelectFont(m_hFontLink);
 			else
@@ -1682,7 +1682,7 @@ public:
 				dc.DrawText(lpstrRight, cchRight, &rcRight, DT_LEFT | uFormat);
 			}
 
-			if(GetFocus() == m_hWnd)
+			if(GetFocus() == this->m_hWnd)
 				dc.DrawFocusRect(&m_rcLink);
 
 			dc.SelectFont(hFontOld);
@@ -1690,7 +1690,7 @@ public:
 		else
 		{
 			dc.SetBkMode(TRANSPARENT);
-			COLORREF clrOld = dc.SetTextColor(IsWindowEnabled() ? (m_bVisited ? m_clrVisited : m_clrLink) : (::GetSysColor(COLOR_GRAYTEXT)));
+			COLORREF clrOld = dc.SetTextColor(this->IsWindowEnabled() ? (m_bVisited ? m_clrVisited : m_clrLink) : (::GetSysColor(COLOR_GRAYTEXT)));
 
 			HFONT hFontOld = NULL;
 			if((m_hFontLink != NULL) && (!IsUnderlineHover() || (IsUnderlineHover() && m_bHover)))
@@ -1700,7 +1700,7 @@ public:
 
 			LPTSTR lpstrText = (m_lpstrLabel != NULL) ? m_lpstrLabel : m_lpstrHyperLink;
 
-			DWORD dwStyle = GetStyle();
+			DWORD dwStyle = this->GetStyle();
 			UINT uFormat = DT_LEFT;
 			if (dwStyle & SS_CENTER)
 				uFormat = DT_CENTER;
@@ -1710,7 +1710,7 @@ public:
 
 			dc.DrawText(lpstrText, -1, &m_rcLink, uFormat);
 
-			if(GetFocus() == m_hWnd)
+			if(GetFocus() == this->m_hWnd)
 				dc.DrawFocusRect(&m_rcLink);
 
 			dc.SetTextColor(clrOld);
@@ -1723,7 +1723,7 @@ public:
 		TRACKMOUSEEVENT tme = { 0 };
 		tme.cbSize = sizeof(tme);
 		tme.dwFlags = TME_LEAVE;
-		tme.hwndTrack = m_hWnd;
+		tme.hwndTrack = this->m_hWnd;
 		return ::TrackMouseEvent(&tme);
 	}
 
@@ -1900,7 +1900,7 @@ public:
 
 	BOOL SetPanes(int* pPanes, int nPanes, bool bSetText = true)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT(nPanes > 0);
 
 		m_nPanes = nPanes;
@@ -1921,12 +1921,12 @@ public:
 		ATL::Checked::memcpy_s(m_pPane, nPanes * sizeof(int), pPanes, nPanes * sizeof(int));
 
 		// get status bar DC and set font
-		CClientDC dc(m_hWnd);
+		CClientDC dc(this->m_hWnd);
 		HFONT hOldFont = dc.SelectFont(GetFont());
 
 		// get status bar borders
 		int arrBorders[3] = { 0 };
-		GetBorders(arrBorders);
+		this->GetBorders(arrBorders);
 
 		const int cchBuff = 128;
 		TCHAR szBuff[cchBuff] = { 0 };
@@ -1952,7 +1952,7 @@ public:
 			cxLeft = pPanesPos[i];
 		}
 
-		BOOL bRet = SetParts(nPanes, pPanesPos);
+		BOOL bRet = this->SetParts(nPanes, pPanesPos);
 
 		if(bRet && bSetText)
 		{
@@ -1972,12 +1972,12 @@ public:
 
 	bool GetPaneTextLength(int nPaneID, int* pcchLength = NULL, int* pnType = NULL) const
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		int nIndex  = GetPaneIndexFromID(nPaneID);
 		if(nIndex == -1)
 			return false;
 
-		int nLength = GetTextLength(nIndex, pnType);
+		int nLength = this->GetTextLength(nIndex, pnType);
 		if(pcchLength != NULL)
 			*pcchLength = nLength;
 
@@ -1986,12 +1986,12 @@ public:
 
 	BOOL GetPaneText(int nPaneID, LPTSTR lpstrText, int* pcchLength = NULL, int* pnType = NULL) const
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		int nIndex  = GetPaneIndexFromID(nPaneID);
 		if(nIndex == -1)
 			return FALSE;
 
-		int nLength = GetText(nIndex, lpstrText, pnType);
+		int nLength = this->GetText(nIndex, lpstrText, pnType);
 		if(pcchLength != NULL)
 			*pcchLength = nLength;
 
@@ -2000,27 +2000,27 @@ public:
 
 	BOOL SetPaneText(int nPaneID, LPCTSTR lpstrText, int nType = 0)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		int nIndex  = GetPaneIndexFromID(nPaneID);
 		if(nIndex == -1)
 			return FALSE;
 
-		return SetText(nIndex, lpstrText, nType);
+		return this->SetText(nIndex, lpstrText, nType);
 	}
 
 	BOOL GetPaneRect(int nPaneID, LPRECT lpRect) const
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		int nIndex  = GetPaneIndexFromID(nPaneID);
 		if(nIndex == -1)
 			return FALSE;
 
-		return GetRect(nIndex, lpRect);
+		return this->GetRect(nIndex, lpRect);
 	}
 
 	BOOL SetPaneWidth(int nPaneID, int cxWidth)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT(nPaneID != ID_DEFAULT_PANE);   // Can't resize this one
 		int nIndex  = GetPaneIndexFromID(nPaneID);
 		if(nIndex == -1)
@@ -2031,7 +2031,7 @@ public:
 		int* pPanesPos = buff.Allocate(m_nPanes);
 		if(pPanesPos == NULL)
 			return FALSE;
-		GetParts(m_nPanes, pPanesPos);
+		this->GetParts(m_nPanes, pPanesPos);
 		// calculate offset
 		int cxPaneWidth = pPanesPos[nIndex] - ((nIndex == 0) ? 0 : pPanesPos[nIndex - 1]);
 		int cxOff = cxWidth - cxPaneWidth;
@@ -2058,50 +2058,50 @@ public:
 				pPanesPos[i] -= cxOff;
 		}
 		// set pane postions
-		return SetParts(m_nPanes, pPanesPos);
+		return this->SetParts(m_nPanes, pPanesPos);
 	}
 
 	BOOL GetPaneTipText(int nPaneID, LPTSTR lpstrText, int nSize) const
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		int nIndex  = GetPaneIndexFromID(nPaneID);
 		if(nIndex == -1)
 			return FALSE;
 
-		GetTipText(nIndex, lpstrText, nSize);
+		this->GetTipText(nIndex, lpstrText, nSize);
 		return TRUE;
 	}
 
 	BOOL SetPaneTipText(int nPaneID, LPCTSTR lpstrText)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		int nIndex  = GetPaneIndexFromID(nPaneID);
 		if(nIndex == -1)
 			return FALSE;
 
-		SetTipText(nIndex, lpstrText);
+		this->SetTipText(nIndex, lpstrText);
 		return TRUE;
 	}
 
 	BOOL GetPaneIcon(int nPaneID, HICON& hIcon) const
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		int nIndex  = GetPaneIndexFromID(nPaneID);
 		if(nIndex == -1)
 			return FALSE;
 
-		hIcon = GetIcon(nIndex);
+		hIcon = this->GetIcon(nIndex);
 		return TRUE;
 	}
 
 	BOOL SetPaneIcon(int nPaneID, HICON hIcon)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		int nIndex  = GetPaneIndexFromID(nPaneID);
 		if(nIndex == -1)
 			return FALSE;
 
-		return SetIcon(nIndex, hIcon);
+		return this->SetIcon(nIndex, hIcon);
 	}
 
 // Message map and handlers
@@ -2111,7 +2111,7 @@ public:
 
 	LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
 	{
-		LRESULT lRet = DefWindowProc(uMsg, wParam, lParam);
+		LRESULT lRet = this->DefWindowProc(uMsg, wParam, lParam);
 		if((wParam != SIZE_MINIMIZED) && (m_nPanes > 0))
 		{
 			T* pT = static_cast<T*>(this);
@@ -2129,16 +2129,16 @@ public:
 		ATLASSERT(pPanesPos != NULL);
 		if(pPanesPos == NULL)
 			return FALSE;
-		int nRet = GetParts(m_nPanes, pPanesPos);
+		int nRet = this->GetParts(m_nPanes, pPanesPos);
 		ATLASSERT(nRet == m_nPanes);
 		if(nRet != m_nPanes)
 			return FALSE;
 		// calculate offset
 		RECT rcClient = { 0 };
-		GetClientRect(&rcClient);
+		this->GetClientRect(&rcClient);
 		int cxOff = rcClient.right - pPanesPos[m_nPanes - 1];
 		// Move panes left if size grip box is present
-		if((GetStyle() & SBARS_SIZEGRIP) != 0)
+		if((this->GetStyle() & SBARS_SIZEGRIP) != 0)
 			cxOff -= ::GetSystemMetrics(SM_CXVSCROLL) + ::GetSystemMetrics(SM_CXEDGE);
 		// find variable width pane
 		int i;
@@ -2154,7 +2154,7 @@ public:
 				pPanesPos[i] += cxOff;
 		}
 		// set pane postions
-		return SetParts(m_nPanes, pPanesPos);
+		return this->SetParts(m_nPanes, pPanesPos);
 	}
 
 	int GetPaneIndexFromID(int nPaneID) const
@@ -2247,7 +2247,7 @@ public:
 			m_dwExtendedStyle = dwExtendedStyle;
 		else
 			m_dwExtendedStyle = (m_dwExtendedStyle & ~dwMask) | (dwExtendedStyle & dwMask);
-		if(m_hWnd != NULL)
+		if(this->m_hWnd != NULL)
 		{
 			T* pT = static_cast<T*>(this);
 			bool bUpdate = false;
@@ -2296,7 +2296,7 @@ public:
 	{
 		HWND hWndOldClient = m_wndClient;
 		m_wndClient = hWndClient;
-		if(m_hWnd != NULL)
+		if(this->m_hWnd != NULL)
 		{
 			T* pT = static_cast<T*>(this);
 			pT->UpdateLayout();
@@ -2319,7 +2319,7 @@ public:
 
 		errno_t nRet = ATL::Checked::tcsncpy_s(m_szTitle, m_cchTitle, lpstrTitle, _TRUNCATE);
 		bool bRet = ((nRet == 0) || (nRet == STRUNCATE));
-		if(bRet && (m_hWnd != NULL))
+		if(bRet && (this->m_hWnd != NULL))
 		{
 			T* pT = static_cast<T*>(this);
 			pT->UpdateLayout();
@@ -2368,7 +2368,7 @@ public:
 
 	BOOL EnableCloseButton(BOOL bEnable)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		T* pT = static_cast<T*>(this);
 		pT;   // avoid level 4 warning
 		return (m_tb.m_hWnd != NULL) ? m_tb.EnableButton(pT->m_nCloseBtnID, bEnable) : FALSE;
@@ -2377,7 +2377,7 @@ public:
 	void UpdateLayout()
 	{
 		RECT rcClient = { 0 };
-		GetClientRect(&rcClient);
+		this->GetClientRect(&rcClient);
 		T* pT = static_cast<T*>(this);
 		pT->UpdateLayout(rcClient.right, rcClient.bottom);
 	}
@@ -2476,7 +2476,7 @@ public:
 		}
 		else
 		{
-			CPaintDC dc(m_hWnd);
+			CPaintDC dc(this->m_hWnd);
 			pT->DrawPaneTitle(dc.m_hDC);
 
 			if(m_wndClient.m_hWnd == NULL)   // no client window
@@ -2517,7 +2517,7 @@ public:
 	{
 		// if command comes from the close button, substitute HWND of the pane container instead
 		if((m_tb.m_hWnd != NULL) && ((HWND)lParam == m_tb.m_hWnd))
-			return GetParent().SendMessage(WM_COMMAND, wParam, (LPARAM)m_hWnd);
+			return this->GetParent().SendMessage(WM_COMMAND, wParam, (LPARAM)this->m_hWnd);
 
 		bHandled = FALSE;
 		return 1;
@@ -2589,7 +2589,7 @@ public:
 
 	void UpdateLayout(int cxWidth, int cyHeight)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		RECT rect = { 0 };
 
 		if(IsVertical())
@@ -2615,14 +2615,14 @@ public:
 				rect.bottom = cyHeight;
 		}
 
-		InvalidateRect(&rect);
+		this->InvalidateRect(&rect);
 	}
 
 	void CreateCloseButton()
 	{
 		ATLASSERT(m_tb.m_hWnd == NULL);
 		// create toolbar for the "x" button
-		m_tb.Create(m_hWnd, rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CCS_NODIVIDER | CCS_NORESIZE | CCS_NOPARENTALIGN | CCS_NOMOVEY | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT, 0);
+		m_tb.Create(this->m_hWnd, this->rcDefault, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CCS_NODIVIDER | CCS_NORESIZE | CCS_NOPARENTALIGN | CCS_NOMOVEY | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT, 0);
 		ATLASSERT(m_tb.IsWindow());
 
 		if(m_tb.m_hWnd != NULL)
@@ -2687,7 +2687,7 @@ public:
 	void DrawPaneTitle(CDCHandle dc)
 	{
 		RECT rect = { 0 };
-		GetClientRect(&rect);
+		this->GetClientRect(&rect);
 
 		UINT uBorder = BF_LEFT | BF_TOP | BF_ADJUST;
 		if(IsVertical())
@@ -2752,7 +2752,7 @@ public:
 	void DrawPaneTitleBackground(CDCHandle dc)
 	{
 		RECT rect = { 0 };
-		GetClientRect(&rect);
+		this->GetClientRect(&rect);
 		if(IsVertical())
 			rect.right = m_cxyHeader;
 		else
@@ -2770,12 +2770,12 @@ public:
 	void DrawPane(CDCHandle dc)
 	{
 		RECT rect = { 0 };
-		GetClientRect(&rect);
+		this->GetClientRect(&rect);
 		if(IsVertical())
 			rect.left += m_cxyHeader;
 		else
 			rect.top += m_cxyHeader;
-		if((GetExStyle() & WS_EX_CLIENTEDGE) == 0)
+		if((this->GetExStyle() & WS_EX_CLIENTEDGE) == 0)
 			dc.DrawEdge(&rect, EDGE_SUNKEN, BF_RECT | BF_ADJUST);
 		dc.FillRect(&rect, COLOR_APPWORKSPACE);
 	}
@@ -3633,7 +3633,7 @@ public:
 // Message filter function - to be called from PreTranslateMessage of the main window
 	BOOL PreTranslateMessage(MSG* pMsg)
 	{
-		if(IsWindow() == FALSE)
+		if(this->IsWindow() == FALSE)
 			return FALSE;
 
 		BOOL bRet = FALSE;
@@ -3686,7 +3686,7 @@ public:
 // Attributes
 	int GetPageCount() const
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		return m_tab.GetItemCount();
 	}
 
@@ -3697,12 +3697,12 @@ public:
 
 	void SetActivePage(int nPage)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT(IsValidPageIndex(nPage));
 
 		T* pT = static_cast<T*>(this);
 
-		SetRedraw(FALSE);
+		this->SetRedraw(FALSE);
 
 		if(m_nActivePage != -1)
 			::ShowWindow(GetPageHWND(m_nActivePage), SW_HIDE);
@@ -3712,8 +3712,8 @@ public:
 
 		pT->UpdateLayout();
 
-		SetRedraw(TRUE);
-		RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_UPDATENOW | RDW_ALLCHILDREN);
+		this->SetRedraw(TRUE);
+		this->RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_UPDATENOW | RDW_ALLCHILDREN);
 
 		if(::GetFocus() != m_tab.m_hWnd)
 			::SetFocus(GetPageHWND(m_nActivePage));
@@ -3724,19 +3724,19 @@ public:
 
 	HIMAGELIST GetImageList() const
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		return m_tab.GetImageList();
 	}
 
 	HIMAGELIST SetImageList(HIMAGELIST hImageList)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		return m_tab.SetImageList(hImageList);
 	}
 
 	void SetWindowMenu(HMENU hMenu)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 
 		m_menu = hMenu;
 
@@ -3746,7 +3746,7 @@ public:
 
 	void SetTitleBarWindow(HWND hWnd)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 
 		delete [] m_lpstrTitleBarBase;
 		m_lpstrTitleBarBase = NULL;
@@ -3768,7 +3768,7 @@ public:
 // Page attributes
 	HWND GetPageHWND(int nPage) const
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT(IsValidPageIndex(nPage));
 
 		TCITEMEXTRA tcix = { 0 };
@@ -3780,7 +3780,7 @@ public:
 
 	LPCTSTR GetPageTitle(int nPage) const
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT(IsValidPageIndex(nPage));
 
 		TCITEMEXTRA tcix = { 0 };
@@ -3793,7 +3793,7 @@ public:
 
 	bool SetPageTitle(int nPage, LPCTSTR lpstrTitle)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT(IsValidPageIndex(nPage));
 
 		T* pT = static_cast<T*>(this);
@@ -3833,7 +3833,7 @@ public:
 
 	LPVOID GetPageData(int nPage) const
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT(IsValidPageIndex(nPage));
 
 		TCITEMEXTRA tcix = { 0 };
@@ -3845,7 +3845,7 @@ public:
 
 	LPVOID SetPageData(int nPage, LPVOID pData)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT(IsValidPageIndex(nPage));
 
 		TCITEMEXTRA tcix = { 0 };
@@ -3861,7 +3861,7 @@ public:
 
 	int GetPageImage(int nPage) const
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT(IsValidPageIndex(nPage));
 
 		TCITEMEXTRA tcix = { 0 };
@@ -3873,7 +3873,7 @@ public:
 
 	int SetPageImage(int nPage, int nImage)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT(IsValidPageIndex(nPage));
 
 		TCITEMEXTRA tcix = { 0 };
@@ -3895,7 +3895,7 @@ public:
 
 	bool InsertPage(int nPage, HWND hWndView, LPCTSTR lpstrTitle, int nImage = -1, LPVOID pData = NULL)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT((nPage == GetPageCount()) || IsValidPageIndex(nPage));
 
 		T* pT = static_cast<T*>(this);
@@ -3915,7 +3915,7 @@ public:
 
 		pT->ShortenTitle(lpstrTitle, lpstrTabText, m_cchTabTextLength + 1);
 
-		SetRedraw(FALSE);
+		this->SetRedraw(FALSE);
 
 		TCITEMEXTRA tcix = { 0 };
 		tcix.tciheader.mask = TCIF_TEXT | TCIF_IMAGE | TCIF_PARAM;
@@ -3928,7 +3928,7 @@ public:
 		if(nItem == -1)
 		{
 			delete [] lpstrBuff;
-			SetRedraw(TRUE);
+			this->SetRedraw(TRUE);
 			return false;
 		}
 
@@ -3944,20 +3944,20 @@ public:
 
 		pT->UpdateLayout();
 
-		SetRedraw(TRUE);
-		RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_UPDATENOW | RDW_ALLCHILDREN);
+		this->SetRedraw(TRUE);
+		this->RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_UPDATENOW | RDW_ALLCHILDREN);
 
 		return true;
 	}
 
 	void RemovePage(int nPage)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT(IsValidPageIndex(nPage));
 
 		T* pT = static_cast<T*>(this);
 
-		SetRedraw(FALSE);
+		this->SetRedraw(FALSE);
 
 		if(GetPageCount() == 1)
 			pT->ShowTabControl(false);
@@ -3985,9 +3985,9 @@ public:
 			}
 			else
 			{
-				SetRedraw(TRUE);
-				Invalidate();
-				UpdateWindow();
+				this->SetRedraw(TRUE);
+				this->Invalidate();
+				this->UpdateWindow();
 				pT->UpdateTitleBar();
 				pT->UpdateMenu();
 			}
@@ -4004,14 +4004,14 @@ public:
 
 	void RemoveAllPages()
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 
 		if(GetPageCount() == 0)
 			return;
 
 		T* pT = static_cast<T*>(this);
 
-		SetRedraw(FALSE);
+		this->SetRedraw(FALSE);
 
 		pT->ShowTabControl(false);
 
@@ -4029,9 +4029,9 @@ public:
 		m_nActivePage = -1;
 		pT->OnPageActivated(m_nActivePage);
 
-		SetRedraw(TRUE);
-		Invalidate();
-		UpdateWindow();
+		this->SetRedraw(TRUE);
+		this->Invalidate();
+		this->UpdateWindow();
 
 		pT->UpdateTitleBar();
 		pT->UpdateMenu();
@@ -4055,7 +4055,7 @@ public:
 
 	void BuildWindowMenu(HMENU hMenu, int nMenuItemsCount = 10, bool bEmptyMenuItem = true, bool bWindowsMenuItem = true, bool bActivePageMenuItem = true, bool bActiveAsDefaultMenuItem = false)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 
 		CMenuHandle menu = hMenu;
 		T* pT = static_cast<T*>(this);
@@ -4490,7 +4490,7 @@ public:
 // Implementation overrideables
 	bool CreateTabControl()
 	{
-		m_tab.Create(m_hWnd, rcDefault, NULL, WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | TCS_TOOLTIPS, 0, m_nTabID);
+		m_tab.Create(this->m_hWnd, this->rcDefault, NULL, WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | TCS_TOOLTIPS, 0, m_nTabID);
 		ATLASSERT(m_tab.m_hWnd != NULL);
 		if(m_tab.m_hWnd == NULL)
 			return false;
@@ -4538,7 +4538,7 @@ public:
 	void UpdateLayout()
 	{
 		RECT rect = { 0 };
-		GetClientRect(&rect);
+		this->GetClientRect(&rect);
 
 		int cyOffset = 0;
 		if(m_tab.IsWindow() && ((m_tab.GetStyle() & WS_VISIBLE) != 0))
@@ -4667,7 +4667,7 @@ public:
 		ATLASSERT(m_ilDrag.m_hImageList == NULL);
 		m_ilDrag.Create(rcItem.right - rcItem.left, rcItem.bottom - rcItem.top, ILC_COLORDDB | ILC_MASK, 1, 1);
 
-		CClientDC dc(m_hWnd);
+		CClientDC dc(this->m_hWnd);
 		CDC dcMem;
 		dcMem.CreateCompatibleDC(dc);
 		ATLASSERT(dcMem.m_hDC != NULL);
@@ -4725,10 +4725,10 @@ public:
 	void OnPageActivated(int nPage)
 	{
 		NMHDR nmhdr = { 0 };
-		nmhdr.hwndFrom = m_hWnd;
+		nmhdr.hwndFrom = this->m_hWnd;
 		nmhdr.idFrom = nPage;
 		nmhdr.code = TBVN_PAGEACTIVATED;
-		GetParent().SendMessage(WM_NOTIFY, GetDlgCtrlID(), (LPARAM)&nmhdr);
+		this->GetParent().SendMessage(WM_NOTIFY, this->GetDlgCtrlID(), (LPARAM)&nmhdr);
 	}
 
 	void OnContextMenu(int nPage, POINT pt)
@@ -4736,11 +4736,11 @@ public:
 		m_tab.ClientToScreen(&pt);
 
 		TBVCONTEXTMENUINFO cmi = { 0 };
-		cmi.hdr.hwndFrom = m_hWnd;
+		cmi.hdr.hwndFrom = this->m_hWnd;
 		cmi.hdr.idFrom = nPage;
 		cmi.hdr.code = TBVN_CONTEXTMENU;
 		cmi.pt = pt;
-		GetParent().SendMessage(WM_NOTIFY, GetDlgCtrlID(), (LPARAM)&cmi);
+		this->GetParent().SendMessage(WM_NOTIFY, this->GetDlgCtrlID(), (LPARAM)&cmi);
 	}
 };
 

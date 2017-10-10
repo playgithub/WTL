@@ -808,13 +808,13 @@ public:
 		FINDTEXTEX ft = { 0 };
 
 		pT->GetSel(ft.chrg);
-		if(m_bFirstSearch)
+		if(this->m_bFirstSearch)
 		{
 			if(bFindDown)
-				m_nInitialSearchPos = ft.chrg.cpMin;
+				this->m_nInitialSearchPos = ft.chrg.cpMin;
 			else
-				m_nInitialSearchPos = ft.chrg.cpMax;
-			m_bFirstSearch = FALSE;
+				this->m_nInitialSearchPos = ft.chrg.cpMax;
+			this->m_bFirstSearch = FALSE;
 		}
 
 		ft.lpstrText = (LPTSTR)lpszFind;
@@ -835,11 +835,11 @@ public:
 		DWORD dwFlags = bMatchCase ? FR_MATCHCASE : 0;
 		dwFlags |= bWholeWord ? FR_WHOLEWORD : 0;
 
-		ft.chrg.cpMax = pT->GetTextLength() + m_nInitialSearchPos;
+		ft.chrg.cpMax = pT->GetTextLength() + this->m_nInitialSearchPos;
 
 		if(bFindDown)
 		{
-			if(m_nInitialSearchPos >= 0)
+			if(this->m_nInitialSearchPos >= 0)
 				ft.chrg.cpMax = pT->GetTextLength();
 
 			dwFlags |= FR_DOWN;
@@ -847,7 +847,7 @@ public:
 		}
 		else
 		{
-			if(m_nInitialSearchPos >= 0)
+			if(this->m_nInitialSearchPos >= 0)
 				ft.chrg.cpMax = 0;
 
 			dwFlags &= ~FR_DOWN;
@@ -859,21 +859,21 @@ public:
 		{
 			bRet = TRUE;   // we found the text
 		}
-		else if(m_nInitialSearchPos > 0)
+		else if(this->m_nInitialSearchPos > 0)
 		{
 			// if the original starting point was not the beginning
 			// of the buffer and we haven't already been here
 			if(bFindDown)
 			{
 				ft.chrg.cpMin = 0;
-				ft.chrg.cpMax = m_nInitialSearchPos;
+				ft.chrg.cpMax = this->m_nInitialSearchPos;
 			}
 			else
 			{
 				ft.chrg.cpMin = pT->GetTextLength();
-				ft.chrg.cpMax = m_nInitialSearchPos;
+				ft.chrg.cpMax = this->m_nInitialSearchPos;
 			}
-			m_nInitialSearchPos = m_nInitialSearchPos - pT->GetTextLength();
+			this->m_nInitialSearchPos = this->m_nInitialSearchPos - pT->GetTextLength();
 
 			bRet = (pT->FindAndSelect(dwFlags, ft) != -1) ? TRUE : FALSE;
 		}

@@ -589,7 +589,7 @@ public:
 		ATLASSERT(m_lpstrThemeClassList != NULL);
 		if(m_lpstrThemeClassList == NULL)
 			return NULL;
-		CloseThemeData();
+		this->CloseThemeData();
 
 		return TBase::OpenThemeData(pT->m_hWnd, m_lpstrThemeClassList);
 	}
@@ -706,7 +706,7 @@ public:
 
 	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 	{
-		CloseThemeData();
+		this->CloseThemeData();
 
 		bHandled = FALSE;
 		return 1;
@@ -714,9 +714,9 @@ public:
 
 	LRESULT OnThemeChanged(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 	{
-		CloseThemeData();
+		this->CloseThemeData();
 		if(m_lpstrThemeClassList != NULL)
-			OpenThemeData();
+			this->OpenThemeData();
 
 		bHandled = FALSE;
 		return 1;
@@ -728,14 +728,14 @@ public:
 		ATLASSERT(::IsWindow(pT->m_hWnd));
 		LRESULT lRet = 0;
 		bHandled = FALSE;
-		if(IsThemingSupported() && ((pT->GetExStyle() & WS_EX_CLIENTEDGE) != 0))
+		if(this->IsThemingSupported() && ((pT->GetExStyle() & WS_EX_CLIENTEDGE) != 0))
 		{
 			if((m_dwExtendedStyle & THEME_EX_3DCLIENTEDGE) != 0)
 			{
 				lRet = ::DefWindowProc(pT->m_hWnd, uMsg, wParam, lParam);
 				bHandled = TRUE;
 			}
-			else if((m_hTheme != NULL) && ((m_dwExtendedStyle & THEME_EX_THEMECLIENTEDGE) != 0))
+			else if((this->m_hTheme != NULL) && ((m_dwExtendedStyle & THEME_EX_THEMECLIENTEDGE) != 0))
 			{
 				HRGN hRgn = (wParam != 1) ? (HRGN)wParam : NULL;
 				if(pT->DrawThemeClientEdge(hRgn))
@@ -750,7 +750,7 @@ public:
 	bool DrawThemeClientEdge(HRGN hRgnUpdate)
 	{
 		T* pT = static_cast<T*>(this);
-		return AtlDrawThemeClientEdge(m_hTheme, pT->m_hWnd, hRgnUpdate, NULL, 0, 0);
+		return AtlDrawThemeClientEdge(this->m_hTheme, pT->m_hWnd, hRgnUpdate, NULL, 0, 0);
 	}
 };
 

@@ -416,7 +416,7 @@ public:
 		: CFileDialogImpl<T>(TRUE, lpszDefExt, lpszFileName, dwFlags, lpszFilter, hWndParent), 
 		  m_pNextFile(NULL)
 	{
-		m_ofn.Flags |= OFN_ALLOWMULTISELECT;   // Force multiple selection mode
+		this->m_ofn.Flags |= OFN_ALLOWMULTISELECT;   // Force multiple selection mode
 
 #ifndef _UNICODE
 #ifdef _versionhelpers_H_INCLUDED_
@@ -440,8 +440,8 @@ public:
 
 	~CMultiFileDialogImpl()
 	{
-		if (m_ofn.lpstrFile != m_szFileName)   // Free the buffer if we allocated it
-			delete[] m_ofn.lpstrFile;
+		if (this->m_ofn.lpstrFile != this->m_szFileName)   // Free the buffer if we allocated it
+			delete[] this->m_ofn.lpstrFile;
 	}
 
 // Operations
@@ -451,10 +451,10 @@ public:
 	// If the function fails, the return value is zero.
 	int GetDirectory(LPTSTR pBuffer, int nBufLen) const
 	{
-		if (m_ofn.lpstrFile == NULL)
+		if (this->m_ofn.lpstrFile == NULL)
 			return 0;
 
-		LPCTSTR pStr = m_ofn.lpstrFile;
+		LPCTSTR pStr = this->m_ofn.lpstrFile;
 		int nLength = lstrlen(pStr);
 		if (pStr[nLength + 1] == 0)
 		{
@@ -497,12 +497,12 @@ public:
 	// Get the first filename as a pointer into the buffer.
 	LPCTSTR GetFirstFileName() const
 	{
-		if (m_ofn.lpstrFile == NULL)
+		if (this->m_ofn.lpstrFile == NULL)
 			return NULL;
 
 		m_pNextFile = NULL;   // Reset internal buffer pointer
 
-		LPCTSTR pStr = m_ofn.lpstrFile;
+		LPCTSTR pStr = this->m_ofn.lpstrFile;
 		int nLength = lstrlen(pStr);
 		if (pStr[nLength + 1] != 0)
 		{
@@ -659,14 +659,14 @@ public:
 // Implementation
 	bool ResizeFilenameBuffer(DWORD dwLength)
 	{
-		if (dwLength > m_ofn.nMaxFile)
+		if (dwLength > this->m_ofn.nMaxFile)
 		{
 			// Free the old buffer.
-			if (m_ofn.lpstrFile != m_szFileName)
+			if (this->m_ofn.lpstrFile != this->m_szFileName)
 			{
-				delete[] m_ofn.lpstrFile;
-				m_ofn.lpstrFile = NULL;
-				m_ofn.nMaxFile = 0;
+				delete[] this->m_ofn.lpstrFile;
+				this->m_ofn.lpstrFile = NULL;
+				this->m_ofn.nMaxFile = 0;
 			}
 
 			// Allocate the new buffer.
@@ -674,13 +674,13 @@ public:
 			ATLTRY(lpstrBuff = new TCHAR[dwLength]);
 			if (lpstrBuff != NULL)
 			{
-				m_ofn.lpstrFile = lpstrBuff;
-				m_ofn.lpstrFile[0] = 0;
-				m_ofn.nMaxFile = dwLength;
+				this->m_ofn.lpstrFile = lpstrBuff;
+				this->m_ofn.lpstrFile[0] = 0;
+				this->m_ofn.nMaxFile = dwLength;
 			}
 		}
 
-		return (m_ofn.lpstrFile != NULL);
+		return (this->m_ofn.lpstrFile != NULL);
 	}
 
 	void OnSelChange(LPOFNOTIFY /*lpon*/)
@@ -692,12 +692,12 @@ public:
 #endif
 
 		// Get the buffer length required to hold the spec.
-		int nLength = GetSpec(NULL, 0);
+		int nLength = this->GetSpec(NULL, 0);
 		if (nLength <= 1)
 			return; // no files are selected, presumably
 		
 		// Add room for the directory, and an extra terminating zero.
-		nLength += GetFolderPath(NULL, 0) + 1;
+		nLength += this->GetFolderPath(NULL, 0) + 1;
 
 		if (!ResizeFilenameBuffer(nLength))
 		{
@@ -706,22 +706,22 @@ public:
 		}
 
 		// If we are not following links then our work is done.
-		if ((m_ofn.Flags & OFN_NODEREFERENCELINKS) != 0)
+		if ((this->m_ofn.Flags & OFN_NODEREFERENCELINKS) != 0)
 			return;
 
 		// Get the file spec, which is the text in the edit control.
-		if (GetSpec(m_ofn.lpstrFile, m_ofn.nMaxFile) <= 0)
+		if (this->GetSpec(this->m_ofn.lpstrFile, this->m_ofn.nMaxFile) <= 0)
 			return;
 		
 		// Get the ID-list of the current folder.
-		int nBytes = GetFolderIDList(NULL, 0);
+		int nBytes = this->GetFolderIDList(NULL, 0);
 #ifdef STRICT_TYPED_ITEMIDS
 		ATL::CTempBuffer<ITEMIDLIST_RELATIVE> idlist;
 #else
 		ATL::CTempBuffer<ITEMIDLIST> idlist;
 #endif
 		idlist.AllocateBytes(nBytes);
-		if ((nBytes <= 0) || (GetFolderIDList(idlist, nBytes) <= 0))
+		if ((nBytes <= 0) || (this->GetFolderIDList(idlist, nBytes) <= 0))
 			return;
 
 		// First bind to the desktop folder, then to the current folder.
@@ -735,8 +735,8 @@ public:
 		// we need to add enough extra buffer space to hold its target path.
 		DWORD nExtraChars = 0;
 		bool bInsideQuotes = false;
-		LPCTSTR pAnchor = m_ofn.lpstrFile;
-		LPCTSTR pChar = m_ofn.lpstrFile;
+		LPCTSTR pAnchor = this->m_ofn.lpstrFile;
+		LPCTSTR pChar = this->m_ofn.lpstrFile;
 		for ( ; *pChar; ++pChar)
 		{
 			// Look for quotation marks.
@@ -799,7 +799,7 @@ public:
 
 		// If we need more space for shortcut targets, then reallocate.
 		if (nExtraChars > 0)
-			ATLVERIFY(ResizeFilenameBuffer(m_ofn.nMaxFile + nExtraChars));
+			ATLVERIFY(ResizeFilenameBuffer(this->m_ofn.nMaxFile + nExtraChars));
 	}
 };
 
@@ -1161,7 +1161,7 @@ public:
 		HRESULT hRet = m_spFileDlg.CoCreateInstance(CLSID_FileOpenDialog);
 
 		if(SUCCEEDED(hRet))
-			_Init(lpszFileName, dwOptions, lpszDefExt, arrFilterSpec, uFilterSpecCount);
+			this->_Init(lpszFileName, dwOptions, lpszDefExt, arrFilterSpec, uFilterSpecCount);
 	}
 
 	IFileOpenDialog* GetPtr()
@@ -1211,7 +1211,7 @@ public:
 		HRESULT hRet = m_spFileDlg.CoCreateInstance(CLSID_FileSaveDialog);
 
 		if(SUCCEEDED(hRet))
-			_Init(lpszFileName, dwOptions, lpszDefExt, arrFilterSpec, uFilterSpecCount);
+			this->_Init(lpszFileName, dwOptions, lpszDefExt, arrFilterSpec, uFilterSpecCount);
 	}
 
 	IFileSaveDialog* GetPtr()
@@ -1741,12 +1741,12 @@ public:
 			HWND hWndParent = NULL)
 			: CFontDialogImpl< T >(NULL, dwFlags, hDCPrinter, hWndParent)
 	{
-		m_cf.Flags |= CF_INITTOLOGFONTSTRUCT;
-		m_cf.Flags |= FillInLogFont(charformat);
-		m_cf.lpLogFont = &m_lf;
+		this->m_cf.Flags |= CF_INITTOLOGFONTSTRUCT;
+		this->m_cf.Flags |= FillInLogFont(charformat);
+		this->m_cf.lpLogFont = &this->m_lf;
 
 		if((charformat.dwMask & CFM_COLOR) != 0)
-			m_cf.rgbColors = charformat.crTextColor;
+			this->m_cf.rgbColors = charformat.crTextColor;
 	}
 
 	void GetCharFormat(CHARFORMAT& cf) const
@@ -1797,55 +1797,55 @@ public:
 		{
 			HDC hDC = ::CreateDC(_T("DISPLAY"), NULL, NULL, NULL);
 			LONG yPerInch = ::GetDeviceCaps(hDC, LOGPIXELSY);
-			m_lf.lfHeight = -(int)((cf.yHeight * yPerInch) / 1440);
+			this->m_lf.lfHeight = -(int)((cf.yHeight * yPerInch) / 1440);
 		}
 		else
-			m_lf.lfHeight = 0;
+			this->m_lf.lfHeight = 0;
 
-		m_lf.lfWidth = 0;
-		m_lf.lfEscapement = 0;
-		m_lf.lfOrientation = 0;
+		this->m_lf.lfWidth = 0;
+		this->m_lf.lfEscapement = 0;
+		this->m_lf.lfOrientation = 0;
 
 		if((cf.dwMask & (CFM_ITALIC | CFM_BOLD)) == (CFM_ITALIC | CFM_BOLD))
 		{
-			m_lf.lfWeight = ((cf.dwEffects & CFE_BOLD) != 0) ? FW_BOLD : FW_NORMAL;
-			m_lf.lfItalic = (BYTE)(((cf.dwEffects & CFE_ITALIC) != 0) ? TRUE : FALSE);
+			this->m_lf.lfWeight = ((cf.dwEffects & CFE_BOLD) != 0) ? FW_BOLD : FW_NORMAL;
+			this->m_lf.lfItalic = (BYTE)(((cf.dwEffects & CFE_ITALIC) != 0) ? TRUE : FALSE);
 		}
 		else
 		{
 			dwFlags |= CF_NOSTYLESEL;
-			m_lf.lfWeight = FW_DONTCARE;
-			m_lf.lfItalic = FALSE;
+			this->m_lf.lfWeight = FW_DONTCARE;
+			this->m_lf.lfItalic = FALSE;
 		}
 
 		if((cf.dwMask & (CFM_UNDERLINE | CFM_STRIKEOUT | CFM_COLOR)) == (CFM_UNDERLINE|CFM_STRIKEOUT|CFM_COLOR))
 		{
 			dwFlags |= CF_EFFECTS;
-			m_lf.lfUnderline = (BYTE)(((cf.dwEffects & CFE_UNDERLINE) != 0) ? TRUE : FALSE);
-			m_lf.lfStrikeOut = (BYTE)(((cf.dwEffects & CFE_STRIKEOUT) != 0) ? TRUE : FALSE);
+			this->m_lf.lfUnderline = (BYTE)(((cf.dwEffects & CFE_UNDERLINE) != 0) ? TRUE : FALSE);
+			this->m_lf.lfStrikeOut = (BYTE)(((cf.dwEffects & CFE_STRIKEOUT) != 0) ? TRUE : FALSE);
 		}
 		else
 		{
-			m_lf.lfUnderline = (BYTE)FALSE;
-			m_lf.lfStrikeOut = (BYTE)FALSE;
+			this->m_lf.lfUnderline = (BYTE)FALSE;
+			this->m_lf.lfStrikeOut = (BYTE)FALSE;
 		}
 
 		if((cf.dwMask & CFM_CHARSET) != 0)
-			m_lf.lfCharSet = cf.bCharSet;
+			this->m_lf.lfCharSet = cf.bCharSet;
 		else
 			dwFlags |= CF_NOSCRIPTSEL;
-		m_lf.lfOutPrecision = OUT_DEFAULT_PRECIS;
-		m_lf.lfClipPrecision = CLIP_DEFAULT_PRECIS;
-		m_lf.lfQuality = DEFAULT_QUALITY;
+		this->m_lf.lfOutPrecision = OUT_DEFAULT_PRECIS;
+		this->m_lf.lfClipPrecision = CLIP_DEFAULT_PRECIS;
+		this->m_lf.lfQuality = DEFAULT_QUALITY;
 		if((cf.dwMask & CFM_FACE) != 0)
 		{
-			m_lf.lfPitchAndFamily = cf.bPitchAndFamily;
-			ATL::Checked::tcscpy_s(m_lf.lfFaceName, _countof(m_lf.lfFaceName), cf.szFaceName);
+			this->m_lf.lfPitchAndFamily = cf.bPitchAndFamily;
+			ATL::Checked::tcscpy_s(this->m_lf.lfFaceName, _countof(this->m_lf.lfFaceName), cf.szFaceName);
 		}
 		else
 		{
-			m_lf.lfPitchAndFamily = DEFAULT_PITCH|FF_DONTCARE;
-			m_lf.lfFaceName[0] = (TCHAR)0;
+			this->m_lf.lfPitchAndFamily = DEFAULT_PITCH|FF_DONTCARE;
+			this->m_lf.lfFaceName[0] = (TCHAR)0;
 		}
 		return dwFlags;
 	}
@@ -3829,7 +3829,7 @@ public:
 // Create method
 	HWND Create(HWND hWndParent = NULL)
 	{
-		ATLASSERT(m_hWnd == NULL);
+		ATLASSERT(this->m_hWnd == NULL);
 
 		m_psh.dwFlags |= PSH_MODELESS;
 		if(m_psh.hwndParent == NULL)
@@ -3852,14 +3852,14 @@ public:
 		HWND hWnd = (HWND)::PropertySheet(&m_psh);
 		_CleanUpPages();   // ensure clean-up, required if call failed
 
-		ATLASSERT(m_hWnd == hWnd);
+		ATLASSERT(this->m_hWnd == hWnd);
 
 		return hWnd;
 	}
 
 	INT_PTR DoModal(HWND hWndParent = ::GetActiveWindow())
 	{
-		ATLASSERT(m_hWnd == NULL);
+		ATLASSERT(this->m_hWnd == NULL);
 
 		m_psh.dwFlags &= ~PSH_MODELESS;
 		if(m_psh.hwndParent == NULL)
@@ -3982,7 +3982,7 @@ public:
 	{
 		ATLASSERT(hPage != NULL);
 		BOOL bRet = FALSE;
-		if(m_hWnd != NULL)
+		if(this->m_hWnd != NULL)
 			bRet = TBase::AddPage(hPage);
 		else	// sheet not created yet, use internal data
 			bRet = m_arrPages.Add((HPROPSHEETPAGE&)hPage);
@@ -4028,7 +4028,7 @@ public:
 
 	void SetHeader(LPCTSTR szbmHeader)
 	{
-		ATLASSERT(m_hWnd == NULL);   // can't do this after it's created
+		ATLASSERT(this->m_hWnd == NULL);   // can't do this after it's created
 
 		m_psh.dwFlags &= ~PSH_WIZARD;
 		m_psh.dwFlags |= (PSH_HEADER | PSH_WIZARD97);
@@ -4046,7 +4046,7 @@ public:
 
 	void SetWatermark(LPCTSTR szbmWatermark, HPALETTE hplWatermark = NULL)
 	{
-		ATLASSERT(m_hWnd == NULL);   // can't do this after it's created
+		ATLASSERT(this->m_hWnd == NULL);   // can't do this after it's created
 
 		m_psh.dwFlags &= ~PSH_WIZARD;
 		m_psh.dwFlags |= PSH_WATERMARK | PSH_WIZARD97;
@@ -4091,17 +4091,17 @@ public:
 
 	LRESULT OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
 	{
-		LRESULT lRet = DefWindowProc(uMsg, wParam, lParam);
+		LRESULT lRet = this->DefWindowProc(uMsg, wParam, lParam);
 		if((HIWORD(wParam) == BN_CLICKED) && ((LOWORD(wParam) == IDOK) || (LOWORD(wParam) == IDCANCEL)) &&
-		   ((m_psh.dwFlags & PSH_MODELESS) != 0) && (GetActivePage() == NULL))
-			DestroyWindow();
+		   ((m_psh.dwFlags & PSH_MODELESS) != 0) && (this->GetActivePage() == NULL))
+			this->DestroyWindow();
 		return lRet;
 	}
 
 	LRESULT OnSysCommand(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled)
 	{
 		if(((m_psh.dwFlags & PSH_MODELESS) == PSH_MODELESS) && ((wParam & 0xFFF0) == SC_CLOSE))
-			SendMessage(WM_CLOSE);
+			this->SendMessage(WM_CLOSE);
 		else
 			bHandled = FALSE;
 		return 0;
@@ -4299,14 +4299,14 @@ public:
 
 	void SetHeaderTitle(LPCTSTR lpstrHeaderTitle)
 	{
-		ATLASSERT(m_hWnd == NULL);   // can't do this after it's created
+		ATLASSERT(this->m_hWnd == NULL);   // can't do this after it's created
 		m_psp.dwFlags |= PSP_USEHEADERTITLE;
 		m_psp.pszHeaderTitle = lpstrHeaderTitle;
 	}
 
 	void SetHeaderSubTitle(LPCTSTR lpstrHeaderSubTitle)
 	{
-		ATLASSERT(m_hWnd == NULL);   // can't do this after it's created
+		ATLASSERT(this->m_hWnd == NULL);   // can't do this after it's created
 		m_psp.dwFlags |= PSP_USEHEADERSUBTITLE;
 		m_psp.pszHeaderSubTitle = lpstrHeaderSubTitle;
 	}
@@ -4324,11 +4324,11 @@ public:
 
 	LRESULT OnNotify(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		NMHDR* pNMHDR = (NMHDR*)lParam;
 
 		// don't handle messages not from the page/sheet itself
-		if((pNMHDR->hwndFrom != m_hWnd) && (pNMHDR->hwndFrom != ::GetParent(m_hWnd)))
+		if((pNMHDR->hwndFrom != this->m_hWnd) && (pNMHDR->hwndFrom != ::GetParent(this->m_hWnd)))
 		{
 			bHandled = FALSE;
 			return 1;
@@ -4650,8 +4650,8 @@ public:
 			// set up property page to use in-memory dialog template
 			if(lpDialogTemplate != NULL)
 			{
-				m_psp.dwFlags |= PSP_DLGINDIRECT;
-				m_psp.pResource = lpDialogTemplate;
+				this->m_psp.dwFlags |= PSP_DLGINDIRECT;
+				this->m_psp.pResource = lpDialogTemplate;
 			}
 			else
 			{
@@ -4691,13 +4691,13 @@ public:
 			return FALSE;
 		// find a direct child of the dialog from the window that has focus
 		HWND hWndCtl = ::GetFocus();
-		if (IsChild(hWndCtl) && (::GetParent(hWndCtl) != m_hWnd))
+		if (this->IsChild(hWndCtl) && (::GetParent(hWndCtl) != this->m_hWnd))
 		{
 			do
 			{
 				hWndCtl = ::GetParent(hWndCtl);
 			}
-			while (::GetParent(hWndCtl) != m_hWnd);
+			while (::GetParent(hWndCtl) != this->m_hWnd);
 		}
 		// give controls a chance to translate this message
 		return (BOOL)::SendMessage(hWndCtl, WM_FORWARDMSG, 0, (LPARAM)pMsg);
@@ -4775,7 +4775,7 @@ public:
 
 					// Get first control on the dialog
 					DLGITEMTEMPLATE* pItem = ATL::_DialogSplitHelper::FindFirstDlgItem(pDlg);
-					HWND hWndPrev = GetWindow(GW_CHILD);
+					HWND hWndPrev = this->GetWindow(GW_CHILD);
 
 					// Create all ActiveX cotnrols in the dialog template and place them in the correct tab order (z-order)
 					for (WORD nItem = 0; nItem < nItems; nItem++)
@@ -4822,10 +4822,10 @@ public:
 								rect.bottom = rect.top + (bDialogEx ? ((ATL::_DialogSplitHelper::DLGITEMTEMPLATEEX*)pItem)->cy : pItem->cy);
 
 								// Convert from dialog units to screen units
-								MapDialogRect(&rect);
+								this->MapDialogRect(&rect);
 
 								// Create AxWindow with a NULL caption.
-								wnd.Create(m_hWnd, 
+								wnd.Create(this->m_hWnd,
 									&rect, 
 									NULL, 
 									(bDialogEx ? 
@@ -4880,7 +4880,7 @@ public:
 // Event handling support
 	HRESULT AdviseSinkMap(bool bAdvise)
 	{
-		if(!bAdvise && (m_hWnd == NULL))
+		if(!bAdvise && (this->m_hWnd == NULL))
 		{
 			// window is gone, controls are already unadvised
 			ATLTRACE2(atlTraceUI, 0, _T("CAxPropertyPageImpl::AdviseSinkMap called after the window was destroyed\n"));
@@ -4906,7 +4906,7 @@ public:
 	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 	{
 		// initialize controls in dialog with DLGINIT resource section
-		ExecuteDlgInit(static_cast<T*>(this)->IDD);
+		this->ExecuteDlgInit(static_cast<T*>(this)->IDD);
 		AdviseSinkMap(true);
 		bHandled = FALSE;
 		return 1;
@@ -5104,11 +5104,11 @@ public:
 			baseClass(title, uStartPage, hWndParent),
 			m_bReceivedFirstSizeMessage(false)
 	{
-		m_psh.dwFlags &= ~(PSH_NOCONTEXTHELP);
-		m_psh.dwFlags &= ~(PSH_WIZARD | PSH_WIZARD_LITE);
+		this->m_psh.dwFlags &= ~(PSH_NOCONTEXTHELP);
+		this->m_psh.dwFlags &= ~(PSH_WIZARD | PSH_WIZARD_LITE);
 
-		m_psh.dwFlags |= (PSH_HASHELP | PSH_WIZARDCONTEXTHELP);
-		m_psh.dwFlags |= PSH_WIZARD97;
+		this->m_psh.dwFlags |= (PSH_HASHELP | PSH_WIZARDCONTEXTHELP);
+		this->m_psh.dwFlags |= PSH_WIZARD97;
 
 		baseClass::SetHeader(headerBitmap.m_lpstr);
 		baseClass::SetWatermark(watermarkBitmap.m_lpstr);
@@ -5297,8 +5297,8 @@ public:
 // Constructors
 	CWizard97ExteriorPageImpl(ATL::_U_STRINGorID title = (LPCTSTR)NULL) : baseClass(title)
 	{
-		m_psp.dwFlags |= PSP_HASHELP;
-		m_psp.dwFlags |= PSP_HIDEHEADER;
+		this->m_psp.dwFlags |= PSP_HASHELP;
+		this->m_psp.dwFlags |= PSP_HIDEHEADER;
 	}
 
 // Message Handling
@@ -5323,9 +5323,9 @@ public:
 // Constructors
 	CWizard97InteriorPageImpl(ATL::_U_STRINGorID title = (LPCTSTR)NULL) : baseClass(title)
 	{
-		m_psp.dwFlags |= PSP_HASHELP;
-		m_psp.dwFlags &= ~PSP_HIDEHEADER;
-		m_psp.dwFlags |= PSP_USEHEADERTITLE | PSP_USEHEADERSUBTITLE;
+		this->m_psp.dwFlags |= PSP_HASHELP;
+		this->m_psp.dwFlags &= ~PSP_HIDEHEADER;
+		this->m_psp.dwFlags |= PSP_USEHEADERTITLE | PSP_USEHEADERSUBTITLE;
 
 		// Be sure to have the derived class define this in the constructor.
 		// We'll default it to something obvious in case its forgotten.
@@ -5399,26 +5399,26 @@ public:
 	CAeroWizardFrameImpl(ATL::_U_STRINGorID title = (LPCTSTR)NULL, UINT uStartPage = 0, HWND hWndParent = NULL) :
 		CPropertySheetImpl<T, TBase >(title, uStartPage, hWndParent)
 	{
-		m_psh.dwFlags |= PSH_WIZARD | PSH_AEROWIZARD;
+		this->m_psh.dwFlags |= PSH_WIZARD | PSH_AEROWIZARD;
 	}
 
 // Operations
 	void EnableResizing()
 	{
 		ATLASSERT(m_hWnd == NULL);   // can't do this after it's created
-		m_psh.dwFlags |= PSH_RESIZABLE;
+		this->m_psh.dwFlags |= PSH_RESIZABLE;
 	}
 
 	void UseHeaderBitmap()
 	{
 		ATLASSERT(m_hWnd == NULL);   // can't do this after it's created
-		m_psh.dwFlags |= PSH_HEADERBITMAP;
+		this->m_psh.dwFlags |= PSH_HEADERBITMAP;
 	}
 
 	void SetNoMargin()
 	{
 		ATLASSERT(m_hWnd == NULL);   // can't do this after it's created
-		m_psh.dwFlags |= PSH_NOMARGIN;
+		this->m_psh.dwFlags |= PSH_NOMARGIN;
 	}
 
 // Override to prevent use

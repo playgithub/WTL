@@ -85,29 +85,29 @@ public:
 #ifdef _CMDBAR_EXTRA_TRACE
 		ATLTRACE2(atlTraceUI, 0, _T("CmdBar - STACK-PUSH (%8.8X) size = %i\n"), t, GetSize());
 #endif
-		return Add(t);
+		return this->Add(t);
 	}
 
 	T Pop()
 	{
-		int nLast = GetSize() - 1;
+		int nLast = this->GetSize() - 1;
 		if(nLast < 0)
 			return NULL;   // must be able to convert to NULL
-		T t = m_aT[nLast];
+		T t = this->m_aT[nLast];
 #ifdef _CMDBAR_EXTRA_TRACE
 		ATLTRACE2(atlTraceUI, 0, _T("CmdBar - STACK-POP (%8.8X) size = %i\n"), t, GetSize());
 #endif
-		if(!RemoveAt(nLast))
+		if(!this->RemoveAt(nLast))
 			return NULL;
 		return t;
 	}
 
 	T GetCurrent()
 	{
-		int nLast = GetSize() - 1;
+		int nLast = this->GetSize() - 1;
 		if(nLast < 0)
 			return NULL;   // must be able to convert to NULL
-		return m_aT[nLast];
+		return this->m_aT[nLast];
 	}
 };
 
@@ -341,7 +341,7 @@ public:
 
 	CMenuHandle GetMenu() const
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		return m_hMenu;
 	}
 
@@ -477,7 +477,7 @@ public:
 
 	BOOL AttachMenu(HMENU hMenu)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT((hMenu == NULL) || ::IsMenu(hMenu));
 		if((hMenu != NULL) && !::IsMenu(hMenu))
 			return FALSE;
@@ -501,12 +501,12 @@ public:
 			return TRUE;
 
 		// Build buttons according to menu
-		SetRedraw(FALSE);
+		this->SetRedraw(FALSE);
 
 		// Clear all buttons
-		int nCount = GetButtonCount();
+		int nCount = this->GetButtonCount();
 		for(int i = 0; i < nCount; i++)
-			ATLVERIFY(DeleteButton(0) != FALSE);
+			ATLVERIFY(this->DeleteButton(0) != FALSE);
 
 		// Add buttons for each menu item
 		if(m_hMenu != NULL)
@@ -544,7 +544,7 @@ public:
 				btn.dwData = 0;
 				btn.iString = 0;
 
-				bRet = InsertButton(-1, &btn);
+				bRet = this->InsertButton(-1, &btn);
 				ATLASSERT(bRet);
 
 				TBBUTTONINFO bi = { 0 };
@@ -552,14 +552,14 @@ public:
 				bi.dwMask = TBIF_TEXT;
 				bi.pszText = szString;
 
-				bRet = SetButtonInfo(i, &bi);
+				bRet = this->SetButtonInfo(i, &bi);
 				ATLASSERT(bRet);
 			}
 		}
 
-		SetRedraw(TRUE);
-		Invalidate();
-		UpdateWindow();
+		this->SetRedraw(TRUE);
+		this->Invalidate();
+		this->UpdateWindow();
 
 		return TRUE;
 	}
@@ -576,7 +576,7 @@ public:
 
 	BOOL _LoadImagesHelper(ATL::_U_STRINGorID image, bool bMapped, UINT nFlags = 0, LPCOLORMAP lpColorMap = NULL, int nMapSize = 0)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		HINSTANCE hInstance = ModuleHelper::GetResourceInstance();
 
 		HRSRC hRsrc = ::FindResource(hInstance, image.m_lpstr, (LPTSTR)RT_TOOLBAR);
@@ -859,7 +859,7 @@ public:
 
 	BOOL TrackPopupMenu(HMENU hMenu, UINT uFlags, int x, int y, LPTPMPARAMS lpParams = NULL)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT(::IsMenu(hMenu));
 		if(!::IsMenu(hMenu))
 			return FALSE;
@@ -950,17 +950,17 @@ public:
 	LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
 	{
 		// Let the toolbar initialize itself
-		LRESULT lRet = DefWindowProc(uMsg, wParam, lParam);
+		LRESULT lRet = this->DefWindowProc(uMsg, wParam, lParam);
 		// get and use system settings
 		T* pT = static_cast<T*>(this);
 		pT->GetSystemSettings();
 		// Parent init
-		ATL::CWindow wndParent = GetParent();
+		ATL::CWindow wndParent = this->GetParent();
 		ATL::CWindow wndTopLevelParent = wndParent.GetTopLevelParent();
 		m_wndParent.SubclassWindow(wndTopLevelParent);
 		// Toolbar Init
-		SetButtonStructSize();
-		SetImageList(NULL);
+		this->SetButtonStructSize();
+		this->SetImageList(NULL);
 
 		// Create message hook if needed
 		CWindowCreateCriticalSectionLock lock;
@@ -971,19 +971,19 @@ public:
 			return -1;
 		}
 
-		if(s_pmapMsgHook == NULL)
+		if(this->s_pmapMsgHook == NULL)
 		{
-			ATLTRY(s_pmapMsgHook = new CMsgHookMap);
-			ATLASSERT(s_pmapMsgHook != NULL);
+			ATLTRY(this->s_pmapMsgHook = new CCommandBarCtrlBase::CMsgHookMap);
+			ATLASSERT(this->s_pmapMsgHook != NULL);
 		}
 
-		if(s_pmapMsgHook != NULL)
+		if(this->s_pmapMsgHook != NULL)
 		{
 			DWORD dwThreadID = ::GetCurrentThreadId();
-			_MsgHookData* pData = s_pmapMsgHook->Lookup(dwThreadID);
+			CCommandBarCtrlBase::_MsgHookData* pData = this->s_pmapMsgHook->Lookup(dwThreadID);
 			if(pData == NULL)
 			{
-				ATLTRY(pData = new _MsgHookData);
+				ATLTRY(pData = new CCommandBarCtrlBase::_MsgHookData);
 				ATLASSERT(pData != NULL);
 				HHOOK hMsgHook = ::SetWindowsHookEx(WH_GETMESSAGE, MessageHookProc, ModuleHelper::GetModuleInstance(), dwThreadID);
 				ATLASSERT(hMsgHook != NULL);
@@ -991,7 +991,7 @@ public:
 				{
 					pData->hMsgHook = hMsgHook;
 					pData->dwUsage = 1;
-					BOOL bRet = s_pmapMsgHook->Add(dwThreadID, pData);
+					BOOL bRet = this->s_pmapMsgHook->Add(dwThreadID, pData);
 					bRet;
 					ATLASSERT(bRet);
 				}
@@ -1004,14 +1004,14 @@ public:
 		lock.Unlock();
 
 		// Get layout
-		m_bLayoutRTL = ((GetExStyle() & WS_EX_LAYOUTRTL) != 0);
+		m_bLayoutRTL = ((this->GetExStyle() & WS_EX_LAYOUTRTL) != 0);
 
 		return lRet;
 	}
 
 	LRESULT OnDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
 	{
-		LRESULT lRet = DefWindowProc(uMsg, wParam, lParam);
+		LRESULT lRet = this->DefWindowProc(uMsg, wParam, lParam);
 
 #if _WTL_CMDBAR_VISTA_MENUS
 		if(m_bVistaMenus && (m_hMenu != NULL))
@@ -1038,10 +1038,10 @@ public:
 			return lRet;
 		}
 
-		if(s_pmapMsgHook != NULL)
+		if(this->s_pmapMsgHook != NULL)
 		{
 			DWORD dwThreadID = ::GetCurrentThreadId();
-			_MsgHookData* pData = s_pmapMsgHook->Lookup(dwThreadID);
+			CCommandBarCtrlBase::_MsgHookData* pData = this->s_pmapMsgHook->Lookup(dwThreadID);
 			if(pData != NULL)
 			{
 				(pData->dwUsage)--;
@@ -1049,16 +1049,16 @@ public:
 				{
 					BOOL bRet = ::UnhookWindowsHookEx(pData->hMsgHook);
 					ATLASSERT(bRet);
-					bRet = s_pmapMsgHook->Remove(dwThreadID);
+					bRet = this->s_pmapMsgHook->Remove(dwThreadID);
 					ATLASSERT(bRet);
 					if(bRet)
 						delete pData;
 				}
 
-				if(s_pmapMsgHook->GetSize() == 0)
+				if(this->s_pmapMsgHook->GetSize() == 0)
 				{
-					delete s_pmapMsgHook;
-					s_pmapMsgHook = NULL;
+					delete this->s_pmapMsgHook;
+					this->s_pmapMsgHook = NULL;
 				}
 			}
 		}
@@ -1093,11 +1093,11 @@ public:
 			if(!m_bMenuActive)
 			{
 				T* pT = static_cast<T*>(this);
-				int nBtn = GetHotItem();
+				int nBtn = this->GetHotItem();
 				int nNextBtn = (wParam == wpNext) ? pT->GetNextMenuItem(nBtn) : pT->GetPreviousMenuItem(nBtn);
 				if(nNextBtn == -2)
 				{
-					SetHotItem(-1);
+					this->SetHotItem(-1);
 					if(pT->DisplayChevronMenu())
 						bHandled = TRUE;
 				}
@@ -1139,12 +1139,12 @@ public:
 		else
 			return 0;
 		// Security
-		if(!m_wndParent.IsWindowEnabled() || (::GetFocus() != m_hWnd))
+		if(!m_wndParent.IsWindowEnabled() || (::GetFocus() != this->m_hWnd))
 			return 0;
 
 		// Handle mnemonic press when we have focus
 		int nBtn = 0;
-		if((wParam != VK_RETURN) && !MapAccelerator((TCHAR)LOWORD(wParam), nBtn))
+		if((wParam != VK_RETURN) && !this->MapAccelerator((TCHAR)LOWORD(wParam), nBtn))
 		{
 			if((TCHAR)LOWORD(wParam) != _chChevronShortcut)
 				::MessageBeep(0);
@@ -1152,16 +1152,16 @@ public:
 		else
 		{
 			RECT rcClient = { 0 };
-			GetClientRect(&rcClient);
+			this->GetClientRect(&rcClient);
 			RECT rcBtn = { 0 };
-			GetItemRect(nBtn, &rcBtn);
+			this->GetItemRect(nBtn, &rcBtn);
 			TBBUTTON tbb = { 0 };
-			GetButton(nBtn, &tbb);
+			this->GetButton(nBtn, &tbb);
 			if(((tbb.fsState & TBSTATE_ENABLED) != 0) && ((tbb.fsState & TBSTATE_HIDDEN) == 0) && (rcBtn.right <= rcClient.right))
 			{
-				PostMessage(WM_KEYDOWN, VK_DOWN, 0L);
+				this->PostMessage(WM_KEYDOWN, VK_DOWN, 0L);
 				if(wParam != VK_RETURN)
-					SetHotItem(nBtn);
+					this->SetHotItem(nBtn);
 			}
 			else
 			{
@@ -1209,7 +1209,7 @@ public:
 
 		CDCHandle dc = (HDC)wParam;
 		RECT rect = { 0 };
-		GetClientRect(&rect);
+		this->GetClientRect(&rect);
 		dc.FillRect(&rect, COLOR_MENU);
 
 		return 1;   // don't do the default erase
@@ -1217,8 +1217,8 @@ public:
 
 	LRESULT OnInitMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 	{
-		int nIndex = GetHotItem();
-		SendMessage(WM_MENUSELECT, MAKEWPARAM(nIndex, MF_POPUP|MF_HILITE), (LPARAM)m_hMenu);
+		int nIndex = this->GetHotItem();
+		this->SendMessage(WM_MENUSELECT, MAKEWPARAM(nIndex, MF_POPUP|MF_HILITE), (LPARAM)m_hMenu);
 		bHandled = FALSE;
 		return 1;
 	}
@@ -1243,9 +1243,9 @@ public:
 		// forward to the parent or subclassed window, so it can handle update UI
 		LRESULT lRet = 0;
 		if(m_bAttachedMenu)
-			lRet = DefWindowProc(uMsg, wParam, (lParam || m_bContextMenu) ? lParam : GetHotItem());
+			lRet = this->DefWindowProc(uMsg, wParam, (lParam || m_bContextMenu) ? lParam : this->GetHotItem());
 		else
-			lRet = m_wndParent.DefWindowProc(uMsg, wParam, (lParam || m_bContextMenu) ? lParam : GetHotItem());
+			lRet = m_wndParent.DefWindowProc(uMsg, wParam, (lParam || m_bContextMenu) ? lParam : this->GetHotItem());
 
 #if _WTL_CMDBAR_VISTA_MENUS
 		// If Vista menus are active, just set bitmaps and return
@@ -1322,7 +1322,7 @@ public:
 			}
 
 			// Add it to the list
-			m_stackMenuHandle.Push(menuPopup.m_hMenu);
+			this->m_stackMenuHandle.Push(menuPopup.m_hMenu);
 		}
 
 		return lRet;
@@ -1345,12 +1345,12 @@ public:
 #ifdef _CMDBAR_EXTRA_TRACE
 			ATLTRACE2(atlTraceUI, 0, _T("CmdBar - OnMenuSelect - CLOSING!!!!\n"));
 #endif
-			ATLASSERT(m_stackMenuWnd.GetSize() == 0);
+			ATLASSERT(this->m_stackMenuWnd.GetSize() == 0);
 			// Restore the menu items to the previous state for all menus that were converted
 			if(m_bImagesVisible)
 			{
 				HMENU hMenu = NULL;
-				while((hMenu = m_stackMenuHandle.Pop()) != NULL)
+				while((hMenu = this->m_stackMenuHandle.Pop()) != NULL)
 				{
 					CMenuHandle menuPopup = hMenu;
 					ATLASSERT(menuPopup.m_hMenu != NULL);
@@ -1401,7 +1401,7 @@ public:
 		// Let's make sure we're not embedded in another process
 		if((LPVOID)wParam != NULL)
 			*((DWORD*)wParam) = GetCurrentProcessId();
-		if(IsWindowVisible())
+		if(this->IsWindowVisible())
 			return (LRESULT)static_cast<CCommandBarCtrlBase*>(this);
 		else
 			return NULL;
@@ -1498,7 +1498,7 @@ public:
 			{
 				if(nRetCode == MNC_EXECUTE)
 				{
-					PostMessage(TB_SETHOTITEM, (WPARAM)-1, 0L);
+					this->PostMessage(TB_SETHOTITEM, (WPARAM)-1, 0L);
 					pT->GiveFocusBack();
 				}
 				bHandled = TRUE;
@@ -1508,10 +1508,10 @@ public:
 		else if(!m_bMenuActive)
 		{
 			int nBtn = 0;
-			if(!MapAccelerator((TCHAR)LOWORD(wParam), nBtn))
+			if(!this->MapAccelerator((TCHAR)LOWORD(wParam), nBtn))
 			{
 				bHandled = FALSE;
-				PostMessage(TB_SETHOTITEM, (WPARAM)-1, 0L);
+				this->PostMessage(TB_SETHOTITEM, (WPARAM)-1, 0L);
 				pT->GiveFocusBack();
 
 				// check if we should display chevron menu
@@ -1524,11 +1524,11 @@ public:
 			else if(m_wndParent.IsWindowEnabled())
 			{
 				RECT rcClient = { 0 };
-				GetClientRect(&rcClient);
+				this->GetClientRect(&rcClient);
 				RECT rcBtn = { 0 };
-				GetItemRect(nBtn, &rcBtn);
+				this->GetItemRect(nBtn, &rcBtn);
 				TBBUTTON tbb = { 0 };
-				GetButton(nBtn, &tbb);
+				this->GetButton(nBtn, &tbb);
 				if(((tbb.fsState & TBSTATE_ENABLED) != 0) && ((tbb.fsState & TBSTATE_HIDDEN) == 0) && (rcBtn.right <= rcClient.right))
 				{
 					if(m_bUseKeyboardCues && !m_bShowKeyboardCues)
@@ -1537,8 +1537,8 @@ public:
 						ShowKeyboardCues(true);
 					}
 					pT->TakeFocus();
-					PostMessage(WM_KEYDOWN, VK_DOWN, 0L);
-					SetHotItem(nBtn);
+					this->PostMessage(WM_KEYDOWN, VK_DOWN, 0L);
+					this->SetHotItem(nBtn);
 				}
 				else
 				{
@@ -1611,7 +1611,7 @@ public:
 
 	LRESULT OnAPIGetCmdBar(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 	{
-		return (LRESULT)m_hWnd;
+		return (LRESULT)this->m_hWnd;
 	}
 
 // Parent window message handlers
@@ -1620,7 +1620,7 @@ public:
 		LPNMTBHOTITEM lpNMHT = (LPNMTBHOTITEM)pnmh;
 
 		// Check if this comes from us
-		if(pnmh->hwndFrom != m_hWnd)
+		if(pnmh->hwndFrom != this->m_hWnd)
 		{
 			bHandled = FALSE;
 			return 0;
@@ -1654,17 +1654,17 @@ public:
 	LRESULT OnParentDropDown(int /*idCtrl*/, LPNMHDR pnmh, BOOL& bHandled)
 	{
 		// Check if this comes from us
-		if(pnmh->hwndFrom != m_hWnd)
+		if(pnmh->hwndFrom != this->m_hWnd)
 		{
 			bHandled = FALSE;
 			return 1;
 		}
 
 		T* pT = static_cast<T*>(this);
-		if(::GetFocus() != m_hWnd)
+		if(::GetFocus() != this->m_hWnd)
 			pT->TakeFocus();
 		LPNMTOOLBAR pNMToolBar = (LPNMTOOLBAR)pnmh;
-		int nIndex = CommandToIndex(pNMToolBar->iItem);
+		int nIndex = this->CommandToIndex(pNMToolBar->iItem);
 		m_bContextMenu = false;
 		m_bEscapePressed = false;
 		pT->DoPopupMenu(nIndex, true);
@@ -1691,10 +1691,10 @@ public:
 			&& (wParam == SC_KEYMENU))
 		{
 			T* pT = static_cast<T*>(this);
-			if(::GetFocus() == m_hWnd)
+			if(::GetFocus() == this->m_hWnd)
 			{
 				pT->GiveFocusBack();   // exit menu "loop"
-				PostMessage(TB_SETHOTITEM, (WPARAM)-1, 0L);
+				this->PostMessage(TB_SETHOTITEM, (WPARAM)-1, 0L);
 			}
 			else if((m_uSysKey != VK_SPACE) && !m_bSkipMsg)
 			{
@@ -1759,8 +1759,8 @@ public:
 		}
 		else
 		{
-			Invalidate();
-			UpdateWindow();
+			this->Invalidate();
+			this->UpdateWindow();
 		}
 		bHandled = FALSE;
 		return 1;
@@ -1770,7 +1770,7 @@ public:
 	{
 		LRESULT lRet = CDRF_DODEFAULT;
 		bHandled = FALSE;
-		if(pnmh->hwndFrom == m_hWnd)
+		if(pnmh->hwndFrom == this->m_hWnd)
 		{
 			LPNMTBCUSTOMDRAW lpTBCustomDraw = (LPNMTBCUSTOMDRAW)pnmh;
 			if(lpTBCustomDraw->nmcd.dwDrawStage == CDDS_PREPAINT)
@@ -1840,7 +1840,7 @@ public:
 		dc.SetTextColor(lpTBCustomDraw->clrText);
 		dc.SetBkMode(lpTBCustomDraw->nStringBkMode);
 
-		HFONT hFont = GetFont();
+		HFONT hFont = this->GetFont();
 		HFONT hFontOld = NULL;
 		if(hFont != NULL)
 			hFontOld = dc.SelectFont(hFont);
@@ -1852,7 +1852,7 @@ public:
 		tbbi.dwMask = TBIF_TEXT;
 		tbbi.pszText = szText;
 		tbbi.cchText = cchText;
-		GetButtonInfo((int)lpTBCustomDraw->nmcd.dwItemSpec, &tbbi);
+		this->GetButtonInfo((int)lpTBCustomDraw->nmcd.dwItemSpec, &tbbi);
 
 		dc.DrawText(szText, -1, &lpTBCustomDraw->nmcd.rc, DT_SINGLELINE | DT_CENTER | DT_VCENTER | (m_bShowKeyboardCues ? 0 : DT_HIDEPREFIX));
 
@@ -1870,19 +1870,19 @@ public:
 		bHandled = FALSE;
 		if(m_bMenuActive)
 		{
-			if(::WindowFromPoint(point) == m_hWnd)
+			if(::WindowFromPoint(point) == this->m_hWnd)
 			{
-				ScreenToClient(&point);
-				int nHit = HitTest(&point);
+				this->ScreenToClient(&point);
+				int nHit = this->HitTest(&point);
 
 				if(((point.x != s_point.x) || (point.y != s_point.y)) && (nHit >= 0) && (nHit < ::GetMenuItemCount(m_hMenu)) && (nHit != m_nPopBtn) && (m_nPopBtn != -1))
 				{
 					TBBUTTON tbb = { 0 };
-					GetButton(nHit, &tbb);
+					this->GetButton(nHit, &tbb);
 					if((tbb.fsState & TBSTATE_ENABLED) != 0)
 					{
 						m_nNextPopBtn = nHit | 0xFFFF0000;
-						HWND hWndMenu = m_stackMenuWnd.GetCurrent();
+						HWND hWndMenu = this->m_stackMenuWnd.GetCurrent();
 						ATLASSERT(hWndMenu != NULL);
 
 						// this one is needed to close a menu if mouse button was down
@@ -1897,7 +1897,7 @@ public:
 		}
 		else
 		{
-			ScreenToClient(&point);
+			this->ScreenToClient(&point);
 		}
 
 		s_point = point;
@@ -1914,10 +1914,10 @@ public:
 		if((wParam == VK_MENU) && m_bParentActive && m_bUseKeyboardCues && !m_bShowKeyboardCues && m_bAllowKeyboardCues)
 			ShowKeyboardCues(true);
 
-		if((wParam != VK_SPACE) && !m_bMenuActive && (::GetFocus() == m_hWnd))
+		if((wParam != VK_SPACE) && !m_bMenuActive && (::GetFocus() == this->m_hWnd))
 		{
 			m_bAllowKeyboardCues = false;
-			PostMessage(TB_SETHOTITEM, (WPARAM)-1, 0L);
+			this->PostMessage(TB_SETHOTITEM, (WPARAM)-1, 0L);
 			T* pT = static_cast<T*>(this);
 			pT->GiveFocusBack();
 			m_bSkipMsg = true;
@@ -1953,7 +1953,7 @@ public:
 		ATLTRACE2(atlTraceUI, 0, _T("CmdBar - Hook WM_SYSCHAR (0x%2.2X)\n"), wParam);
 #endif
 
-		if(!m_bMenuActive && (m_hWndHook != m_hWnd) && (wParam != VK_SPACE))
+		if(!m_bMenuActive && (this->m_hWndHook != this->m_hWnd) && (wParam != VK_SPACE))
 			bHandled = TRUE;
 		return 0;
 	}
@@ -1966,40 +1966,40 @@ public:
 		bHandled = FALSE;
 		T* pT = static_cast<T*>(this);
 
-		if((wParam == VK_ESCAPE) && (m_stackMenuWnd.GetSize() <= 1))
+		if((wParam == VK_ESCAPE) && (this->m_stackMenuWnd.GetSize() <= 1))
 		{
 			if(m_bMenuActive && !m_bContextMenu)
 			{
-				int nHot = GetHotItem();
+				int nHot = this->GetHotItem();
 				if(nHot == -1)
 					nHot = m_nPopBtn;
 				if(nHot == -1)
 					nHot = 0;
-				SetHotItem(nHot);
+				this->SetHotItem(nHot);
 				bHandled = TRUE;
 				pT->TakeFocus();
 				m_bEscapePressed = true; // To keep focus
 				m_bSkipPostDown = false;
 			}
-			else if((::GetFocus() == m_hWnd) && m_wndParent.IsWindow())
+			else if((::GetFocus() == this->m_hWnd) && m_wndParent.IsWindow())
 			{
-				SetHotItem(-1);
+				this->SetHotItem(-1);
 				pT->GiveFocusBack();
 				bHandled = TRUE;
 			}
 		}
 		else if((wParam == VK_RETURN) || (wParam == VK_UP) || (wParam == VK_DOWN))
 		{
-			if(!m_bMenuActive && (::GetFocus() == m_hWnd) && m_wndParent.IsWindow())
+			if(!m_bMenuActive && (::GetFocus() == this->m_hWnd) && m_wndParent.IsWindow())
 			{
-				int nHot = GetHotItem();
+				int nHot = this->GetHotItem();
 				if(nHot != -1)
 				{
 					if(wParam != VK_RETURN)
 					{
 						if(!m_bSkipPostDown)
 						{
-							PostMessage(WM_KEYDOWN, VK_DOWN, 0L);
+							this->PostMessage(WM_KEYDOWN, VK_DOWN, 0L);
 							m_bSkipPostDown = true;
 						}
 						else
@@ -2016,7 +2016,7 @@ public:
 			}
 			if((wParam == VK_RETURN) && m_bMenuActive)
 			{
-				PostMessage(TB_SETHOTITEM, (WPARAM)-1, 0L);
+				this->PostMessage(TB_SETHOTITEM, (WPARAM)-1, 0L);
 				m_nNextPopBtn = -1;
 				pT->GiveFocusBack();
 			}
@@ -2029,7 +2029,7 @@ public:
 			if(m_bMenuActive && !m_bContextMenu && !((wParam == wpNext) && m_bPopupItem))
 			{
 				bool bAction = false;
-				if((wParam == wpPrev) && (s_pCurrentBar->m_stackMenuWnd.GetSize() == 1))
+				if((wParam == wpPrev) && (this->s_pCurrentBar->m_stackMenuWnd.GetSize() == 1))
 				{
 					m_nNextPopBtn = pT->GetPreviousMenuItem(m_nPopBtn);
 					if(m_nNextPopBtn != -1)
@@ -2041,7 +2041,7 @@ public:
 					if(m_nNextPopBtn != -1)
 						bAction = true;
 				}
-				HWND hWndMenu = m_stackMenuWnd.GetCurrent();
+				HWND hWndMenu = this->m_stackMenuWnd.GetCurrent();
 				ATLASSERT(hWndMenu != NULL);
 
 				// Close the popup menu
@@ -2050,10 +2050,10 @@ public:
 					::PostMessage(hWndMenu, WM_KEYDOWN, VK_ESCAPE, 0L);
 					if(wParam == wpNext)
 					{
-						int cItem = m_stackMenuWnd.GetSize() - 1;
+						int cItem = this->m_stackMenuWnd.GetSize() - 1;
 						while(cItem >= 0)
 						{
-							hWndMenu = m_stackMenuWnd[cItem];
+							hWndMenu = this->m_stackMenuWnd[cItem];
 							if(hWndMenu != NULL)
 								::PostMessage(hWndMenu, WM_KEYDOWN, VK_ESCAPE, 0L);
 							cItem--;
@@ -2612,7 +2612,7 @@ public:
 
 			::GetClassName(hWndMenu, szClassName, cchClassName);
 			if(!lstrcmp(_T("#32768"), szClassName))
-				s_pCurrentBar->m_stackMenuWnd.Push(hWndMenu);
+				CCommandBarCtrlBase::s_pCurrentBar->m_stackMenuWnd.Push(hWndMenu);
 		}
 		else if(nCode == HCBT_DESTROYWND)
 		{
@@ -2624,12 +2624,12 @@ public:
 			::GetClassName(hWndMenu, szClassName, cchClassName);
 			if(!lstrcmp(_T("#32768"), szClassName))
 			{
-				ATLASSERT(hWndMenu == s_pCurrentBar->m_stackMenuWnd.GetCurrent());
-				s_pCurrentBar->m_stackMenuWnd.Pop();
+				ATLASSERT(hWndMenu == CCommandBarCtrlBase::s_pCurrentBar->m_stackMenuWnd.GetCurrent());
+				CCommandBarCtrlBase::s_pCurrentBar->m_stackMenuWnd.Pop();
 			}
 		}
 
-		return ::CallNextHookEx(s_hCreateHook, nCode, wParam, lParam);
+		return ::CallNextHookEx(CCommandBarCtrlBase::s_hCreateHook, nCode, wParam, lParam);
 	}
 
 	static LRESULT CALLBACK MessageHookProc(int nCode, WPARAM wParam, LPARAM lParam)
@@ -2660,11 +2660,11 @@ public:
 		}
 
 		LRESULT lRet = 0;
-		ATLASSERT(s_pmapMsgHook != NULL);
-		if(s_pmapMsgHook != NULL)
+		ATLASSERT(CCommandBarCtrlBase::s_pmapMsgHook != NULL);
+		if(CCommandBarCtrlBase::s_pmapMsgHook != NULL)
 		{
 			DWORD dwThreadID = ::GetCurrentThreadId();
-			_MsgHookData* pData = s_pmapMsgHook->Lookup(dwThreadID);
+			CCommandBarCtrlBase::_MsgHookData* pData = CCommandBarCtrlBase::s_pmapMsgHook->Lookup(dwThreadID);
 			if(pData != NULL)
 			{
 				lRet = ::CallNextHookEx(pData->hMsgHook, nCode, wParam, lParam);
@@ -2683,10 +2683,10 @@ public:
 
 		// get popup menu and it's position
 		RECT rect = { 0 };
-		GetItemRect(nIndex, &rect);
+		this->GetItemRect(nIndex, &rect);
 		POINT pt = { rect.left, rect.bottom };
-		MapWindowPoints(NULL, &pt, 1);
-		MapWindowPoints(NULL, &rect);
+		this->MapWindowPoints(NULL, &pt, 1);
+		this->MapWindowPoints(NULL, &rect);
 		TPMPARAMS TPMParams = { 0 };
 		TPMParams.cbSize = sizeof(TPMPARAMS);
 		TPMParams.rcExclude = rect;
@@ -2695,33 +2695,33 @@ public:
 
 		// get button ID
 		TBBUTTON tbb = { 0 };
-		GetButton(nIndex, &tbb);
+		this->GetButton(nIndex, &tbb);
 		int nCmdID = tbb.idCommand;
 
 		m_nPopBtn = nIndex;   // remember current button's index
 
 		// press button and display popup menu
-		PressButton(nCmdID, TRUE);
-		SetHotItem(nCmdID);
+		this->PressButton(nCmdID, TRUE);
+		this->SetHotItem(nCmdID);
 		pT->DoTrackPopupMenu(hMenuPopup, TPM_LEFTBUTTON | TPM_VERTICAL | TPM_LEFTALIGN | TPM_TOPALIGN |
-			(s_bW2K ? (bAnimate ? TPM_VERPOSANIMATION : TPM_NOANIMATION) : 0), pt.x, pt.y, &TPMParams);
-		PressButton(nCmdID, FALSE);
-		if(::GetFocus() != m_hWnd)
-			SetHotItem(-1);
+			(this->s_bW2K ? (bAnimate ? TPM_VERPOSANIMATION : TPM_NOANIMATION) : 0), pt.x, pt.y, &TPMParams);
+		this->PressButton(nCmdID, FALSE);
+		if(::GetFocus() != this->m_hWnd)
+			this->SetHotItem(-1);
 
 		m_nPopBtn = -1;   // restore
 
 		// eat next message if click is on the same button
 		MSG msg = { 0 };
-		if(::PeekMessage(&msg, m_hWnd, WM_LBUTTONDOWN, WM_LBUTTONDOWN, PM_NOREMOVE) && ::PtInRect(&rect, msg.pt))
-			::PeekMessage(&msg, m_hWnd, WM_LBUTTONDOWN, WM_LBUTTONDOWN, PM_REMOVE);
+		if(::PeekMessage(&msg, this->m_hWnd, WM_LBUTTONDOWN, WM_LBUTTONDOWN, PM_NOREMOVE) && ::PtInRect(&rect, msg.pt))
+			::PeekMessage(&msg, this->m_hWnd, WM_LBUTTONDOWN, WM_LBUTTONDOWN, PM_REMOVE);
 
 		// check if another popup menu should be displayed
 		if(m_nNextPopBtn != -1)
 		{
-			PostMessage(GetAutoPopupMessage(), m_nNextPopBtn & 0xFFFF);
+			this->PostMessage(GetAutoPopupMessage(), m_nNextPopBtn & 0xFFFF);
 			if(!(m_nNextPopBtn & 0xFFFF0000) && !m_bPopupItem)
-				PostMessage(WM_KEYDOWN, VK_DOWN, 0);
+				this->PostMessage(WM_KEYDOWN, VK_DOWN, 0);
 			m_nNextPopBtn = -1;
 		}
 		else
@@ -2736,8 +2736,8 @@ public:
 			}
 			else
 			{
-				SetHotItem(nCmdID);
-				SetAnchorHighlight(TRUE);
+				this->SetHotItem(nCmdID);
+				this->SetAnchorHighlight(TRUE);
 			}
 		}
 	}
@@ -2754,23 +2754,23 @@ public:
 			return FALSE;
 		}
 
-		ATLASSERT(s_hCreateHook == NULL);
+		ATLASSERT(this->s_hCreateHook == NULL);
 
-		s_pCurrentBar = static_cast<CCommandBarCtrlBase*>(this);
+		this->s_pCurrentBar = static_cast<CCommandBarCtrlBase*>(this);
 
-		s_hCreateHook = ::SetWindowsHookEx(WH_CBT, CreateHookProc, ModuleHelper::GetModuleInstance(), GetCurrentThreadId());
-		ATLASSERT(s_hCreateHook != NULL);
+		this->s_hCreateHook = ::SetWindowsHookEx(WH_CBT, CreateHookProc, ModuleHelper::GetModuleInstance(), GetCurrentThreadId());
+		ATLASSERT(this->s_hCreateHook != NULL);
 
 		m_bPopupItem = false;
 		m_bMenuActive = true;
 
-		BOOL bTrackRet = menuPopup.TrackPopupMenuEx(uFlags, x, y, m_hWnd, lpParams);
+		BOOL bTrackRet = menuPopup.TrackPopupMenuEx(uFlags, x, y, this->m_hWnd, lpParams);
 		m_bMenuActive = false;
 
-		::UnhookWindowsHookEx(s_hCreateHook);
+		::UnhookWindowsHookEx(this->s_hCreateHook);
 
-		s_hCreateHook = NULL;
-		s_pCurrentBar = NULL;
+		this->s_hCreateHook = NULL;
+		this->s_pCurrentBar = NULL;
 
 		lock.Unlock();
 
@@ -2779,17 +2779,17 @@ public:
 		ATLTRACE2(atlTraceUI, 0, _T("CmdBar - TrackPopupMenu - cleanup\n"));
 #endif
 
-		ATLASSERT(m_stackMenuWnd.GetSize() == 0);
+		ATLASSERT(this->m_stackMenuWnd.GetSize() == 0);
 
-		UpdateWindow();
-		ATL::CWindow wndTL = GetTopLevelParent();
+		this->UpdateWindow();
+		ATL::CWindow wndTL = this->GetTopLevelParent();
 		wndTL.UpdateWindow();
 
 		// restore the menu items to the previous state for all menus that were converted
 		if(m_bImagesVisible)
 		{
 			HMENU hMenuSav = NULL;
-			while((hMenuSav = m_stackMenuHandle.Pop()) != NULL)
+			while((hMenuSav = this->m_stackMenuHandle.Pop()) != NULL)
 			{
 				menuPopup = hMenuSav;
 				BOOL bRet = FALSE;
@@ -2830,16 +2830,16 @@ public:
 		if(nBtn == -1)
 			return -1;
 		RECT rcClient = { 0 };
-		GetClientRect(&rcClient);
+		this->GetClientRect(&rcClient);
 		int nNextBtn;
 		for(nNextBtn = nBtn - 1; nNextBtn != nBtn; nNextBtn--)
 		{
 			if(nNextBtn < 0)
 				nNextBtn = ::GetMenuItemCount(m_hMenu) - 1;
 			TBBUTTON tbb = { 0 };
-			GetButton(nNextBtn, &tbb);
+			this->GetButton(nNextBtn, &tbb);
 			RECT rcBtn = { 0 };
-			GetItemRect(nNextBtn, &rcBtn);
+			this->GetItemRect(nNextBtn, &rcBtn);
 			if(rcBtn.right > rcClient.right)
 			{
 				nNextBtn = -2;   // chevron
@@ -2856,7 +2856,7 @@ public:
 		if(nBtn == -1)
 			return -1;
 		RECT rcClient = { 0 };
-		GetClientRect(&rcClient);
+		this->GetClientRect(&rcClient);
 		int nNextBtn = 0;
 		int nCount = ::GetMenuItemCount(m_hMenu);
 		for(nNextBtn = nBtn + 1; nNextBtn != nBtn; nNextBtn++)
@@ -2864,9 +2864,9 @@ public:
 			if(nNextBtn >= nCount)
 				nNextBtn = 0;
 			TBBUTTON tbb = { 0 };
-			GetButton(nNextBtn, &tbb);
+			this->GetButton(nNextBtn, &tbb);
 			RECT rcBtn = { 0 };
-			GetItemRect(nNextBtn, &rcBtn);
+			this->GetItemRect(nNextBtn, &rcBtn);
 			if(rcBtn.right > rcClient.right)
 			{
 				nNextBtn = -2;   // chevron
@@ -2881,19 +2881,19 @@ public:
 	bool DisplayChevronMenu()
 	{
 		// assume we are in a rebar
-		HWND hWndReBar = GetParent();
+		HWND hWndReBar = this->GetParent();
 		int nCount = (int)::SendMessage(hWndReBar, RB_GETBANDCOUNT, 0, 0L);
 		bool bRet = false;
 		for(int i = 0; i < nCount; i++)
 		{
 			REBARBANDINFO rbbi = { RunTimeHelper::SizeOf_REBARBANDINFO(), RBBIM_CHILD | RBBIM_STYLE };
 			BOOL bRetBandInfo = (BOOL)::SendMessage(hWndReBar, RB_GETBANDINFO, i, (LPARAM)&rbbi);
-			if(bRetBandInfo && (rbbi.hwndChild == m_hWnd))
+			if(bRetBandInfo && (rbbi.hwndChild == this->m_hWnd))
 			{
 				if((rbbi.fStyle & RBBS_USECHEVRON) != 0)
 				{
 					::PostMessage(hWndReBar, RB_PUSHCHEVRON, i, 0L);
-					PostMessage(WM_KEYDOWN, VK_DOWN, 0L);
+					this->PostMessage(WM_KEYDOWN, VK_DOWN, 0L);
 					bRet = true;
 				}
 				break;
@@ -2935,15 +2935,15 @@ public:
 					if(m_fontMenu.m_hFont != NULL)
 						m_fontMenu.DeleteObject();
 					m_fontMenu.Attach(hFontMenu);
-					SetFont(m_fontMenu);
-					AddStrings(_T("NS\0"));   // for proper item height
-					AutoSize();
+					this->SetFont(m_fontMenu);
+					this->AddStrings(_T("NS\0"));   // for proper item height
+					this->AutoSize();
 				}
 			}
 		}
 
 		// check if we need extra spacing for menu item text
-		CWindowDC dc(m_hWnd);
+		CWindowDC dc(this->m_hWnd);
 		HFONT hFontOld = dc.SelectFont(m_fontMenu);
 		RECT rcText = { 0 };
 		dc.DrawText(_T("\t"), -1, &rcText, DT_SINGLELINE | DT_LEFT | DT_VCENTER | DT_CALCRECT);
@@ -3014,7 +3014,7 @@ public:
 	{
 		if((m_dwExtendedStyle & CBR_EX_ALTFOCUSMODE) && (m_hWndFocus == NULL))
 			m_hWndFocus = ::GetFocus();
-		SetFocus();
+		this->SetFocus();
 	}
 
 	void GiveFocusBack()
@@ -3027,18 +3027,18 @@ public:
 				m_wndParent.SetFocus();
 		}
 		m_hWndFocus = NULL;
-		SetAnchorHighlight(FALSE);
+		this->SetAnchorHighlight(FALSE);
 		if(m_bUseKeyboardCues && m_bShowKeyboardCues)
-			ShowKeyboardCues(false);
+			this->ShowKeyboardCues(false);
 		m_bSkipPostDown = false;
 	}
 
 	void ShowKeyboardCues(bool bShow)
 	{
 		m_bShowKeyboardCues = bShow;
-		SetDrawTextFlags(DT_HIDEPREFIX, m_bShowKeyboardCues ? 0 : DT_HIDEPREFIX);
-		Invalidate();
-		UpdateWindow();
+		this->SetDrawTextFlags(DT_HIDEPREFIX, m_bShowKeyboardCues ? 0 : DT_HIDEPREFIX);
+		this->Invalidate();
+		this->UpdateWindow();
 	}
 
 // Implementation - internal message helpers
@@ -3347,7 +3347,7 @@ public:
 
 	LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
 	{
-		LRESULT lRet = DefWindowProc(uMsg, wParam, lParam);
+		LRESULT lRet = this->DefWindowProc(uMsg, wParam, lParam);
 		T* pT = static_cast<T*>(this);
 		pT->_AdjustBtnSize(GET_Y_LPARAM(lParam));
 		return lRet;
@@ -3355,12 +3355,12 @@ public:
 
 	LRESULT OnNcCalcSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
 	{
-		LRESULT lRet = DefWindowProc(uMsg, wParam, lParam);
+		LRESULT lRet = this->DefWindowProc(uMsg, wParam, lParam);
 
 		if(m_bChildMaximized && (BOOL)wParam)
 		{
 			LPNCCALCSIZE_PARAMS lpParams = (LPNCCALCSIZE_PARAMS)lParam;
-			if(m_bLayoutRTL)
+			if(this->m_bLayoutRTL)
 			{
 				lpParams->rgrc[0].left += m_cxRight;
 				lpParams->rgrc[0].right -= m_cxLeft;
@@ -3377,7 +3377,7 @@ public:
 
 	LRESULT OnNcPaint(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
 	{
-		LRESULT lRet = DefWindowProc(uMsg, wParam, lParam);
+		LRESULT lRet = this->DefWindowProc(uMsg, wParam, lParam);
 
 		if(!m_bChildMaximized)
 			return lRet;
@@ -3385,9 +3385,9 @@ public:
 		ATLASSERT((m_hWndChildMaximized != NULL) && (m_hIconChildMaximized != NULL));
 
 		// get DC and window rectangle
-		CWindowDC dc(m_hWnd);
+		CWindowDC dc(this->m_hWnd);
 		RECT rect = { 0 };
-		GetWindowRect(&rect);
+		this->GetWindowRect(&rect);
 		int cxWidth = rect.right - rect.left;
 		int cyHeight = rect.bottom - rect.top;
 
@@ -3395,11 +3395,11 @@ public:
 		::SetRect(&rect, 0, 0, m_cxLeft, cyHeight);
 		if(m_hTheme != NULL)
 		{
-			::DrawThemeParentBackground(m_hWnd, dc, &rect);
+			::DrawThemeParentBackground(this->m_hWnd, dc, &rect);
 		}
 		else
 		{
-			if((m_dwExtendedStyle & CBR_EX_TRANSPARENT) != 0)
+			if((this->m_dwExtendedStyle & CBR_EX_TRANSPARENT) != 0)
 				dc.FillRect(&rect, COLOR_3DFACE);
 			else
 				dc.FillRect(&rect, COLOR_MENU);
@@ -3420,7 +3420,7 @@ public:
 			dc.SetViewportOrg(ptOrg.x + m_cxLeft, ptOrg.y);
 			::OffsetRect(&rect, -m_cxLeft, 0);
 
-			::DrawThemeParentBackground(m_hWnd, dc, &rect);
+			::DrawThemeParentBackground(this->m_hWnd, dc, &rect);
 
 			// restore
 			dc.SetViewportOrg(ptOrg);
@@ -3428,7 +3428,7 @@ public:
 		}
 		else
 		{
-			if((m_dwExtendedStyle & CBR_EX_TRANSPARENT) != 0)
+			if((this->m_dwExtendedStyle & CBR_EX_TRANSPARENT) != 0)
 				dc.FillRect(&rect, COLOR_3DFACE);
 			else
 				dc.FillRect(&rect, COLOR_MENU);
@@ -3444,13 +3444,13 @@ public:
 
 	LRESULT OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
 	{
-		LRESULT lRet = DefWindowProc(uMsg, wParam, lParam);
+		LRESULT lRet = this->DefWindowProc(uMsg, wParam, lParam);
 		if(m_bChildMaximized)
 		{
 			RECT rect = { 0 };
-			GetWindowRect(&rect);
+			this->GetWindowRect(&rect);
 			POINT pt = { GET_X_LPARAM(lParam) - rect.left, GET_Y_LPARAM(lParam) - rect.top };
-			if(m_bLayoutRTL)
+			if(this->m_bLayoutRTL)
 			{
 				if((pt.x < m_cxRight) || (pt.x > ((rect.right - rect.left) - m_cxLeft)))
 					lRet = HTBORDER;
@@ -3476,15 +3476,15 @@ public:
 
 		POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
 		RECT rect = { 0 };
-		GetWindowRect(&rect);
+		this->GetWindowRect(&rect);
 		pt.x -= rect.left;
 		pt.y -= rect.top;
 
 		RECT rcIcon = { 0 };
 		T* pT = static_cast<T*>(this);
-		pT->_CalcIconRect(rect.right - rect.left, rect.bottom - rect.top, rcIcon, m_bLayoutRTL);
+		pT->_CalcIconRect(rect.right - rect.left, rect.bottom - rect.top, rcIcon, this->m_bLayoutRTL);
 		RECT arrRect[3] = { 0 };
-		pT->_CalcBtnRects(rect.right - rect.left, rect.bottom - rect.top, arrRect, m_bLayoutRTL);
+		pT->_CalcBtnRects(rect.right - rect.left, rect.bottom - rect.top, arrRect, this->m_bLayoutRTL);
 
 		if(::PtInRect(&rcIcon, pt))
 		{
@@ -3493,13 +3493,13 @@ public:
 #endif
 			CMenuHandle menu = ::GetSystemMenu(m_hWndChildMaximized, FALSE);
 			UINT uRet = (UINT)menu.TrackPopupMenu(TPM_LEFTBUTTON | TPM_VERTICAL | TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD |  
-				(s_bW2K ? TPM_VERPOSANIMATION : 0), m_bLayoutRTL ? rect.right : rect.left, rect.bottom, m_hWndChildMaximized);
+				(this->s_bW2K ? TPM_VERPOSANIMATION : 0), this->m_bLayoutRTL ? rect.right : rect.left, rect.bottom, m_hWndChildMaximized);
 
 			// eat next message if click is on the same button
 			::OffsetRect(&rcIcon, rect.left, rect.top);
 			MSG msg = { 0 };
-			if(::PeekMessage(&msg, m_hWnd, WM_NCLBUTTONDOWN, WM_NCLBUTTONDOWN, PM_NOREMOVE) && ::PtInRect(&rcIcon, msg.pt))
-				::PeekMessage(&msg, m_hWnd, WM_NCLBUTTONDOWN, WM_NCLBUTTONDOWN, PM_REMOVE);
+			if(::PeekMessage(&msg, this->m_hWnd, WM_NCLBUTTONDOWN, WM_NCLBUTTONDOWN, PM_NOREMOVE) && ::PtInRect(&rcIcon, msg.pt))
+				::PeekMessage(&msg, this->m_hWnd, WM_NCLBUTTONDOWN, WM_NCLBUTTONDOWN, PM_REMOVE);
 
 			if(uRet != 0)
 				::SendMessage(m_hWndChildMaximized, WM_SYSCOMMAND, uRet, 0L);
@@ -3533,8 +3533,8 @@ public:
 		// draw the button state if it was pressed
 		if(m_nBtnPressed != -1)
 		{
-			SetCapture();
-			CWindowDC dc(m_hWnd);
+			this->SetCapture();
+			CWindowDC dc(this->m_hWnd);
 			pT->_CalcBtnRects(rect.right - rect.left, rect.bottom - rect.top, arrRect);
 			pT->_DrawMDIButton(dc, arrRect, m_nBtnPressed);
 		}
@@ -3544,26 +3544,26 @@ public:
 
 	LRESULT OnMouseMove(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled)
 	{
-		if(!m_bChildMaximized || (::GetCapture() != m_hWnd) || (m_nBtnWasPressed == -1))
+		if(!m_bChildMaximized || (::GetCapture() != this->m_hWnd) || (m_nBtnWasPressed == -1))
 		{
 			bHandled = FALSE;
 			return 1;
 		}
 
 		POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
-		ClientToScreen(&pt);
+		this->ClientToScreen(&pt);
 		RECT rect = { 0 };
-		GetWindowRect(&rect);
+		this->GetWindowRect(&rect);
 		pt.x -= rect.left;
 		pt.y -= rect.top;
 		RECT arrRect[3] = { 0 };
 		T* pT = static_cast<T*>(this);
-		pT->_CalcBtnRects(rect.right - rect.left, rect.bottom - rect.top, arrRect, m_bLayoutRTL);
+		pT->_CalcBtnRects(rect.right - rect.left, rect.bottom - rect.top, arrRect, this->m_bLayoutRTL);
 		int nOldBtnPressed = m_nBtnPressed;
 		m_nBtnPressed = ::PtInRect(&arrRect[m_nBtnWasPressed], pt) ? m_nBtnWasPressed : -1;
 		if(nOldBtnPressed != m_nBtnPressed)
 		{
-			CWindowDC dc(m_hWnd);
+			CWindowDC dc(this->m_hWnd);
 			pT->_CalcBtnRects(rect.right - rect.left, rect.bottom - rect.top, arrRect);
 			pT->_DrawMDIButton(dc, arrRect, (m_nBtnPressed != -1) ? m_nBtnPressed : nOldBtnPressed);
 		}
@@ -3573,7 +3573,7 @@ public:
 
 	LRESULT OnLButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled)
 	{
-		if(!m_bChildMaximized || (::GetCapture() != m_hWnd) || (m_nBtnWasPressed == -1))
+		if(!m_bChildMaximized || (::GetCapture() != this->m_hWnd) || (m_nBtnWasPressed == -1))
 		{
 			bHandled = FALSE;
 			return 1;
@@ -3582,9 +3582,9 @@ public:
 		ATLASSERT(_DebugCheckChild());
 
 		POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
-		ClientToScreen(&pt);
+		this->ClientToScreen(&pt);
 		RECT rect = { 0 };
-		GetWindowRect(&rect);
+		this->GetWindowRect(&rect);
 		pt.x -= rect.left;
 		pt.y -= rect.top;
 
@@ -3593,7 +3593,7 @@ public:
 
 		RECT arrRect[3] = { 0 };
 		T* pT = static_cast<T*>(this);
-		pT->_CalcBtnRects(rect.right - rect.left, rect.bottom - rect.top, arrRect, m_bLayoutRTL);
+		pT->_CalcBtnRects(rect.right - rect.left, rect.bottom - rect.top, arrRect, this->m_bLayoutRTL);
 		if(::PtInRect(&arrRect[nBtn], pt))
 		{
 			switch(nBtn)
@@ -3636,15 +3636,15 @@ public:
 
 		POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
 		RECT rect = { 0 };
-		GetWindowRect(&rect);
+		this->GetWindowRect(&rect);
 		pt.x -= rect.left;
 		pt.y -= rect.top;
 
 		RECT rcIcon = { 0 };
 		T* pT = static_cast<T*>(this);
-		pT->_CalcIconRect(rect.right - rect.left, rect.bottom - rect.top, rcIcon, m_bLayoutRTL);
+		pT->_CalcIconRect(rect.right - rect.left, rect.bottom - rect.top, rcIcon, this->m_bLayoutRTL);
 		RECT arrRect[3] = { 0 };
-		pT->_CalcBtnRects(rect.right - rect.left, rect.bottom - rect.top, arrRect, m_bLayoutRTL);
+		pT->_CalcBtnRects(rect.right - rect.left, rect.bottom - rect.top, arrRect, this->m_bLayoutRTL);
 
 		if(::PtInRect(&rcIcon, pt))
 		{
@@ -3667,11 +3667,11 @@ public:
 				ATLASSERT(m_nBtnPressed == m_nBtnWasPressed);   // must be
 				m_nBtnPressed = -1;
 				RECT rect = { 0 };
-				GetWindowRect(&rect);
+				this->GetWindowRect(&rect);
 				RECT arrRect[3] = { 0 };
 				T* pT = static_cast<T*>(this);
 				pT->_CalcBtnRects(rect.right - rect.left, rect.bottom - rect.top, arrRect);
-				CWindowDC dc(m_hWnd);
+				CWindowDC dc(this->m_hWnd);
 				pT->_DrawMDIButton(dc, arrRect, m_nBtnWasPressed);
 			}
 			m_nBtnWasPressed = -1;
@@ -3686,8 +3686,8 @@ public:
 // Parent window message handlers
 	LRESULT OnParentActivate(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled)
 	{
-		m_bParentActive = (LOWORD(wParam) != WA_INACTIVE);
-		RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_FRAME | RDW_UPDATENOW);
+		this->m_bParentActive = (LOWORD(wParam) != WA_INACTIVE);
+		this->RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_FRAME | RDW_UPDATENOW);
 		bHandled = FALSE;
 		return 1;
 	}
@@ -3696,8 +3696,8 @@ public:
 	LRESULT OnMDISetMenu(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
 	{
 		m_wndMDIClient.DefWindowProc(uMsg, NULL, lParam);
-		HMENU hOldMenu = GetMenu();
-		BOOL bRet = AttachMenu((HMENU)wParam);
+		HMENU hOldMenu = this->GetMenu();
+		BOOL bRet = this->AttachMenu((HMENU)wParam);
 		bRet;   // avoid level 4 warning
 		ATLASSERT(bRet);
 
@@ -3723,23 +3723,23 @@ public:
 	{
 		// assuming we are in a rebar, change ideal size to our size
 		// we hope that if we are not in a rebar, nCount will be 0
-		int nCount = (int)GetParent().SendMessage(RB_GETBANDCOUNT, 0, 0L);
+		int nCount = (int)this->GetParent().SendMessage(RB_GETBANDCOUNT, 0, 0L);
 		for(int i = 0; i < nCount; i++)
 		{
 			REBARBANDINFO rbi = { RunTimeHelper::SizeOf_REBARBANDINFO(), RBBIM_CHILD | RBBIM_CHILDSIZE | RBBIM_IDEALSIZE };
-			GetParent().SendMessage(RB_GETBANDINFO, i, (LPARAM)&rbi);
-			if(rbi.hwndChild == m_hWnd)
+			this->GetParent().SendMessage(RB_GETBANDINFO, i, (LPARAM)&rbi);
+			if(rbi.hwndChild == this->m_hWnd)
 			{
 				rbi.fMask = RBBIM_IDEALSIZE;
 				rbi.cxIdeal = m_bChildMaximized ? m_cxLeft + m_cxRight : 0;
-				int nBtnCount = GetButtonCount();
+				int nBtnCount = this->GetButtonCount();
 				if(nBtnCount > 0)
 				{
 					RECT rect = { 0 };
-					GetItemRect(nBtnCount - 1, &rect);
+					this->GetItemRect(nBtnCount - 1, &rect);
 					rbi.cxIdeal += rect.right;
 				}
-				GetParent().SendMessage(RB_SETBANDINFO, i, (LPARAM)&rbi);
+				this->GetParent().SendMessage(RB_SETBANDINFO, i, (LPARAM)&rbi);
 				break;
 			}
 		}
@@ -3784,20 +3784,20 @@ public:
 #endif
 			// assuming we are in a rebar, change our size to accomodate new state
 			// we hope that if we are not in a rebar, nCount will be 0
-			int nCount = (int)GetParent().SendMessage(RB_GETBANDCOUNT, 0, 0L);
+			int nCount = (int)this->GetParent().SendMessage(RB_GETBANDCOUNT, 0, 0L);
 			int cxDiff = (m_bChildMaximized ? 1 : -1) * (m_cxLeft + m_cxRight);
 			for(int i = 0; i < nCount; i++)
 			{
 				REBARBANDINFO rbi = { RunTimeHelper::SizeOf_REBARBANDINFO(), RBBIM_CHILD | RBBIM_CHILDSIZE | RBBIM_IDEALSIZE | RBBIM_STYLE };
-				GetParent().SendMessage(RB_GETBANDINFO, i, (LPARAM)&rbi);
-				if(rbi.hwndChild == m_hWnd)
+				this->GetParent().SendMessage(RB_GETBANDINFO, i, (LPARAM)&rbi);
+				if(rbi.hwndChild == this->m_hWnd)
 				{
 					if((rbi.fStyle & RBBS_USECHEVRON) != 0)
 					{
 						rbi.fMask = RBBIM_CHILDSIZE | RBBIM_IDEALSIZE;
 						rbi.cxMinChild += cxDiff;
 						rbi.cxIdeal += cxDiff;
-						GetParent().SendMessage(RB_SETBANDINFO, i, (LPARAM)&rbi);
+						this->GetParent().SendMessage(RB_SETBANDINFO, i, (LPARAM)&rbi);
 					}
 					break;
 				}
@@ -3808,13 +3808,13 @@ public:
 		{
 			// force size change and redraw everything
 			RECT rect = { 0 };
-			GetWindowRect(&rect);
-			::MapWindowPoints(NULL, GetParent(), (LPPOINT)&rect, 2);
-			SetRedraw(FALSE);
-			SetWindowPos(NULL, 0, 0, 1, 1, SWP_NOZORDER | SWP_NOMOVE);
-			SetWindowPos(NULL, &rect, SWP_NOZORDER | SWP_NOMOVE);
-			SetRedraw(TRUE);
-			RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_UPDATENOW);
+			this->GetWindowRect(&rect);
+			::MapWindowPoints(NULL, this->GetParent(), (LPPOINT)&rect, 2);
+			this->SetRedraw(FALSE);
+			this->SetWindowPos(NULL, 0, 0, 1, 1, SWP_NOZORDER | SWP_NOMOVE);
+			this->SetWindowPos(NULL, &rect, SWP_NOZORDER | SWP_NOMOVE);
+			this->SetRedraw(TRUE);
+			this->RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_UPDATENOW);
 		}
 	}
 
@@ -3850,7 +3850,7 @@ public:
 		}
 
 		RECT rect = { 0 };
-		GetClientRect(&rect);
+		this->GetClientRect(&rect);
 		T* pT = static_cast<T*>(this);
 		pT->_AdjustBtnSize(rect.bottom);
 	}
@@ -3932,11 +3932,11 @@ public:
 			const int MINBS_DISABLED = 4;
 #endif // __VSSYM32_H__
 			if((nBtn == -1) || (nBtn == 0))
-				::DrawThemeBackground(m_hTheme, dc, WP_MDICLOSEBUTTON, m_bParentActive ? ((m_nBtnPressed == 0) ? CBS_PUSHED : CBS_NORMAL) : CBS_DISABLED, &pRects[0], NULL);
+				::DrawThemeBackground(m_hTheme, dc, WP_MDICLOSEBUTTON, this->m_bParentActive ? ((m_nBtnPressed == 0) ? CBS_PUSHED : CBS_NORMAL) : CBS_DISABLED, &pRects[0], NULL);
 			if((nBtn == -1) || (nBtn == 1))
-				::DrawThemeBackground(m_hTheme, dc, WP_MDIRESTOREBUTTON, m_bParentActive ? ((m_nBtnPressed == 1) ? RBS_PUSHED : RBS_NORMAL) : RBS_DISABLED, &pRects[1], NULL);
+				::DrawThemeBackground(m_hTheme, dc, WP_MDIRESTOREBUTTON, this->m_bParentActive ? ((m_nBtnPressed == 1) ? RBS_PUSHED : RBS_NORMAL) : RBS_DISABLED, &pRects[1], NULL);
 			if((nBtn == -1) || (nBtn == 2))
-				::DrawThemeBackground(m_hTheme, dc, WP_MDIMINBUTTON, m_bParentActive ? ((m_nBtnPressed == 2) ? MINBS_PUSHED : MINBS_NORMAL) : MINBS_DISABLED, &pRects[2], NULL);
+				::DrawThemeBackground(m_hTheme, dc, WP_MDIMINBUTTON, this->m_bParentActive ? ((m_nBtnPressed == 2) ? MINBS_PUSHED : MINBS_NORMAL) : MINBS_DISABLED, &pRects[2], NULL);
 		}
 		else
 		{
@@ -3960,7 +3960,7 @@ public:
 	void _OpenThemeData()
 	{
 		if(RunTimeHelper::IsThemeAvailable())
-			m_hTheme = ::OpenThemeData(m_hWnd, L"Window");
+			m_hTheme = ::OpenThemeData(this->m_hWnd, L"Window");
 	}
 
 	void _CloseThemeData()

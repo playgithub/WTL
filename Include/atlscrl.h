@@ -1100,9 +1100,9 @@ public:
 			dc.SetMapMode(m_nMapMode);
 			POINT ptViewportOrg = { 0, 0 };
 			if(m_nMapMode == MM_TEXT)
-				dc.SetViewportOrg(-m_ptOffset.x, -m_ptOffset.y, &ptViewportOrg);
+				dc.SetViewportOrg(-this->m_ptOffset.x, -this->m_ptOffset.y, &ptViewportOrg);
 			else
-				dc.SetViewportOrg(-m_ptOffset.x, -m_ptOffset.y + m_sizeAll.cy, &ptViewportOrg);
+				dc.SetViewportOrg(-this->m_ptOffset.x, -this->m_ptOffset.y + this->m_sizeAll.cy, &ptViewportOrg);
 			POINT ptWindowOrg = { 0, 0 };
 			dc.SetWindowOrg(m_rectLogAll.left, m_rectLogAll.top, &ptWindowOrg);
 
@@ -1117,9 +1117,9 @@ public:
 			CPaintDC dc(pT->m_hWnd);
 			dc.SetMapMode(m_nMapMode);
 			if(m_nMapMode == MM_TEXT)
-				dc.SetViewportOrg(-m_ptOffset.x, -m_ptOffset.y);
+				dc.SetViewportOrg(-this->m_ptOffset.x, -this->m_ptOffset.y);
 			else
-				dc.SetViewportOrg(-m_ptOffset.x, -m_ptOffset.y + m_sizeAll.cy);
+				dc.SetViewportOrg(-this->m_ptOffset.x, -this->m_ptOffset.y + this->m_sizeAll.cy);
 			dc.SetWindowOrg(m_rectLogAll.left, m_rectLogAll.top);
 			pT->DoPaint(dc.m_hDC);
 		}
@@ -1200,20 +1200,20 @@ public:
 // (only those methods that are used by scroll window classes)
 	int SetScrollPos(int nBar, int nPos, BOOL bRedraw = TRUE)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
-		return FlatSB_SetScrollPos(nBar, nPos, bRedraw);
+		ATLASSERT(::IsWindow(this->m_hWnd));
+		return this->FlatSB_SetScrollPos(nBar, nPos, bRedraw);
 	}
 
 	BOOL GetScrollInfo(int nBar, LPSCROLLINFO lpScrollInfo)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
-		return FlatSB_GetScrollInfo(nBar, lpScrollInfo);
+		ATLASSERT(::IsWindow(this->m_hWnd));
+		return this->FlatSB_GetScrollInfo(nBar, lpScrollInfo);
 	}
 
 	BOOL SetScrollInfo(int nBar, LPSCROLLINFO lpScrollInfo, BOOL bRedraw = TRUE)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
-		return FlatSB_SetScrollInfo(nBar, lpScrollInfo, bRedraw);
+		ATLASSERT(::IsWindow(this->m_hWnd));
+		return this->FlatSB_SetScrollInfo(nBar, lpScrollInfo, bRedraw);
 	}
 };
 
@@ -1502,8 +1502,8 @@ public:
 
 		ATLASSERT((size.cx > 0) && (size.cy > 0));
 		
-		float fScaleH = (float)(m_sizeClient.cx  + 1) / (float)size.cx;
-		float fScaleV = (float)(m_sizeClient.cy + 1) / (float)size.cy;
+		float fScaleH = (float)(this->m_sizeClient.cx  + 1) / (float)size.cx;
+		float fScaleV = (float)(this->m_sizeClient.cy + 1) / (float)size.cy;
 		float fZoomScale = __min(fScaleH, fScaleV) * m_fZoomScale;
 		pT->Zoom(pt, fZoomScale);		
 	}
@@ -1563,11 +1563,11 @@ public:
 	// Helper functions
 	void PrepareDC(CDCHandle dc)
 	{
-		ATLASSERT((m_sizeAll.cx >= 0) && (m_sizeAll.cy >= 0));
+		ATLASSERT((this->m_sizeAll.cx >= 0) && (this->m_sizeAll.cy >= 0));
 		dc.SetMapMode(MM_ANISOTROPIC);
-		dc.SetWindowExt(m_sizeLogAll);
-		dc.SetViewportExt(m_sizeAll);
-		dc.SetViewportOrg(-m_ptOffset.x, -m_ptOffset.y);
+		dc.SetWindowExt(this->m_sizeLogAll);
+		dc.SetViewportExt(this->m_sizeAll);
+		dc.SetViewportOrg(-this->m_ptOffset.x, -this->m_ptOffset.y);
 	}
 
 	void ViewDPtoLP(LPPOINT lpPoints, int nCount = 1)
@@ -1600,8 +1600,8 @@ public:
 
 	void DeviceToClient(POINT &pt)
 	{
-		pt.x -= m_ptOffset.x;
-		pt.y -= m_ptOffset.y;
+		pt.x -= this->m_ptOffset.x;
+		pt.y -= this->m_ptOffset.y;
 	}
 
 	void CenterOnPoint(POINT pt)
@@ -1610,26 +1610,26 @@ public:
 		RECT rect = { 0 };
 		pT->GetClientRect(&rect);
 
-		int xOfs = pt.x - (rect.right / 2) + m_ptOffset.x;
+		int xOfs = pt.x - (rect.right / 2) + this->m_ptOffset.x;
 		if(xOfs < 0)
 		{
 			xOfs = 0;
 		}
 		else 
 		{
-			int xMax = __max((int)(m_sizeAll.cx - rect.right), 0);
+			int xMax = __max((int)(this->m_sizeAll.cx - rect.right), 0);
 			if(xOfs > xMax)
 				xOfs = xMax;
 		}
 		
-		int yOfs = pt.y - (rect.bottom / 2) + m_ptOffset.y;
+		int yOfs = pt.y - (rect.bottom / 2) + this->m_ptOffset.y;
 		if(yOfs < 0)
 		{
 			yOfs = 0;
 		}
 		else 
 		{
-			int yMax = __max((int)(m_sizeAll.cy - rect.bottom), 0);
+			int yMax = __max((int)(this->m_sizeAll.cy - rect.bottom), 0);
 			if(yOfs > yMax)
 				yOfs = yMax;
 		}
@@ -1647,8 +1647,8 @@ public:
 
 	BOOL PtInDevRect(POINT pt)
 	{
-		RECT rc = { 0, 0, m_sizeAll.cx, m_sizeAll.cy };
-		::OffsetRect(&rc, -m_ptOffset.x, -m_ptOffset.y);
+		RECT rc = { 0, 0, this->m_sizeAll.cx, this->m_sizeAll.cy };
+		::OffsetRect(&rc, -this->m_ptOffset.x, -this->m_ptOffset.y);
 		return ::PtInRect(&rc, pt);
 	}
 
@@ -1725,7 +1725,7 @@ public:
 		T* pT = static_cast<T*>(this);
 		ATLASSERT(::IsWindow(pT->m_hWnd));
 		ATLASSERT((m_sizeLogAll.cx >= 0) && (m_sizeLogAll.cy >= 0));
-		ATLASSERT((m_sizeAll.cx >= 0) && (m_sizeAll.cy >= 0));
+		ATLASSERT((this->m_sizeAll.cx >= 0) && (this->m_sizeAll.cy >= 0));
 
 		if(wParam != NULL)
 		{
@@ -1735,9 +1735,9 @@ public:
 			SIZE szWindowExt = { 0, 0 };
 			dc.SetWindowExt(m_sizeLogAll, &szWindowExt);
 			SIZE szViewportExt = { 0, 0 };
-			dc.SetViewportExt(m_sizeAll, &szViewportExt);
+			dc.SetViewportExt(this->m_sizeAll, &szViewportExt);
 			POINT ptViewportOrg = { 0, 0 };
-			dc.SetViewportOrg(-m_ptOffset.x, -m_ptOffset.y, &ptViewportOrg);
+			dc.SetViewportOrg(-this->m_ptOffset.x, -this->m_ptOffset.y, &ptViewportOrg);
 
 			pT->DoPaint(dc);
 
@@ -2034,7 +2034,7 @@ public:
 // Implementation - overrideable methods
 	void UpdateLayout()
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 
 		if(m_bAutoSizeClient && (m_wndClient.m_hWnd != NULL))
 		{
@@ -2046,19 +2046,19 @@ public:
 		}
 		else
 		{
-			Invalidate();
+			this->Invalidate();
 		}
 	}
 
 	void GetContainerRect(RECT& rect)
 	{
-		GetClientRect(&rect);
+		this->GetClientRect(&rect);
 
-		if(rect.right < m_sizeAll.cx)
-			rect.right = m_sizeAll.cx;
+		if(rect.right < this->m_sizeAll.cx)
+			rect.right = this->m_sizeAll.cx;
 
-		if(rect.bottom < m_sizeAll.cy)
-			rect.bottom = m_sizeAll.cy;
+		if(rect.bottom < this->m_sizeAll.cy)
+			rect.bottom = this->m_sizeAll.cy;
 	}
 };
 

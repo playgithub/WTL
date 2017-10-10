@@ -325,7 +325,7 @@ public:
 
 	HRESULT Unregister()
 	{
-		if(!IsDwmSupported())
+		if(!this->IsDwmSupported())
 			return E_NOTIMPL;
 		if(m_hThumbnail == NULL)
 			return S_FALSE;
@@ -382,7 +382,7 @@ public:
 
 	CAeroControlImpl()
 	{
-		m_PaintParams.dwFlags = BPPF_ERASE;
+		this->m_PaintParams.dwFlags = BPPF_ERASE;
 	}
 
 	static LPCWSTR GetThemeName()
@@ -414,8 +414,8 @@ public:
 
 	LRESULT OnActivate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 	{
-		if(IsThemingSupported())
-			Invalidate(FALSE);
+		if(this->IsThemingSupported())
+			this->Invalidate(FALSE);
 
 		bHandled = FALSE;
 		return 0;
@@ -439,7 +439,7 @@ public:
 // Implementation
 	LRESULT DefWindowProc()
 	{
-		const ATL::_ATL_MSG* pMsg = m_pCurrentMsg;
+		const ATL::_ATL_MSG* pMsg = this->m_pCurrentMsg;
 		LRESULT lRes = 0;
 		if(pMsg != NULL)
 			lRes = DefWindowProc(pMsg->message, pMsg->wParam, pMsg->lParam);
@@ -462,11 +462,11 @@ public:
 		T* pT = static_cast<T*>(this);
 		HDC hDCPaint = NULL;
 		RECT rcClient = { 0 };
-		GetClientRect(&rcClient);
-		m_BufferedPaint.Begin(hDC, &rcClient, m_dwFormat, &m_PaintParams, &hDCPaint);
+		this->GetClientRect(&rcClient);
+		this->m_BufferedPaint.Begin(hDC, &rcClient, this->m_dwFormat, &this->m_PaintParams, &hDCPaint);
 		ATLASSERT(hDCPaint != NULL);
 		pT->DoAeroPaint(hDCPaint, rcClient, rcPaint);
-		m_BufferedPaint.End();
+		this->m_BufferedPaint.End();
 	}
 
 	void DoPaint(HDC /*hdc*/, RECT& /*rcClient*/)
@@ -479,15 +479,15 @@ public:
 	{
 		T* pT = static_cast<T*>(this);
 		pT;   // avoid level 4 warning
-		SetThemeClassList(pT->GetThemeName());
-		if(m_lpstrThemeClassList != NULL)
-			OpenThemeData();
+		this->SetThemeClassList(pT->GetThemeName());
+		if(this->m_lpstrThemeClassList != NULL)
+			this->OpenThemeData();
 	}
 
 	void DoAeroPaint(HDC hDC, RECT& /*rcClient*/, RECT& rcPaint)
 	{
 		DefWindowProc(WM_PAINT, (WPARAM) hDC, 0L);
-		m_BufferedPaint.MakeOpaque(&rcPaint);
+		this->m_BufferedPaint.MakeOpaque(&rcPaint);
 	}
 };
 

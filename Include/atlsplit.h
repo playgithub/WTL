@@ -946,7 +946,7 @@ public:
 
 			// invert the brush pattern (looks just like frame window sizing)
 			CWindowDC dc(pT->m_hWnd);
-			CBrush brush = CDCHandle::GetHalftoneBrush();
+			CBrush brush(CDCHandle::GetHalftoneBrush());
 			if(brush.m_hBrush != NULL)
 			{
 				CBrushHandle brushOld = dc.SelectBrush(brush);
@@ -1083,7 +1083,7 @@ public:
 	LRESULT OnSize(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled)
 	{
 		if(wParam != SIZE_MINIMIZED)
-			SetSplitterRect();
+			this->SetSplitterRect();
 
 		bHandled = FALSE;
 		return 1;
