@@ -3438,17 +3438,17 @@ public:
 			CreateTemplate();
 
 		// Allocate the thunk structure here, where we can fail gracefully.
-		BOOL bRet = m_thunk.Init(NULL, NULL);
+		BOOL bRet = this->m_thunk.Init(NULL, NULL);
 		if(bRet == FALSE)
 		{
 			::SetLastError(ERROR_OUTOFMEMORY);
 			return -1;
 		}
 
-		ModuleHelper::AddCreateWndData(&m_thunk.cd, (ATL::CDialogImplBaseT< TBase >*)pT);
+		ModuleHelper::AddCreateWndData(&this->m_thunk.cd, (ATL::CDialogImplBaseT< TBase >*)pT);
 
 #ifdef _DEBUG
-		m_bModal = true;
+		this->m_bModal = true;
 #endif // _DEBUG
 
 		return ::DialogBoxIndirectParam(ModuleHelper::GetResourceInstance(), m_Template.GetTemplatePtr(), hWndParent, (DLGPROC)T::StartDialogProc, dwInitParam);
@@ -3463,21 +3463,21 @@ public:
 			CreateTemplate();
 
 		// Allocate the thunk structure here, where we can fail gracefully.
-		BOOL bRet = m_thunk.Init(NULL, NULL);
+		BOOL bRet = this->m_thunk.Init(NULL, NULL);
 		if(bRet == FALSE) 
 		{
 			::SetLastError(ERROR_OUTOFMEMORY);
 			return NULL;
 		}
 
-		ModuleHelper::AddCreateWndData(&m_thunk.cd, (ATL::CDialogImplBaseT< TBase >*)pT);
+		ModuleHelper::AddCreateWndData(&this->m_thunk.cd, (ATL::CDialogImplBaseT< TBase >*)pT);
 
 #ifdef _DEBUG
-		m_bModal = false;
+		this->m_bModal = false;
 #endif // _DEBUG
 
 		HWND hWnd = ::CreateDialogIndirectParam(ModuleHelper::GetResourceInstance(), (LPCDLGTEMPLATE)m_Template.GetTemplatePtr(), hWndParent, (DLGPROC)T::StartDialogProc, dwInitParam);
-		ATLASSERT(m_hWnd == hWnd);
+		ATLASSERT(this->m_hWnd == hWnd);
 
 		return hWnd;
 	}
@@ -3898,33 +3898,33 @@ public:
 // Note: Calling these after the sheet is created gives unpredictable results
 	int GetPageCount() const
 	{
-		if(m_hWnd == NULL)   // not created yet
+		if(this->m_hWnd == NULL)   // not created yet
 			return m_arrPages.GetSize();
 		return TBase::GetPageCount();
 	}
 
 	int GetActiveIndex() const
 	{
-		if(m_hWnd == NULL)   // not created yet
+		if(this->m_hWnd == NULL)   // not created yet
 			return m_psh.nStartPage;
 		return TBase::GetActiveIndex();
 	}
 
 	HPROPSHEETPAGE GetPage(int nPageIndex) const
 	{
-		ATLASSERT(m_hWnd == NULL);   // can't do this after it's created
+		ATLASSERT(this->m_hWnd == NULL);   // can't do this after it's created
 		return (HPROPSHEETPAGE)m_arrPages[nPageIndex];
 	}
 
 	int GetPageIndex(HPROPSHEETPAGE hPage) const
 	{
-		ATLASSERT(m_hWnd == NULL);   // can't do this after it's created
+		ATLASSERT(this->m_hWnd == NULL);   // can't do this after it's created
 		return m_arrPages.Find((HPROPSHEETPAGE&)hPage);
 	}
 
 	BOOL SetActivePage(int nPageIndex)
 	{
-		if(m_hWnd == NULL)   // not created yet
+		if(this->m_hWnd == NULL)   // not created yet
 		{
 			ATLASSERT((nPageIndex >= 0) && (nPageIndex < m_arrPages.GetSize()));
 			m_psh.nStartPage = nPageIndex;
@@ -3936,7 +3936,7 @@ public:
 	BOOL SetActivePage(HPROPSHEETPAGE hPage)
 	{
 		ATLASSERT(hPage != NULL);
-		if (m_hWnd == NULL)   // not created yet
+		if(this->m_hWnd == NULL)   // not created yet
 		{
 			int nPageIndex = GetPageIndex(hPage);
 			if(nPageIndex == -1)
@@ -3953,7 +3953,7 @@ public:
 		ATLASSERT((nStyle & ~PSH_PROPTITLE) == 0);   // only PSH_PROPTITLE is valid
 		ATLASSERT(lpszText != NULL);
 
-		if(m_hWnd == NULL)
+		if(this->m_hWnd == NULL)
 		{
 			// set internal state
 			m_psh.pszCaption = lpszText;   // must exist until sheet is created
@@ -4004,7 +4004,7 @@ public:
 	BOOL RemovePage(HPROPSHEETPAGE hPage)
 	{
 		ATLASSERT(hPage != NULL);
-		if (m_hWnd == NULL)   // not created yet
+		if(this->m_hWnd == NULL)   // not created yet
 		{
 			int nPage = GetPageIndex(hPage);
 			if(nPage == -1)
@@ -4019,7 +4019,7 @@ public:
 	BOOL RemovePage(int nPageIndex)
 	{
 		BOOL bRet = TRUE;
-		if(m_hWnd != NULL)
+		if(this->m_hWnd != NULL)
 			TBase::RemovePage(nPageIndex);
 		else	// sheet not created yet, use internal data
 			bRet = m_arrPages.RemoveAt(nPageIndex);
@@ -4037,7 +4037,7 @@ public:
 
 	void SetHeader(HBITMAP hbmHeader)
 	{
-		ATLASSERT(m_hWnd == NULL);   // can't do this after it's created
+		ATLASSERT(this->m_hWnd == NULL);   // can't do this after it's created
 
 		m_psh.dwFlags &= ~PSH_WIZARD;
 		m_psh.dwFlags |= (PSH_HEADER | PSH_USEHBMHEADER | PSH_WIZARD97);
@@ -4052,7 +4052,7 @@ public:
 		m_psh.dwFlags |= PSH_WATERMARK | PSH_WIZARD97;
 		m_psh.pszbmWatermark = szbmWatermark;
 
-		if (hplWatermark != NULL)
+		if(hplWatermark != NULL)
 		{
 			m_psh.dwFlags |= PSH_USEHPLWATERMARK;
 			m_psh.hplWatermark = hplWatermark;
@@ -4061,13 +4061,13 @@ public:
 
 	void SetWatermark(HBITMAP hbmWatermark, HPALETTE hplWatermark = NULL)
 	{
-		ATLASSERT(m_hWnd == NULL);   // can't do this after it's created
+		ATLASSERT(this->m_hWnd == NULL);   // can't do this after it's created
 
 		m_psh.dwFlags &= ~PSH_WIZARD;
 		m_psh.dwFlags |= (PSH_WATERMARK | PSH_USEHBMWATERMARK | PSH_WIZARD97);
 		m_psh.hbmWatermark = hbmWatermark;
 
-		if (hplWatermark != NULL)
+		if(hplWatermark != NULL)
 		{
 			m_psh.dwFlags |= PSH_USEHPLWATERMARK;
 			m_psh.hplWatermark = hplWatermark;
@@ -4076,8 +4076,8 @@ public:
 
 	void StretchWatermark(bool bStretchWatermark)
 	{
-		ATLASSERT(m_hWnd == NULL);   // can't do this after it's created
-		if (bStretchWatermark)
+		ATLASSERT(this->m_hWnd == NULL);   // can't do this after it's created
+		if(bStretchWatermark)
 			m_psh.dwFlags |= PSH_STRETCHWATERMARK;
 		else
 			m_psh.dwFlags &= ~PSH_STRETCHWATERMARK;
