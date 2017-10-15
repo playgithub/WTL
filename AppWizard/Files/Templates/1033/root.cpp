@@ -327,7 +327,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 [!if WTL_APPTYPE_DLG_MODAL]
 		{
 			[!output WTL_MAINDLG_CLASS] dlgMain;
-			nRet = dlgMain.DoModal();
+			nRet = (int)dlgMain.DoModal();
 		}
 [!else]
 [!if WTL_RIBBON_SINGLE_UI]
@@ -358,7 +358,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	// BLOCK: Run application
 	{
 		[!output WTL_MAINDLG_CLASS] dlgMain;
-		nRet = dlgMain.DoModal();
+		nRet = (int)dlgMain.DoModal();
 	}
 [!else]
 [!if WTL_APPTYPE_MTSDI]
