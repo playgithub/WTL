@@ -713,7 +713,7 @@ public: \
 	if (uMsg == WM_KEYDOWN) \
 	{ \
 		SetMsgHandled(TRUE); \
-		func((TCHAR)wParam, (UINT)lParam & 0xFFFF, (UINT)((lParam & 0xFFFF0000) >> 16)); \
+		func((UINT)wParam, (UINT)lParam & 0xFFFF, (UINT)((lParam & 0xFFFF0000) >> 16)); \
 		lResult = 0; \
 		if(IsMsgHandled()) \
 			return TRUE; \
@@ -724,13 +724,13 @@ public: \
 	if (uMsg == WM_KEYUP) \
 	{ \
 		SetMsgHandled(TRUE); \
-		func((TCHAR)wParam, (UINT)lParam & 0xFFFF, (UINT)((lParam & 0xFFFF0000) >> 16)); \
+		func((UINT)wParam, (UINT)lParam & 0xFFFF, (UINT)((lParam & 0xFFFF0000) >> 16)); \
 		lResult = 0; \
 		if(IsMsgHandled()) \
 			return TRUE; \
 	}
 
-// void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
+// void OnChar(TCHAR chChar, UINT nRepCnt, UINT nFlags)
 #define MSG_WM_CHAR(func) \
 	if (uMsg == WM_CHAR) \
 	{ \
@@ -741,7 +741,7 @@ public: \
 			return TRUE; \
 	}
 
-// void OnDeadChar(UINT nChar, UINT nRepCnt, UINT nFlags)
+// void OnDeadChar(TCHAR chChar, UINT nRepCnt, UINT nFlags)
 #define MSG_WM_DEADCHAR(func) \
 	if (uMsg == WM_DEADCHAR) \
 	{ \
@@ -757,7 +757,7 @@ public: \
 	if (uMsg == WM_SYSKEYDOWN) \
 	{ \
 		SetMsgHandled(TRUE); \
-		func((TCHAR)wParam, (UINT)lParam & 0xFFFF, (UINT)((lParam & 0xFFFF0000) >> 16)); \
+		func((UINT)wParam, (UINT)lParam & 0xFFFF, (UINT)((lParam & 0xFFFF0000) >> 16)); \
 		lResult = 0; \
 		if(IsMsgHandled()) \
 			return TRUE; \
@@ -768,13 +768,13 @@ public: \
 	if (uMsg == WM_SYSKEYUP) \
 	{ \
 		SetMsgHandled(TRUE); \
-		func((TCHAR)wParam, (UINT)lParam & 0xFFFF, (UINT)((lParam & 0xFFFF0000) >> 16)); \
+		func((UINT)wParam, (UINT)lParam & 0xFFFF, (UINT)((lParam & 0xFFFF0000) >> 16)); \
 		lResult = 0; \
 		if(IsMsgHandled()) \
 			return TRUE; \
 	}
 
-// void OnSysChar(UINT nChar, UINT nRepCnt, UINT nFlags)
+// void OnSysChar(TCHAR chChar, UINT nRepCnt, UINT nFlags)
 #define MSG_WM_SYSCHAR(func) \
 	if (uMsg == WM_SYSCHAR) \
 	{ \
@@ -785,7 +785,7 @@ public: \
 			return TRUE; \
 	}
 
-// void OnSysDeadChar(UINT nChar, UINT nRepCnt, UINT nFlags)
+// void OnSysDeadChar(TCHAR chChar, UINT nRepCnt, UINT nFlags)
 #define MSG_WM_SYSDEADCHAR(func) \
 	if (uMsg == WM_SYSDEADCHAR) \
 	{ \
@@ -1609,7 +1609,7 @@ public: \
 	}
 
 ///////////////////////////////////////////////////////////////////////////////
-// New NT4 & NT5 messages
+// Newer Windows messages
 
 // void OnMouseHover(WPARAM wParam, CPoint ptPos)
 #define MSG_WM_MOUSEHOVER(func) \
@@ -1702,7 +1702,7 @@ public: \
 	{ \
 		SetMsgHandled(TRUE); \
 		func(GET_XBUTTON_WPARAM(wParam), GET_NCHITTEST_WPARAM(wParam), ::CPoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam))); \
-		lResult = 0; \
+		lResult = (LRESULT)TRUE; \
 		if(IsMsgHandled()) \
 			return TRUE; \
 	}
@@ -1713,7 +1713,7 @@ public: \
 	{ \
 		SetMsgHandled(TRUE); \
 		func(GET_XBUTTON_WPARAM(wParam), GET_NCHITTEST_WPARAM(wParam), ::CPoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam))); \
-		lResult = 0; \
+		lResult = (LRESULT)TRUE; \
 		if(IsMsgHandled()) \
 			return TRUE; \
 	}
@@ -1724,7 +1724,7 @@ public: \
 	{ \
 		SetMsgHandled(TRUE); \
 		func(GET_XBUTTON_WPARAM(wParam), GET_NCHITTEST_WPARAM(wParam), ::CPoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam))); \
-		lResult = 0; \
+		lResult = (LRESULT)TRUE; \
 		if(IsMsgHandled()) \
 			return TRUE; \
 	}
@@ -1735,7 +1735,7 @@ public: \
 	{ \
 		SetMsgHandled(TRUE); \
 		func(GET_XBUTTON_WPARAM(wParam), GET_KEYSTATE_WPARAM(wParam), ::CPoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam))); \
-		lResult = 0; \
+		lResult = (LRESULT)TRUE; \
 		if(IsMsgHandled()) \
 			return TRUE; \
 	}
@@ -1746,7 +1746,7 @@ public: \
 	{ \
 		SetMsgHandled(TRUE); \
 		func(GET_XBUTTON_WPARAM(wParam), GET_KEYSTATE_WPARAM(wParam), ::CPoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam))); \
-		lResult = 0; \
+		lResult = (LRESULT)TRUE; \
 		if(IsMsgHandled()) \
 			return TRUE; \
 	}
@@ -1757,7 +1757,7 @@ public: \
 	{ \
 		SetMsgHandled(TRUE); \
 		func(GET_XBUTTON_WPARAM(wParam), GET_KEYSTATE_WPARAM(wParam), ::CPoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam))); \
-		lResult = 0; \
+		lResult = (LRESULT)TRUE; \
 		if(IsMsgHandled()) \
 			return TRUE; \
 	}
@@ -1853,6 +1853,39 @@ public: \
 	}
 
 #endif // (_WIN32_WINNT >= 0x0600)
+
+#if (WINVER >= 0x0601)
+
+// void OnGesture(ULONGLONG ullArguments, HGESTUREINFO hGestureInfo)
+#define MSG_WM_GESTURE(func) \
+	if (uMsg == WM_GESTURE) \
+	{ \
+		SetMsgHandled(TRUE); \
+		func((ULONGLONG)wParam, (HGESTUREINFO)lParam); \
+		lResult = 0; \
+		if(IsMsgHandled()) \
+			return TRUE; \
+	}
+
+// void OnGestureNotify(PGESTURENOTIFYSTRUCT pGestureNotifyStruct)
+#define MSG_WM_GESTURENOTIFY(func) \
+	if (uMsg == WM_GESTURENOTIFY) \
+	{ \
+		func((PGESTURENOTIFYSTRUCT)lParam); \
+	}
+
+// void OnDpiChanged(UINT nDpiX, UINT nDpiY, PRECT pRect)
+#define MSG_WM_DPICHANGED(func) \
+	if (uMsg == WM_DPICHANGED) \
+	{ \
+		SetMsgHandled(TRUE); \
+		func((UINT)LOWORD(wParam), (UINT)HIWORD(wParam), (PRECT)lParam); \
+		lResult = 0; \
+		if(IsMsgHandled()) \
+			return TRUE; \
+	}
+
+#endif // (WINVER >= 0x0601)
 
 ///////////////////////////////////////////////////////////////////////////////
 // ATL defined messages
@@ -2372,6 +2405,17 @@ public: \
 	{ \
 		SetMsgHandled(TRUE); \
 		lResult = func((LPNMHDR)lParam); \
+		if(IsMsgHandled()) \
+			return TRUE; \
+	}
+
+// void OnAppCommandHandler(UINT uDevice, DWORD dwKeys, CWindow wndFocus)
+#define APPCOMMAND_HANDLER_EX(cmd, func) \
+	if((uMsg == WM_APPCOMMAND) && (cmd == GET_APPCOMMAND_LPARAM(lParam))) \
+	{ \
+		SetMsgHandled(TRUE); \
+		func(GET_DEVICE_LPARAM(lParam), GET_KEYSTATE_LPARAM(lParam), (HWND)wParam); \
+		lResult = TRUE; \
 		if(IsMsgHandled()) \
 			return TRUE; \
 	}
