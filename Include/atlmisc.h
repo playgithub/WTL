@@ -15,6 +15,11 @@
 	#error atlmisc.h requires atlapp.h to be included first
 #endif
 
+#ifndef _WTL_NO_COMPATIBILITY_INCLUDES
+  #include <atlstr.h>
+  #include <atltypes.h>
+#endif // _WTL_NO_COMPATIBILITY_INCLUDES
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Classes in this file:
