@@ -103,11 +103,8 @@ function OnFinish(selProj, selObj)
 		// Set view symbols
 		if(wizard.FindSymbol("WTL_USE_VIEW"))
 		{
-			var strViewFile = strProjectName + "View";
-			wizard.AddSymbol("WTL_VIEW_FILE", strViewFile);
-
-			var strViewClass = "C" + wizard.FindSymbol("NICE_SAFE_PROJECT_NAME") + "View";
-			wizard.AddSymbol("WTL_VIEW_CLASS", strViewClass);
+			wizard.AddSymbol("WTL_VIEW_FILE", "View");
+			wizard.AddSymbol("WTL_VIEW_CLASS", "CView");
 
 			wizard.AddSymbol("WTL_VIEWTYPE_GENERIC", false);
 			var strView = wizard.FindSymbol("WTL_COMBO_VIEW_TYPE");
@@ -516,11 +513,11 @@ function GetTargetName(strName, strProjectName)
 		}
 		else if(strName == 'view.h')
 		{
-			strTarget = strProjectName + 'View.h';
+			strTarget = 'View.h';
 		}
 		else if(strName == 'view.cpp')
 		{
-			strTarget = strProjectName + 'View.cpp';
+			strTarget = 'View.cpp';
 		}
 		else if(strName == 'toolbar.bmp')
 		{
