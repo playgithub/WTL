@@ -27,9 +27,9 @@ html, body {
 
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" id="AutoNumber3">
   <tr>
-    <td class="style3">
+    <td>
 	<p style="text-align: left"><font face="Arial"><b>Windows Template Library - WTL 10</b></font><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-	version 10.0.0000 (2017-09-20)</font></td>
+	version 10.0.7292 (2017-10-19)</font></td>
   </tr>
   <tr>
     <td><hr></td>
@@ -66,12 +66,8 @@ html, body {
 	<li><font face="Arial" size="2"><a href="#Packing List">Packing List</a></font></li>
 	<li><font face="Arial" size="2"><a href="#Class Overview">Class Overview</a></font></li>
 	<li><font face="Arial" size="2"><a href="#ATL/WTL AppWizard">ATL/WTL AppWizard</a></font></li>
-	<li><a href="#Support for Windows CE"><font face="Arial" size="2">S</font></a><font face="Arial" size="2"><a href="#Support for Windows CE">upport 
-  for Windows CE</a></font></li>
-	<li><font face="Arial" size="2">
-	<a href="#Support for Visual C++ Express">Support for Visual C++ 
-	Express</a></font></li>
-	<li><font face="Arial" size="2"><a href="#Notes">Notes</a></font></li>
+	<li><font face="Arial" size="2"><a href="#Changes Between WTL 10 and 9.1">Changes Between WTL 
+	10 and 9.1</a></font></li>
 	<li><font face="Arial" size="2"><a href="#Changes Between WTL 9.1 and 9.0">Changes Between WTL 
 	9.1 and 9.0</a></font></li>
 	<li><font face="Arial" size="2"><a href="#Changes Between WTL 9.0 and 8.0">Changes Between WTL 
@@ -87,6 +83,7 @@ html, body {
 </ul>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in>&nbsp;</p>
+
 <p style=margin:0in><font face="Arial">
 <b><a name="Introduction"></a>Introduction</b></font></p>
 <p style=margin:0in>&nbsp;</p>
@@ -112,17 +109,17 @@ and speed to SDK programs, while presenting a more logical, object oriented
 model to a programmer.</font></p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in>&nbsp;</p>
+
 <p style=margin:0in><font face="Arial">
 <b><a name="Features and Installation"></a>Features and Installation</b></font></p>
 <p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2">This is the eigth public release 
-of WTL, after WTL 3.0, 3.1, 7.0, 7.1, 7.5, 8.0, and 9.0. This version is released 
+<p style=margin:0in><font face="Arial" size="2">This is the ningth public release 
+of WTL, after WTL 3.0, 3.1, 7.0, 7.1, 7.5, 8.0, 9.0, and 9.1. This version is released 
 under the Microsoft Public License, enabling developers from the WTL community to 
 contribute to the library.</font></p>
 <p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2">WTL classes can be used with either VC++ 6.0, VC++ .NET 2002 or 2003, VC++ 2005 or 2008 or 2010 or 2012 or 2013 or 2015, 
-or EVC++ 4.0 or 3.0. AppWizard for Visual Studio is 
-included.</font></p>
+<p style=margin:0in><font face="Arial" size="2">WTL classes can be used with either VC++ 2005 or 2008 or 2010 or 2012 or 2013 or 2015 or 2017, 
+. AppWizard for Visual Studio is included.</font></p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><font face="Arial" size="2">The WTL classes are provided in 
 header files located in the include directory. The only header files that must 
@@ -137,26 +134,19 @@ directory</b> to the list of include directories in VC++, so that the compiler
 can find them when you include them in your projects..</font></p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><font face="Arial" size="2">Setup programs for the AppWizard are provided. After executing the setup script, ATL/WTL AppWizard will appear in the list of AppWizards when you select File.New.Project 
-in VC++ IDE. The file AppWiz\setup.js is the setup script for all supported versions of Visual Studio, while 
-AppWizards for Windows CE have separate scripts for VS2005 and VS2008 SmartDevice projects.</font></p>
+in VC++ IDE. The file AppWiz\setup.js is the setup script for all supported versions of Visual Studio.</font></p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><font face="Arial" size="2">To manually install AppWizard 
-for VC++ .NET 2002/2003, copy all WTLAppWiz.* files from AppWiz\Files to VC++ .NET 
-projects directory, %VC7DIR%\Vc7\vcprojects, where %VC7DIR% is the directory 
-where VC++ .NET 2002/2003 is installed. After that,&nbsp;open WTLAppWiz.vsz and modify the 
-like that contains ABSOLUTE_PATH to contain %WTLDIR%\AppWiz\Files, where 
+for VC++ 2005, copy all WTLAppWiz.* files from AppWiz\Files to VC++ 
+projects directory, %VCDIR%\VC\vcprojects, where %VCDIR% is the directory 
+where VC++ 2005 is installed. After that,&nbsp;open WTL10AppWiz.vsz and modify the 
+line that contains ABSOLUTE_PATH to contain %WTLDIR%\AppWiz\Files, where 
 %WTLDIR% is the directory where WTL files are.</font></p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><font face="Arial" size="2">Platform support and 
 requirements:</font></p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; Compiler/IDE/ATL:</font></p>
-<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-Visual C++ 6.0&nbsp;&nbsp; (ATL 3.0)</font></p>
-<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-Visual C++.NET 2002&nbsp;&nbsp; (ATL 7.0)</font></p>
-<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-Visual C++.NET 2003&nbsp;&nbsp; (ATL 7.1)</font></p>
 <p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 Visual C++ 2005&nbsp;&nbsp; (ATL 8.0)</font></p>
 <p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -169,35 +159,16 @@ Visual C++ 2012&nbsp;&nbsp; (ATL 11.0)</font></p>
 Visual C++ 2013&nbsp;&nbsp; (ATL 12.0)</font></p>
 <p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 Visual C++ 2015&nbsp;&nbsp; (ATL 14.0)</font></p>
+<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Visual C++ 2017&nbsp;&nbsp; (ATL 14.0)</font></p>
 <p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; SDK 
+<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; Windows SDK 
 (optional):</font></p>
 <p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-Any Platform SDK from January 2000 release up to the latest Windows SDK</font></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; Windows CE 
-development:</font></p>
-<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-eMbedded Visual C++ 3.0 - Pocket PC, Pocket PC 2002</font></p>
-<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-eMbedded Visual C++ 4.0 - STANDARDSDK_410, Pocket PC 2003, Smartphone 2003,
-</font></p>
-<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-STANDARDSDK_500, Pocket PC 2003 SE, Smartphone 2003 SE</font></p>
-<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-Visual C++ 2005 - Pocket PC 2003 SE, Smartphone 2003 SE, STANDARDSDK_500,</font></p>
-<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Windows Mobile 5.0 (Pocket PC and Smartphone),<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-Windows Mobile 6.0 (Standard and Professional)</font></p>
-<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-Visual C++ 2008 - Pocket PC 2003 SE, Smartphone 2003 SE, STANDARDSDK_500,</font></p>
-<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Windows Mobile 5.0 (Pocket PC and Smartphone),<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-Windows Mobile 6.0 (Standard and Professional)</font></p>
+Any Windows SDK from 6.0 up to the latest Windows SDK</font></p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in>&nbsp;</p>
+
 <p style=margin:0in><font face="Arial">
 <b><a name="Packing List"></a>Packing List</b></font></p>
 <p style=margin:0in>&nbsp;</p>
@@ -288,11 +259,6 @@ Windows Mobile 6.0 (Standard and Professional)</font></p>
     <td width="358"><font face="Arial" size="2">standard resource IDs</font></td>
   </tr>
   <tr>
-    <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; atlresce.h</font></td>
-    <td width="358"><font face="Arial" size="2">standard resource IDs for 
-    Windows CE</font></td>
-  </tr>
-  <tr>
     <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; atlribbon.h</font></td>
     <td width="358"><font face="Arial" size="2">RibbonUI support</font></td>
   </tr>
@@ -311,11 +277,6 @@ Windows Mobile 6.0 (Standard and Professional)</font></p>
   <tr>
     <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; atluser.h</font></td>
     <td width="358"><font face="Arial" size="2">menu class, USER object classes</font></td>
-  </tr>
-  <tr>
-    <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; atlwince.h</font></td>
-    <td width="358"><font face="Arial" size="2">specific support for Windows CE 
-	Mobile platforms</font></td>
   </tr>
   <tr>
     <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; atlwinx.h</font></td>
@@ -347,11 +308,6 @@ Windows Mobile 6.0 (Standard and Professional)</font></p>
     sample</font></td>
   </tr>
 	<tr>
-    <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; ImageView\...</font></td>
-    <td width="358"><font face="Arial" size="2">Full-featured PPC frame-view 
-	application</font></td>
-  </tr>
-	<tr>
     <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; MDIDocVw\...</font></td>
     <td width="358"><font face="Arial" size="2">WTL version of the MDI sample</font></td>
   </tr>
@@ -360,22 +316,12 @@ Windows Mobile 6.0 (Standard and Professional)</font></p>
     <td width="358"><font face="Arial" size="2">In-memory dialog sample</font></td>
   </tr>
 	<tr>
-    <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; MiniPie\...</font></td>
-    <td width="358"><font face="Arial" size="2">port of the SDK sample for 
-	Mobile devices</font></td>
-  </tr>
-	<tr>
     <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; MTPad\...</font></td>
     <td width="358"><font face="Arial" size="2">multithreaded notepad sample</font></td>
   </tr>
 	<tr>
     <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; MTPad7\...</font></td>
     <td width="358"><font face="Arial" size="2">MTPad with RibbonUI</font></td>
-  </tr>
-  <tr>
-    <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; SPControls\...</font></td>
-    <td width="358"><font face="Arial" size="2">Barebone SmartPhone dialog 
-	application</font></td>
   </tr>
   <tr>
     <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; TabBrowser\...</font></td>
@@ -406,49 +352,10 @@ Windows Mobile 6.0 (Standard and Professional)</font></p>
     <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; Files\...</font></td>
     <td width="358"><font face="Arial" size="2">WTL AppWizard files</font></td>
   </tr>
-  <tr>
-    <td width="494" colspan="2">&nbsp;</td>
-  </tr>
-	<tr>
-    <td width="494" colspan="2"><font face="Arial" size="2">AppWizCE\</font></td>
-  </tr>
-	<tr>
-    <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; setup80.js</font></td>
-    <td width="358"><font face="Arial" size="2">AppWizard setup program for VC++ 
-    2005</font></td>
-  </tr>
-	<tr>
-    <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; setup90.js</font></td>
-    <td width="358"><font face="Arial" size="2">AppWizard setup program for VC++ 
-    2008</font></td>
-  </tr>
-	<tr>
-    <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; Files\...</font></td>
-    <td width="358"><font face="Arial" size="2">WTL AppWizard CE files</font></td>
-  </tr>
-  <tr>
-    <td width="494" colspan="2">&nbsp;</td>
-  </tr>
-  <tr>
-    <td width="494" colspan="2"><font face="Arial" size="2">AppWizMobile\</font></td>
-  </tr>
-  <tr>
-    <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; setup80.js</font></td>
-    <td width="358"><font face="Arial" size="2">AppWizard Mobile setup program for VC++ 
-    2005</font></td>
-  </tr>
-  <tr>
-    <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; setup90.js</font></td>
-    <td width="358"><font face="Arial" size="2">AppWizard Mobile setup program for VC++ 
-    2008</font></td>
-  </tr>
-  <tr>
-    <td width="136"><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; Files\...</font></td>
-    <td width="358"><font face="Arial" size="2">WTL AppWizard Mobile files</font></td>
-  </tr>
   </table>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in>&nbsp;</p>
+
 <p style=margin:0in><font face="Arial">
 <b><a name="Class Overview"></a>Class Overview</b></font></p>
 <p style=margin:0in>&nbsp;</p>
@@ -780,19 +687,6 @@ Windows Mobile 6.0 (Standard and Professional)</font></p>
     <td width="221"><b><font face="Arial" size="2">CCustomDraw</font></b></td>
     <td width="115"><font face="Arial" size="2">impl mi class</font></td>
     <td width="255"><font face="Arial" size="2">custom draw handling support</font></td>
-  </tr>
-  <tr>
-    <td colspan="3" width="593"><font face="Arial" size="2"><br>Windows CE controls</font></td>
-  </tr>
-  <tr>
-    <td width="221"><b><font face="Arial" size="2">CCECommandBarCtrl</font></b></td>
-    <td width="115"><font face="Arial" size="2">client</font></td>
-    <td width="255"><font face="Arial" size="2">command bar ctrl</font></td>
-  </tr>
-  <tr>
-    <td width="221"><b><font face="Arial" size="2">CCECommandBandsCtrl</font></b></td>
-    <td width="115"><font face="Arial" size="2">client</font></td>
-    <td width="255"><font face="Arial" size="2">command bands ctrl</font></td>
   </tr>
   <tr>
     <td colspan="3" width="593"><font face="Arial" size="2"><br>Property sheet &amp; page</font></td>
@@ -1421,26 +1315,6 @@ Windows Mobile 6.0 (Standard and Professional)</font></p>
     <td colspan="3" width="593"><font face="Arial" size="2"><br>Miscellaneous</font></td>
   </tr>
 	<tr>
-    <td width="221"><b><font face="Arial" size="2">CSize</font></b></td>
-    <td width="115"><font face="Arial" size="2">as-is</font></td>
-    <td width="255"><font face="Arial" size="2">WTL port of MFC's CSize</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CPoint</font></b></td>
-    <td width="115"><font face="Arial" size="2">as-is</font></td>
-    <td width="255"><font face="Arial" size="2">WTL port of MFC's CPoint</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CRect</font></b></td>
-    <td width="115"><font face="Arial" size="2">as-is</font></td>
-    <td width="255"><font face="Arial" size="2">WTL port of MFC's CRect</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CString</font></b></td>
-    <td width="115"><font face="Arial" size="2">as-is</font></td>
-    <td width="255"><font face="Arial" size="2">WTL port of MFC's CString</font></td>
-  </tr>
-	<tr>
     <td width="221"><b><font face="Arial" size="2">CWinDataExchange</font></b></td>
     <td width="115"><font face="Arial" size="2">mi</font></td>
     <td width="255"><font face="Arial" size="2">data exchange for controls</font></td>
@@ -1577,157 +1451,10 @@ Windows Mobile 6.0 (Standard and Professional)</font></p>
     <td width="115"><font face="Arial" size="2">as-is</font></td>
     <td width="255"><font face="Arial" size="2">Ribbon persistance support</font></td>
   </tr>
-  <tr>
-    <td colspan="3" width="593"><font face="Arial" size="2"><br>Windows CE support</font></td>
-  </tr>
-  <tr>
-    <td width="221"><b><font face="Arial" size="2">CStdDialogBase</font></b></td>
-    <td width="115"><font face="Arial" size="2">base</font></td>
-    <td width="255"><font face="Arial" size="2">standard dialog base class</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CStdDialogImpl</font></b></td>
-    <td width="115"><font face="Arial" size="2">impl</font></td>
-    <td width="255"><font face="Arial" size="2">standard dialog implementation</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CStdSimpleDialog</font></b></td>
-    <td width="115"><font face="Arial" size="2">as-is</font></td>
-    <td width="255"><font face="Arial" size="2">standard simple dialog</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CStdDialogResizeBase</font></b></td>
-    <td width="115"><font face="Arial" size="2">base</font></td>
-    <td width="255"><font face="Arial" size="2">orientation aware standard dialog base class</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CStdDialogResizeImpl</font></b></td>
-    <td width="115"><font face="Arial" size="2">impl</font></td>
-    <td width="255"><font face="Arial" size="2">orientation aware standard dialog implementation</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CStdSimpleDialogResizeImpl</font></b></td>
-    <td width="115"><font face="Arial" size="2">impl</font></td>
-    <td width="255"><font face="Arial" size="2">standard resizing simple dialog implementation</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CStdOrientedDialogBase</font></b></td>
-    <td width="115"><font face="Arial" size="2">base</font></td>
-    <td width="255"><font face="Arial" size="2">oriented dialog base class</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CStdOrientedDialogImpl</font></b></td>
-    <td width="115"><font face="Arial" size="2">impl</font></td>
-    <td width="255"><font face="Arial" size="2">oriented dialog implementation</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CStdSimpleOrientedDialog</font></b></td>
-    <td width="115"><font face="Arial" size="2">as-is</font></td>
-    <td width="255"><font face="Arial" size="2">standard simple oriented dialog</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CAppInfoBase</font></b></td>
-    <td width="115"><font face="Arial" size="2">base</font></td>
-    <td width="255"><font face="Arial" size="2">application state save/restore to registry</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CAppInfoT</font></b></td>
-    <td width="115"><font face="Arial" size="2">impl</font></td>
-    <td width="255"><font face="Arial" size="2">CAppInfoBase constructed from a CAppWindow&lt;T&gt;</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CAppWindow&lt;&gt;</font></b></td>
-    <td width="115"><font face="Arial" size="2">mi</font></td>
-    <td width="255"><font face="Arial" size="2">PPC/SmartPhone well-behaved application window class</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CAppDialog</font></b></td>
-    <td width="115"><font face="Arial" size="2">mi</font></td>
-    <td width="255"><font face="Arial" size="2">PPC/SmartPhone well-behaved application non-modal dialog class</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CAppStdDialogImpl</font></b></td>
-    <td width="115"><font face="Arial" size="2">impl</font></td>
-    <td width="255"><font face="Arial" size="2">PPC/SmartPhone implementation of non-modal standard dialog application</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CFullScreenFrame</font></b></td>
-    <td width="115"><font face="Arial" size="2">impl</font></td>
-    <td width="255"><font face="Arial" size="2">Full screen frame class</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CZoomScrollImpl</font></b></td>
-    <td width="115"><font face="Arial" size="2">mi</font></td>
-    <td width="255"><font face="Arial" size="2">WinCE zooming implementation</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CHtmlCtrl</font></b></td>
-    <td width="115"><font face="Arial" size="2">client</font></td>
-    <td width="255"><font face="Arial" size="2">HTML control</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CRichInkCtrl</font></b></td>
-    <td width="115"><font face="Arial" size="2">client</font></td>
-    <td width="255"><font face="Arial" size="2">RichInk control</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CInkXCtrl</font></b></td>
-    <td width="115"><font face="Arial" size="2">client</font></td>
-    <td width="255"><font face="Arial" size="2">InkX control</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CVoiceRecorderCtrl</font></b></td>
-    <td width="115"><font face="Arial" size="2">client</font></td>
-    <td width="255"><font face="Arial" size="2">VoiceRecorder control</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CDocListCtrl</font></b></td>
-    <td width="115"><font face="Arial" size="2">client</font></td>
-    <td width="255"><font face="Arial" size="2">DocList control</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CCapEdit</font></b></td>
-    <td width="115"><font face="Arial" size="2">client</font></td>
-    <td width="255"><font face="Arial" size="2">CapEdit control</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CTTStatic</font></b></td>
-    <td width="115"><font face="Arial" size="2">client</font></td>
-    <td width="255"><font face="Arial" size="2">TT Static control</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CTTButton</font></b></td>
-    <td width="115"><font face="Arial" size="2">client</font></td>
-    <td width="255"><font face="Arial" size="2">TT Button control</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CSpinCtrl</font></b></td>
-    <td width="115"><font face="Arial" size="2">client</font></td>
-    <td width="255"><font face="Arial" size="2">Spin control</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CSpinListBox</font></b></td>
-    <td width="115"><font face="Arial" size="2">client</font></td>
-    <td width="255"><font face="Arial" size="2">Spin List Box control</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CExpandListBox</font></b></td>
-    <td width="115"><font face="Arial" size="2">client</font></td>
-    <td width="255"><font face="Arial" size="2">Expand List Box control</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CExpandEdit</font></b></td>
-    <td width="115"><font face="Arial" size="2">client</font></td>
-    <td width="255"><font face="Arial" size="2">Expand Edit control</font></td>
-  </tr>
-	<tr>
-    <td width="221"><b><font face="Arial" size="2">CExpandCapEdit</font></b></td>
-    <td width="115"><font face="Arial" size="2">client</font></td>
-    <td width="255"><font face="Arial" size="2">Expand CapEdit control</font></td>
-  </tr>
 </table>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in>&nbsp;</p>
+
 <p style=margin:0in><font face="Arial">
 <b><a name="ATL/WTL AppWizard"></a>ATL/WTL AppWizard</b></font></p>
 <p style=margin:0in>&nbsp;</p>
@@ -1752,158 +1479,21 @@ WTL application. It has options to create code for different application types a
 </ul>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in><font face="Arial" size="2">ATL/WTL AppWizard supports VC++ 
-.NET 2002 and 2003, VC++ 2005, 2008, 2010, 2012, 2013, and 2015.</font></p>
+2005, 2008, 2010, 2012, 2013, 2015, and 2017.</font></p>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><b><font face="Arial">
-<a name="Support for Windows CE"></a>Support for 
-Windows CE</font></b></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2">WTL fully supports building 
-projects for the Windows CE platforms. The initial support for Windows CE was implemented primarily for 
-eMbedded Visual C++ 4.0 with Pocket PC 2003 and 
-SmartPhone 2003 SDKs. However, it can be used with other versions and 
-configurations. For instance, Standard SDK 4.1 or 5.0 is supported as well. Considerable effort was made to provide the best Windows CE support, 
-however, there might be some limitations because different platforms provide different 
-programming support. SmartDevice projects with Visual Studio 2005 and 2008 are also 
-supported, and it also includes an AppWizard for VS2005 and VS2008.</font></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2">The support for Windows CE was 
-not designed to port projects for the desktop version of Windows as-is to the 
-Windows CE platforms, but to allow use of the same library, WTL, for both 
-desktop Windows and Windows CE. Applications for Windows CE are often designed 
-in a different way, and they use different platform services. WTL depends on the 
-version of ATL provided with each Windows CE platform, and supports controls and 
-services that are appropriate and supported for each Windows CE platform.</font></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><b><font face="Arial">
-<a name="Support for Visual C++ Express"></a>Support for 
-Visual C++ Express</font></b></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2">Note: Visual Studio Express is not the only or the best free development environment any more - <b>Visual Studio Community</b> provides a complete release of Visual Studio for free.</font></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2">WTL supports using Visual C++ Express Edition to build projects. Since Visual C++ Express ships without ATL, you have to use a version of ATL that ships with Windows Driver Kit 7.1.0 or Platform SDK (Windows Server 2003 R2 Platform SDK).</font></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2">Windows Driver Kit 7.1.0 contains ATL version 8, while Platform SDK has ATL version 3. We recomend ATL from Windows Driver Kit since it is newer and better version. However, you can still use ATL from Platform SDK since WTL still fully supports ATL3.</font></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2">The WTL App Wizard can be installed by running AppWiz\setup.js program. The App Wizard generates code in the stdafx.h file that allows use of ATL. That code is used if _WTL_SUPPORT_EXTERNAL_ATL is defined, so you can comment the line in stdafx.h that defines _WTL_SUPPORT_EXTERNAL_ATL to use the project with different versions of Visual C++ or ATL.</font></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2">Note that Release builds might generate some warnings, since ATL3 from Platform SDK is an old version of ATL which doesn't quite match the newer compiler and CRT files. You can ignore those warnings, as they do not indicate any real problems with the code.</font></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2">Supported VC++ versions:</font></p>
-<ul style='margin-top:0in;margin-bottom:0in'>
-  <li><font face="Arial" size="2">VC++ 2005 Express</font></li>
-  <li><font face="Arial" size="2">VC++ 2008 Express</font></li>
-  <li><font face="Arial" size="2">VC++ 2010 Express</font></li>
-  <li><font face="Arial" size="2">VC++ Express 2012 for Windows Desktop</font></li>
-  <li><font face="Arial" size="2">VC++ Express 2013 for Windows Desktop</font></li>
-  <li><font face="Arial" size="2">VC++ Express 2015 for Windows Desktop</font></li>
-</ul>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2">Supported ATL versions:</font></p>
-<ul style='margin-top:0in;margin-bottom:0in'>
-  <li><font face="Arial" size="2">from Platform SDK (ATL 3)</font></li>
-  <li><font face="Arial" size="2">from Windows Driver Kit (ATL 8)</font></li>
-</ul>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2">Download Links:</font></p>
-<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="https://www.visualstudio.com/downloads/download-visual-studio-vs#d-community">Visual Studio Community 2013 and 2015</a></font></p>
-<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="https://www.visualstudio.com/downloads/download-visual-studio-vs">Visual Studio Express 2013 and 2015 for Windows Desktop</a></font></p>
-<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.microsoft.com/en-us/download/details.aspx?id=34673">Visual Studio Express 2012 for Windows Desktop</a></font></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://www.microsoft.com/en-us/download/details.aspx?id=11800">Windows Driver Kit Version 7.1.0</a></font></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2">Older versions are not avilable for download any more. If you already have them, you can use them as descibed here.</font></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><b><font face="Arial">
-<a name="Notes"></a>Notes</font></b></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2"><b>~</b>&nbsp;&nbsp;&nbsp; WTL provides 
-several classes that are also present in ATL 7.0 and 7.1. The classes are: <b>
-CSize</b>, <b>CPoint</b>, <b>CRect</b>, and <b>CString</b> in atlmisc.h. 
-While their existence will not cause any problems, their usage might. You should 
-qualify the class you want to use with a namespace to resolve ambiguity, either 
-ATL or WTL namespace, depending on which implementation you want to use. 
-Alternatively, you can conditionally exclude WTL implementations, by defining 
-preprocessor symbol <b>_WTL_NO_WTYPES</b> for CSize, CPoint, and CRect; and <b>_WTL_NO_CSTRING</b> 
-for CString.</font></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2"><b>~</b>&nbsp;&nbsp;&nbsp; If 
-you use WTL 9.0 with VC++ 6.0/ATL 3.0 and define _ATL_STATIC_REGISTRY, you'll 
-get errors referring to the ambiguous symbol ATL. This is caused by a bug in ATL 
-3.0 - in atlbase.h, the file statreg.h is included inside of the ATL namespace, 
-and it contains another namespace ATL declaration. Because of that, the compiler 
-cannot decide between ATL:: and ATL::ATL:: namespaces. The solution is either to 
-fix the atlbase.h, or to surround atlbase.h include declaration with following 
-statements:</font></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2"><b>&nbsp;&nbsp;&nbsp; #define 
-ATL&nbsp;&nbsp; ATLFIX</b></font></p>
-<p style=margin:0in><font face="Arial" size="2">&nbsp;&nbsp;&nbsp; #include &lt;atlapp.h&gt;</font></p>
-<p style=margin:0in><font face="Arial" size="2">
-<b>&nbsp;&nbsp;&nbsp; #undef ATL</b></font></p>
-<p style=margin:0in><font face="Arial" size="2">
-<b>&nbsp;&nbsp;&nbsp; namespace ATL = ::ATLFIX;</b></font></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2"><b>~</b>&nbsp;&nbsp;&nbsp; 
-Windows XP allows applications to use Common Controls version 6, which supports 
-only Unicode applications. While WTL allows creation of Ansi applications that 
-use Common Controls 6, that should be used only for test programs and is not 
-recommended or supported for released projects. If you want to use Common 
-Controls 6, build your application as Unicode.</font></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2"><b>~</b>&nbsp;&nbsp;&nbsp; 
-If you build your app that hosts ActiveX controls 
-with VC++ 7.x, you can see this assert failing:<br>
-<span class="style2"><strong><br>
-&nbsp;&nbsp;&nbsp; !InlineIsEqualGUID(*m_plibid, GUID_NULL) &amp;&amp; &quot;Did you forget 
-to pass the LIBID to CComModule::Init?&quot;<br>
-<br>
-</strong></span><font face="Arial" size="2">There are two ways to fix this:</font></p>
-<ul>
-	<li>
-	<p style=margin:0in><font face="Arial" size="2">In the main .CPP file of your 
-	project, replace the line</font><br>
-	<span class="style2"><strong>&nbsp;&nbsp;&nbsp; hRes = _Module.Init(NULL, hInstance);<br>
-	</strong></span><font face="Arial" size="2">with this one</font><br>
-	<span class="style2"><strong>&nbsp;&nbsp;&nbsp; hRes = _Module.Init(NULL, hInstance, &amp;LIBID_ATLLib);<br>
-&nbsp;</strong></span></p>
-	</li>
-	<li>
-	<p style=margin:0in><font face="Arial" size="2">Compile you project with _ATL_DLL 
-	defined (dynamic link to ATL)</font></p>
-	</li>
-</ul>
-<p style=margin:0in><font face="Arial" size="2"><b>~</b>&nbsp;&nbsp;&nbsp; 
-Several of the sample programs included with WTL were extended to support 
-building for Windows CE. These samples are not specially redesigned for Windows 
-CE, but just modified to allow you to compile and run them on the Windows CE 
-platforms. The samples are: BmpView, GuidGen, and MTPad.</font></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2"><b>~</b>&nbsp;&nbsp;&nbsp; WTL 
-supports building projects with EVC++ 3.0 only for Pocket PC and Pocket PC 2002 
-platforms, as other platforms don't provide minimum support for ATL or other 
-required libraries.</font></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2"><b>~</b>&nbsp;&nbsp;&nbsp; The 
-old AppWizards for VC++ 6.0 and eVC++ 4.0/3.0 are not included in this version 
-of WTL because they cannot be a part of an Open Source project. They are still 
-available in the previous release, WTL 7.1.</font></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><font face="Arial" size="2"><b>~</b>&nbsp;&nbsp;&nbsp; Visual 
-Studio 2012 and higher use default subsystem version 6.0 (Windows Vista). Previous 
-versions of Visual Studio used 5.01 (Windows XP). That means that applications built 
-with Visual Studio 2012 and higher cannot run on Windows XP. Attempting to run would 
-result in an error that it is not a valid Win32 application. If you want to run your 
-applications on Windows XP, you need to change subsystem version to 5.01. You can do 
-that by going to Project Properties -> Linker -> System -> Minimum Required Version, 
-and entering 5.01 as a value.</font></p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><b><font face="Arial">
 
+<p><hr></p>
+
+<p style=margin:0in><b><font face="Arial" size="2">
+<a name="Changes Between WTL 10 and 9.1"></a>Changes Between WTL 10 and 9.1</font></b></p>
+<p style=margin:0in>&nbsp;</p>
+  <p style=margin:0in><font face="Arial" size="2">TODO</font></p>
+
+<p style=margin:0in>&nbsp;</p>
+<p style=margin:0in>&nbsp;</p>
+
+<p style=margin:0in><b><font face="Arial" size="2">
 <a name="Changes Between WTL 9.1 and 9.0"></a>Changes Between WTL 9.1 and 9.0</font></b></p>
 <p style=margin:0in>&nbsp;</p>
   <p style=margin:0in><font face="Arial" size="2">New and improved:</font></p>
@@ -1943,8 +1533,8 @@ and entering 5.01 as a value.</font></p>
   </blockquote>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in>&nbsp;</p>
-<p style=margin:0in><b><font face="Arial">
 
+<p style=margin:0in><b><font face="Arial">
 <a name="Changes Between WTL 9.0 and 8.0"></a>Changes Between WTL 9.0 and 8.0</font></b></p>
 <p style=margin:0in>&nbsp;</p>
   <p style=margin:0in><font face="Arial" size="2">New and improved:</font></p>
@@ -2065,6 +1655,7 @@ and entering 5.01 as a value.</font></p>
   </blockquote>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in>&nbsp;</p>
+
 <p style=margin:0in><b><font face="Arial">
 <a name="Changes Between WTL 8.0 and 7.5"></a>Changes Between WTL 8.0 and 7.5</font></b></p>
 <p style=margin:0in>&nbsp;</p>
@@ -2396,6 +1987,7 @@ and entering 5.01 as a value.</font></p>
   </blockquote>
 	<p style=margin:0in>&nbsp;</p>
 	<p style=margin:0in>&nbsp;</p>
+
 <p style=margin:0in><b><font face="Arial">
 <a name="Changes Between WTL 7.5 and 7.1"></a>Changes Between WTL 7.5 and 7.1</font></b></p>
 <p style=margin:0in>&nbsp;</p>
@@ -2746,6 +2338,7 @@ and entering 5.01 as a value.</font></p>
   </blockquote>
 <p style=margin:0in><br>
 &nbsp;</p>
+
 <p style=margin:0in><b><font face="Arial">
 <a name="Changes Between WTL 7.1 and 7.0"></a>Changes Between WTL 7.1 and 7.0</font></b></p>
 <p style=margin:0in>&nbsp;</p>
@@ -3181,6 +2774,7 @@ and entering 5.01 as a value.</font></p>
   </blockquote>
   <p style=margin:0in>&nbsp;</p>
   <p style=margin:0in>&nbsp;</p>
+
 <p style=margin:0in><b><font face="Arial">
 <a name="Changes Between WTL 7.0 and 3.1"></a>Changes Between WTL 7.0 and 3.1</font></b></p>
 <p style=margin:0in>&nbsp;</p>
@@ -3444,6 +3038,7 @@ and entering 5.01 as a value.</font></p>
 </blockquote>
 <p style=margin:0in>&nbsp;</p>
 <p style=margin:0in>&nbsp;</p>
+
 <p style=margin:0in><b><font face="Arial">
 <a name="Changes Between WTL 3.1 and 3.0"></a>Changes Between WTL 3.1 and 
 3.0</font></b></p>
