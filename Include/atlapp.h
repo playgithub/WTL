@@ -745,6 +745,12 @@ public:
 ///////////////////////////////////////////////////////////////////////////////
 // CAppModule - module class for an application
 
+#if (_MSC_VER == 1400)   // VS2005
+  #pragma warning(push)
+  #pragma warning(disable : 4244)
+  #pragma warning(disable : 4312)
+#endif
+
 class CAppModule : public ATL::CComModule
 {
 public:
@@ -959,6 +965,10 @@ public:
 		return FALSE;
 	}
 };
+
+#if (_MSC_VER == 1400)   // VS2005
+  #pragma warning(pop)
+#endif
 
 
 ///////////////////////////////////////////////////////////////////////////////
