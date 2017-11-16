@@ -1594,8 +1594,8 @@ public:
 
 	void ClientToDevice(POINT &pt)
 	{
-		pt.x += m_ptOffset.x;
-		pt.y += m_ptOffset.y;
+		pt.x += this->m_ptOffset.x;
+		pt.y += this->m_ptOffset.y;
 	}	 
 
 	void DeviceToClient(POINT &pt)
