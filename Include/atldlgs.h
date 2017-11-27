@@ -115,23 +115,10 @@ public:
 			LPCTSTR lpszFileName = NULL,
 			DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
 			LPCTSTR lpszFilter = NULL,
-			HWND hWndParent = NULL)
+			HWND hWndParent = NULL) : m_bOpenFileDialog(bOpenFileDialog)
 	{
 		memset(&m_ofn, 0, sizeof(m_ofn)); // initialize structure to 0/NULL
-		m_szFileName[0] = _T('\0');
-		m_szFileTitle[0] = _T('\0');
-
-		m_bOpenFileDialog = bOpenFileDialog;
-
 		m_ofn.lStructSize = sizeof(m_ofn);
-
-		// adjust struct size if running on older version of Windows
-		if(AtlIsOldWindows())
-		{
-			ATLASSERT(sizeof(m_ofn) > OPENFILENAME_SIZE_VERSION_400);   // must be
-			m_ofn.lStructSize = OPENFILENAME_SIZE_VERSION_400;
-		}
-
 		m_ofn.lpstrFile = m_szFileName;
 		m_ofn.nMaxFile = _MAX_PATH;
 		m_ofn.lpstrDefExt = lpszDefExt;
@@ -143,9 +130,12 @@ public:
 		m_ofn.lpfnHook = (LPOFNHOOKPROC)T::StartDialogProc;
 		m_ofn.hwndOwner = hWndParent;
 
+		m_szFileName[0] = _T('\0');
+		m_szFileTitle[0] = _T('\0');
+
 		// setup initial file name
 		if(lpszFileName != NULL)
-		ATL::Checked::tcsncpy_s(m_szFileName, _countof(m_szFileName), lpszFileName, _TRUNCATE);
+			ATL::Checked::tcsncpy_s(m_szFileName, _countof(m_szFileName), lpszFileName, _TRUNCATE);
 	}
 
 	INT_PTR DoModal(HWND hWndParent = ::GetActiveWindow())
@@ -170,15 +160,11 @@ public:
 
 		ModuleHelper::AddCreateWndData(&m_thunk.cd, (ATL::CDialogImplBase*)this);
 
-		BOOL bRet;
-		if(m_bOpenFileDialog)
-			bRet = ::GetOpenFileName(&m_ofn);
-		else
-			bRet = ::GetSaveFileName(&m_ofn);
+		BOOL bRet = (m_bOpenFileDialog != FALSE) ? ::GetOpenFileName(&m_ofn) : ::GetSaveFileName(&m_ofn);
 
 		m_hWnd = NULL;
 
-		return bRet ? IDOK : IDCANCEL;
+		return (bRet != FALSE) ? IDOK : IDCANCEL;
 	}
 
 // Attributes

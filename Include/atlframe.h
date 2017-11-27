@@ -847,7 +847,7 @@ public:
 		RECT rc = cmi.lpnm->rc;
 		wndFrom.MapWindowPoints(NULL, &rc);
 		// set up flags and rect
-		UINT uMenuFlags = TPM_LEFTBUTTON | TPM_VERTICAL | TPM_LEFTALIGN | TPM_TOPALIGN | (!AtlIsOldWindows() ? TPM_VERPOSANIMATION : 0);
+		UINT uMenuFlags = TPM_LEFTBUTTON | TPM_VERTICAL | TPM_LEFTALIGN | TPM_TOPALIGN | TPM_VERPOSANIMATION;
 		TPMPARAMS TPMParams = { 0 };
 		TPMParams.cbSize = sizeof(TPMPARAMS);
 		TPMParams.rcExclude = rc;
