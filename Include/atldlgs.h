@@ -2958,7 +2958,7 @@ public:
 		}
 	}
 
-	CDialogBaseUnits(LOGFONT lf, HWND hWnd = NULL)
+	CDialogBaseUnits(const LOGFONT& lf, HWND hWnd = NULL)
 	{
 		if(!InitDialogBaseUnits(lf, hWnd)) {
 			LONG nDlgBaseUnits = ::GetDialogBaseUnits();
@@ -2978,7 +2978,7 @@ public:
 		return TRUE;
 	}
 
-	BOOL InitDialogBaseUnits(LOGFONT lf, HWND hWnd = NULL)
+	BOOL InitDialogBaseUnits(const LOGFONT& lf, HWND hWnd = NULL)
 	{
 		CFont font;
 		font.CreateFontIndirect(&lf);
