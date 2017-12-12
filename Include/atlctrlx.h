@@ -1887,7 +1887,7 @@ public:
 // Methods
 	HWND Create(HWND hWndParent, LPCTSTR lpstrText, DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | SBARS_SIZEGRIP, UINT nID = ATL_IDW_STATUS_BAR)
 	{
-		return ATL::CWindowImpl< T, TBase >::Create(hWndParent, rcDefault, lpstrText, dwStyle, 0, nID);
+		return ATL::CWindowImpl< T, TBase >::Create(hWndParent, this->rcDefault, lpstrText, dwStyle, 0, nID);
 	}
 
 	HWND Create(HWND hWndParent, UINT nTextID = ATL_IDS_IDLEMESSAGE, DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | SBARS_SIZEGRIP, UINT nID = ATL_IDW_STATUS_BAR)
@@ -2339,7 +2339,7 @@ public:
 	{
 		if(lpstrTitle != NULL)
 			ATL::Checked::tcsncpy_s(m_szTitle, m_cchTitle, lpstrTitle, _TRUNCATE);
-		return ATL::CWindowImpl< T, TBase, TWinTraits >::Create(hWndParent, rcDefault, NULL, dwStyle, dwExStyle, nID, lpCreateParam);
+		return ATL::CWindowImpl< T, TBase, TWinTraits >::Create(hWndParent, this->rcDefault, NULL, dwStyle, dwExStyle, nID, lpCreateParam);
 	}
 
 	HWND Create(HWND hWndParent, UINT uTitleID, DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
@@ -2347,7 +2347,7 @@ public:
 	{
 		if(uTitleID != 0U)
 			::LoadString(ModuleHelper::GetResourceInstance(), uTitleID, m_szTitle, m_cchTitle);
-		return ATL::CWindowImpl< T, TBase, TWinTraits >::Create(hWndParent, rcDefault, NULL, dwStyle, dwExStyle, nID, lpCreateParam);
+		return ATL::CWindowImpl< T, TBase, TWinTraits >::Create(hWndParent, this->rcDefault, NULL, dwStyle, dwExStyle, nID, lpCreateParam);
 	}
 
 	BOOL SubclassWindow(HWND hWnd)
