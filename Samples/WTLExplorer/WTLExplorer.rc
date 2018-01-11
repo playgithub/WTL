@@ -225,7 +225,7 @@ END
 
 IDR_MAINFRAME           BITMAP  MOVEABLE PURE   "res\\Toolbar.bmp"
 IDT_GO                  BITMAP  DISCARDABLE     "res\\go.bmp"
-IDT_GO1                 BITMAP  DISCARDABLE     "res\\idt_go1.bmp"
+IDT_GO1                 BITMAP  DISCARDABLE     "res\\go1.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

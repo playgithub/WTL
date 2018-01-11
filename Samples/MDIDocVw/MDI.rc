@@ -56,8 +56,8 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON    DISCARDABLE     "MDI.ICO"
-IDR_BOUNCETYPE          ICON    DISCARDABLE     "res\\idr_boun.ico"
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\MDI.ico"
+IDR_BOUNCETYPE          ICON    DISCARDABLE     "res\\bounce.ico"
 IDR_HELLOTYPE           ICON    DISCARDABLE     "res\\HelloDoc.ico"
 
 /////////////////////////////////////////////////////////////////////////////
