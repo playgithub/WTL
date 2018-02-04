@@ -692,7 +692,7 @@ public:
 	void Init()
 	{
 		T* pT = static_cast<T*>(this);
-		pT;   // avoid level 4 warning
+		(void)pT;   // avoid level 4 warning
 		ATLASSERT((pT->GetExtendedLVStyle() & LVS_EX_CHECKBOXES) != 0);
 		this->SetExtendedListViewStyle(pT->GetExtendedLVStyle());
 	}
@@ -1946,7 +1946,7 @@ public:
 				::LoadString(ModuleHelper::GetResourceInstance(), pPanes[i], szBuff, cchBuff);
 				dc.GetTextExtent(szBuff, lstrlen(szBuff), &size);
 				T* pT = static_cast<T*>(this);
-				pT;
+				(void)pT;   // avoid level 4 warning
 				pPanesPos[i] = cxLeft + size.cx + arrBorders[2] + 2 * pT->m_cxPaneMargin;
 			}
 			cxLeft = pPanesPos[i];
@@ -2370,7 +2370,7 @@ public:
 	{
 		ATLASSERT(::IsWindow(this->m_hWnd));
 		T* pT = static_cast<T*>(this);
-		pT;   // avoid level 4 warning
+		(void)pT;   // avoid level 4 warning
 		return (m_tb.m_hWnd != NULL) ? m_tb.EnableButton(pT->m_nCloseBtnID, bEnable) : FALSE;
 	}
 
@@ -2495,7 +2495,7 @@ public:
 		}
 
 		T* pT = static_cast<T*>(this);
-		pT;
+		(void)pT;   // avoid level 4 warning
 		LPNMHDR lpnmh = (LPNMHDR)lParam;
 		LRESULT lRet = 0;
 
@@ -2628,7 +2628,7 @@ public:
 		if(m_tb.m_hWnd != NULL)
 		{
 			T* pT = static_cast<T*>(this);
-			pT;   // avoid level 4 warning
+			(void)pT;   // avoid level 4 warning
 
 			m_tb.SetButtonStructSize();
 
@@ -4059,7 +4059,7 @@ public:
 
 		CMenuHandle menu = hMenu;
 		T* pT = static_cast<T*>(this);
-		pT;   // avoid level 4 warning
+		(void)pT;   // avoid level 4 warning
 		int nFirstPos = 0;
 
 		// Find first menu item in our range

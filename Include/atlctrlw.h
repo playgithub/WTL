@@ -510,7 +510,7 @@ public:
 			int nItems = ::GetMenuItemCount(m_hMenu);
 
 			T* pT = static_cast<T*>(this);
-			pT;   // avoid level 4 warning
+			(void)pT;   // avoid level 4 warning
 			TCHAR szString[pT->_nMaxMenuItemTextLength] = { 0 };
 			for(int i = 0; i < nItems; i++)
 			{
@@ -988,7 +988,7 @@ public:
 					pData->hMsgHook = hMsgHook;
 					pData->dwUsage = 1;
 					BOOL bRet = this->s_pmapMsgHook->Add(dwThreadID, pData);
-					bRet;
+					(void)bRet;   // avoid level 4 warning
 					ATLASSERT(bRet);
 				}
 			}
@@ -1272,7 +1272,7 @@ public:
 			ATLASSERT(menuPopup.m_hMenu != NULL);
 
 			T* pT = static_cast<T*>(this);
-			pT;   // avoid level 4 warning
+			(void)pT;   // avoid level 4 warning
 			TCHAR szString[pT->_nMaxMenuItemTextLength] = { 0 };
 			BOOL bRet = FALSE;
 			for(int i = 0; i < menuPopup.GetMenuItemCount(); i++)
@@ -1935,7 +1935,7 @@ public:
 		if(!m_bAllowKeyboardCues)
 			m_bAllowKeyboardCues = true;
 		bHandled = FALSE;
-		wParam;
+		(void)wParam;   // avoid level 4 warning
 #ifdef _CMDBAR_EXTRA_TRACE
 		ATLTRACE2(atlTraceUI, 0, _T("CmdBar - Hook WM_SYSKEYUP (0x%2.2X)\n"), wParam);
 #endif
@@ -3694,7 +3694,7 @@ public:
 		m_wndMDIClient.DefWindowProc(uMsg, NULL, lParam);
 		HMENU hOldMenu = this->GetMenu();
 		BOOL bRet = this->AttachMenu((HMENU)wParam);
-		bRet;   // avoid level 4 warning
+		(void)bRet;   // avoid level 4 warning
 		ATLASSERT(bRet);
 
 		T* pT = static_cast<T*>(this);
