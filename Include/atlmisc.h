@@ -113,7 +113,7 @@ public:
 	int m_cchMaxItemLen;
 
 // Constructor
-	CRecentDocumentListBase() : m_hMenu(NULL), m_nMaxEntries(4), m_cchMaxItemLen(-1)
+	CRecentDocumentListBase() : m_nMaxEntries(4), m_hMenu(NULL), m_cchMaxItemLen(-1)
 	{
 		// These ASSERTs verify values of the template arguments
 		ATLASSERT(t_cchItemLen > m_cchMaxItemLen_Min);
@@ -460,10 +460,10 @@ class CFindFile
 {
 public:
 // Data members
+	HANDLE m_hFind;
 	WIN32_FIND_DATA m_fd;
 	TCHAR m_lpszRoot[MAX_PATH];
 	TCHAR m_chDirSeparator;
-	HANDLE m_hFind;
 	BOOL m_bFound;
 
 // Constructor/destructor

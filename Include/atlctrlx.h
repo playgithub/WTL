@@ -3602,9 +3602,9 @@ public:
 
 // Constructor/destructor
 	CTabViewImpl() :
-			m_nActivePage(-1), 
-			m_cyTabHeight(0), 
-			m_tab(this, 1), 
+			m_tab(this, 1),
+			m_cyTabHeight(0),
+			m_nActivePage(-1),
 			m_nInsertItem(-1), 
 			m_cchTabTextLength(30), 
 			m_nMenuItemsCount(10), 
