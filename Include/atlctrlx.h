@@ -1922,7 +1922,7 @@ public:
 
 		// get status bar DC and set font
 		CClientDC dc(this->m_hWnd);
-		HFONT hOldFont = dc.SelectFont(GetFont());
+		HFONT hOldFont = dc.SelectFont(this->GetFont());
 
 		// get status bar borders
 		int arrBorders[3] = { 0 };
