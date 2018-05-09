@@ -1009,7 +1009,7 @@ public:
 			if(m_hFontLink != NULL)
 				hOldFont = dc.SelectFont(m_hFontLink);
 			LPTSTR lpstrText = (m_lpstrLabel != NULL) ? m_lpstrLabel : m_lpstrHyperLink;
-			DWORD dwStyle = GetStyle();
+			DWORD dwStyle = this->GetStyle();
 			UINT uFormat = DT_LEFT;
 			if (dwStyle & SS_CENTER)
 				uFormat = DT_CENTER;
@@ -3501,7 +3501,7 @@ public:
 
 	bool SortItems(int iCol, bool bDescending = false)
 	{
-		return DoSortItems(iCol, bDescending);
+		return this->DoSortItems(iCol, bDescending);
 	}
 		
 	BEGIN_MSG_MAP(CSortListViewCtrlImpl)
