@@ -2786,10 +2786,16 @@ public:
 //   on the position of the previous control in a group.
 
 // dialog resize map macros
+struct _AtlDlgResizeMap
+{
+	int m_nCtlID;
+	DWORD m_dwResizeFlags;
+};
+
 #define BEGIN_DLGRESIZE_MAP(thisClass) \
-	static const typename CDialogResize::_AtlDlgResizeMap* GetDlgResizeMap() \
+	static const WTL::_AtlDlgResizeMap* GetDlgResizeMap() \
 	{ \
-		static const typename CDialogResize::_AtlDlgResizeMap theMap[] = \
+		static const WTL::_AtlDlgResizeMap theMap[] = \
 		{
 
 #define END_DLGRESIZE_MAP() \
@@ -2827,12 +2833,6 @@ public:
 		_DLSZ_BEGIN_GROUP	= 0x00001000,
 		_DLSZ_END_GROUP		= 0x00002000,
 		_DLSZ_GRIPPER		= 0x00004000
-	};
-
-	struct _AtlDlgResizeMap
-	{
-		int m_nCtlID;
-		DWORD m_dwResizeFlags;
 	};
 
 	struct _AtlDlgResizeData
