@@ -955,7 +955,7 @@ public:
 	void GetScrollOffset(POINT& ptOffset) const
 	{
 		ATLASSERT((m_nMapMode >= MM_MIN) && (m_nMapMode <= MM_MAX_FIXEDSCALE));
-		ptOffset = m_ptOffset;
+		ptOffset = this->m_ptOffset;
 		// block: convert device to logical units
 		{
 			CWindowDC dc(NULL);
@@ -1192,7 +1192,7 @@ public:
 
 	CFSBWindowT< TBase >& operator =(HWND hWnd)
 	{
-		m_hWnd = hWnd;
+		this->m_hWnd = hWnd;
 		return *this;
 	}
 
@@ -1985,7 +1985,7 @@ public:
 
 	HWND SetClient(HWND hWndClient, bool bClientSizeAsMin = true)
 	{
-		ATLASSERT(::IsWindow(m_hWnd));
+		ATLASSERT(::IsWindow(this->m_hWnd));
 
 		HWND hWndOldClient = m_wndClient;
 		m_wndClient = hWndClient;

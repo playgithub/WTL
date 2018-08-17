@@ -5443,19 +5443,19 @@ public:
 // Operations
 	void EnableResizing()
 	{
-		ATLASSERT(m_hWnd == NULL);   // can't do this after it's created
+		ATLASSERT(this->m_hWnd == NULL);   // can't do this after it's created
 		this->m_psh.dwFlags |= PSH_RESIZABLE;
 	}
 
 	void UseHeaderBitmap()
 	{
-		ATLASSERT(m_hWnd == NULL);   // can't do this after it's created
+		ATLASSERT(this->m_hWnd == NULL);   // can't do this after it's created
 		this->m_psh.dwFlags |= PSH_HEADERBITMAP;
 	}
 
 	void SetNoMargin()
 	{
-		ATLASSERT(m_hWnd == NULL);   // can't do this after it's created
+		ATLASSERT(this->m_hWnd == NULL);   // can't do this after it's created
 		this->m_psh.dwFlags |= PSH_NOMARGIN;
 	}
 
