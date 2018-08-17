@@ -693,6 +693,7 @@ public:
 			{
 			case VK_RETURN:
 				m_xySplitterPosNew = m_xySplitterPos;
+				// FALLTHROUGH
 			case VK_ESCAPE:
 				::ReleaseCapture();
 				break;

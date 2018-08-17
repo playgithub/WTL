@@ -2990,8 +2990,8 @@ public:
 	{
 		ATLASSERT(hFont != NULL);
 		CWindowDC dc = hWnd;
-		TEXTMETRIC tmText = { 0 };
-		SIZE sizeText = { 0 };
+		TEXTMETRIC tmText = {};
+		SIZE sizeText = {};
 		HFONT hFontOld = dc.SelectFont(hFont);
 		dc.GetTextMetrics(&tmText);
 		m_sizeUnits.cy = tmText.tmHeight + tmText.tmExternalLeading;
@@ -3378,7 +3378,7 @@ typedef CMemDlgTemplateT<ATL::CControlWinTraits>	CMemDlgTemplate;
 
 #define END_DIALOG() \
 		m_Template.Create(bExTemplate, szCaption, nX, nY, nWidth, nHeight, dwStyle, dwExStyle, szFontName, wFontSize, wWeight, bItalic, bCharset, dwHelpID, ClassName, Menu); \
-	};
+	}
 
 #define DIALOG_CAPTION(caption) \
 		szCaption = caption;
@@ -3406,7 +3406,7 @@ typedef CMemDlgTemplateT<ATL::CControlWinTraits>	CMemDlgTemplate;
 	{
 
 #define END_CONTROLS_MAP() \
-	};
+	}
 
 
 #define CONTROL_LTEXT(text, id, x, y, width, height, style, exStyle) \
@@ -5172,8 +5172,8 @@ public:
 		CFontHandle fontThisDialog = this->GetFont();
 		CClientDC dcScreen(NULL);
 
-		LOGFONT titleLogFont = {0};
-		LOGFONT bulletLogFont = {0};
+		LOGFONT titleLogFont = {};
+		LOGFONT bulletLogFont = {};
 		fontThisDialog.GetLogFont(&titleLogFont);
 		fontThisDialog.GetLogFont(&bulletLogFont);
 

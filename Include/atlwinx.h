@@ -496,7 +496,7 @@ public:
 	{
 		ATLASSERT(::IsWindow(m_hWnd));
 
-		TRACKMOUSEEVENT tme = { 0 };
+		TRACKMOUSEEVENT tme = {};
 		tme.cbSize = sizeof(TRACKMOUSEEVENT);
 		tme.dwFlags = TME_LEAVE;
 		tme.hwndTrack = m_hWnd;
@@ -507,7 +507,7 @@ public:
 	{
 		ATLASSERT(::IsWindow(m_hWnd));
 
-		TRACKMOUSEEVENT tme = { 0 };
+		TRACKMOUSEEVENT tme = {};
 		tme.cbSize = sizeof(TRACKMOUSEEVENT);
 		tme.dwFlags = dwFlags;
 		tme.hwndTrack = m_hWnd;
@@ -519,7 +519,7 @@ public:
 	{
 		ATLASSERT(::IsWindow(m_hWnd));
 
-		TRACKMOUSEEVENT tme = { 0 };
+		TRACKMOUSEEVENT tme = {};
 		tme.cbSize = sizeof(TRACKMOUSEEVENT);
 		tme.dwFlags = TME_CANCEL | dwType;
 		tme.hwndTrack = m_hWnd;

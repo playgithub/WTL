@@ -370,7 +370,7 @@ public:
 		CFontHandle font = (HFONT)::SendMessage(hWnd, WM_GETFONT, 0, 0L);
 		if(font.IsNull())
 			font = (HFONT)::GetStockObject(SYSTEM_FONT);
-		LOGFONT lf = { 0 };
+		LOGFONT lf = {};
 		font.GetLogFont(lf);
 		WORD cyFontHeight = (WORD)abs(lf.lfHeight);
 
@@ -389,7 +389,7 @@ public:
 		}
 		else
 		{
-			TBADDBITMAP tbab = { 0 };
+			TBADDBITMAP tbab = {};
 			tbab.hInst = hInst;
 			tbab.nID = nResourceID;
 			::SendMessage(hWnd, TB_ADDBITMAP, nBmp, (LPARAM)&tbab);
