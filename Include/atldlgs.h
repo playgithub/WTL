@@ -1792,36 +1792,36 @@ public:
 		USES_CONVERSION;
 		cf.dwEffects = 0;
 		cf.dwMask = 0;
-		if((m_cf.Flags & CF_NOSTYLESEL) == 0)
+		if((this->m_cf.Flags & CF_NOSTYLESEL) == 0)
 		{
 			cf.dwMask |= CFM_BOLD | CFM_ITALIC;
 			cf.dwEffects |= this->IsBold() ? CFE_BOLD : 0;
 			cf.dwEffects |= this->IsItalic() ? CFE_ITALIC : 0;
 		}
-		if((m_cf.Flags & CF_NOSIZESEL) == 0)
+		if((this->m_cf.Flags & CF_NOSIZESEL) == 0)
 		{
 			cf.dwMask |= CFM_SIZE;
 			// GetSize() returns in tenths of points so mulitply by 2 to get twips
 			cf.yHeight = this->GetSize() * 2;
 		}
 
-		if((m_cf.Flags & CF_NOFACESEL) == 0)
+		if((this->m_cf.Flags & CF_NOFACESEL) == 0)
 		{
 			cf.dwMask |= CFM_FACE;
-			cf.bPitchAndFamily = m_cf.lpLogFont->lfPitchAndFamily;
+			cf.bPitchAndFamily = this->m_cf.lpLogFont->lfPitchAndFamily;
 			ATL::Checked::tcscpy_s(cf.szFaceName, _countof(cf.szFaceName), this->GetFaceName());
 		}
 
-		if((m_cf.Flags & CF_EFFECTS) != 0)
+		if((this->m_cf.Flags & CF_EFFECTS) != 0)
 		{
 			cf.dwMask |= CFM_UNDERLINE | CFM_STRIKEOUT | CFM_COLOR;
 			cf.dwEffects |= this->IsUnderline() ? CFE_UNDERLINE : 0;
 			cf.dwEffects |= this->IsStrikeOut() ? CFE_STRIKEOUT : 0;
 			cf.crTextColor = this->GetColor();
 		}
-		if((m_cf.Flags & CF_NOSCRIPTSEL) == 0)
+		if((this->m_cf.Flags & CF_NOSCRIPTSEL) == 0)
 		{
-			cf.bCharSet = m_cf.lpLogFont->lfCharSet;
+			cf.bCharSet = this->m_cf.lpLogFont->lfCharSet;
 			cf.dwMask |= CFM_CHARSET;
 		}
 		cf.yOffset = 0;

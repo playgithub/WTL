@@ -24,6 +24,38 @@
 // CWindowEx
 
 
+/////////////////////////////////////////////////////////////////////////////
+// Additional macros needed for template classes
+
+#ifndef DECLARE_WND_CLASS_EX2
+  #define DECLARE_WND_CLASS_EX2(WndClassName, EnclosingClass, style, bkgnd) \
+  static ATL::CWndClassInfo& GetWndClassInfo() \
+  { \
+	static ATL::CWndClassInfo wc = \
+	{ \
+		{ sizeof(WNDCLASSEX), style, EnclosingClass::StartWindowProc, \
+		  0, 0, NULL, NULL, NULL, (HBRUSH)(bkgnd + 1), NULL, WndClassName, NULL }, \
+		  NULL, NULL, IDC_ARROW, TRUE, 0, _T("") \
+	}; \
+	return wc; \
+  }
+#endif // DECLARE_WND_CLASS_EX2
+
+#ifndef DECLARE_WND_SUPERCLASS2
+  #define DECLARE_WND_SUPERCLASS2(WndClassName, EnclosingClass, OrigWndClassName) \
+  static ATL::CWndClassInfo& GetWndClassInfo() \
+  { \
+	static ATL::CWndClassInfo wc = \
+	{ \
+		{ sizeof(WNDCLASSEX), 0, EnclosingClass::StartWindowProc, \
+		  0, 0, NULL, NULL, NULL, NULL, NULL, WndClassName, NULL }, \
+		  OrigWndClassName, NULL, NULL, TRUE, 0, _T("") \
+	}; \
+	return wc; \
+  }
+#endif // DECLARE_WND_SUPERCLASS2
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // Command Chaining Macros
 
