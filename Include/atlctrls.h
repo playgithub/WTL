@@ -7544,6 +7544,18 @@ public:
 		::SendMessage(this->m_hWnd, EM_SETMARGINS, wFlags, MAKELONG(nLeft, nRight));
 	}
 
+	WORD GetTypographyOptions() const
+	{
+		ATLASSERT(::IsWindow(this->m_hWnd));
+		return (WORD)::SendMessage(this->m_hWnd, EM_GETTYPOGRAPHYOPTIONS, 0, 0L);
+	}
+
+	BOOL SetTypographyOptions(WORD wOptions, WORD wMask) const
+	{
+		ATLASSERT(::IsWindow(this->m_hWnd));
+		return (BOOL)::SendMessage(this->m_hWnd, EM_SETTYPOGRAPHYOPTIONS, wOptions, wMask);
+	}
+
 // Operations
 	void LimitText(LONG nChars = 0)
 	{
