@@ -219,31 +219,43 @@ public:
 
 	HANDLE CopyToHDEVNAMES() const
 	{
-		HANDLE h = NULL;
+		HANDLE hDevNames = NULL;
 		CPrinterInfo<5> pinfon5;
 		CPrinterInfo<2> pinfon2;
 		LPTSTR lpszPrinterName = NULL;
+		LPTSTR lpszPortName = NULL;
 		// Some printers fail for PRINTER_INFO_5 in some situations
-		if (pinfon5.GetPrinterInfo(m_hPrinter))
-			lpszPrinterName = pinfon5.m_pi->pPrinterName;
-		else if (pinfon2.GetPrinterInfo(m_hPrinter))
-			lpszPrinterName = pinfon2.m_pi->pPrinterName;
-		if (lpszPrinterName != NULL)
+		if(pinfon5.GetPrinterInfo(m_hPrinter))
 		{
-			int nLen = sizeof(DEVNAMES) + (lstrlen(lpszPrinterName) + 1) * sizeof(TCHAR);
-			h = ::GlobalAlloc(GMEM_MOVEABLE, nLen);
-			BYTE* pv = (BYTE*)::GlobalLock(h);
+			lpszPrinterName = pinfon5.m_pi->pPrinterName;
+			lpszPortName = pinfon5.m_pi->pPortName;
+		}
+		else if(pinfon2.GetPrinterInfo(m_hPrinter))
+		{
+			lpszPrinterName = pinfon2.m_pi->pPrinterName;
+			lpszPortName = pinfon2.m_pi->pPortName;
+		}
+
+		if(lpszPrinterName != NULL)
+		{
+			int nLen = sizeof(DEVNAMES) + (lstrlen(lpszPrinterName) + 1 + lstrlen(lpszPortName) + 1) * sizeof(TCHAR);
+			hDevNames = ::GlobalAlloc(GMEM_MOVEABLE, nLen);
+			BYTE* pv = (BYTE*)::GlobalLock(hDevNames);
 			DEVNAMES* pdev = (DEVNAMES*)pv;
-			if (pv != NULL)
+			if(pv != NULL)
 			{
 				memset(pv, 0, nLen);
-				pdev->wDeviceOffset = sizeof(DEVNAMES) / sizeof(TCHAR);
+				pdev->wDeviceOffset = sizeof(DEVNAMES);
 				pv = pv + sizeof(DEVNAMES); // now points to end
 				ATL::Checked::tcscpy_s((LPTSTR)pv, lstrlen(lpszPrinterName) + 1, lpszPrinterName);
-				::GlobalUnlock(h);
+				pdev->wOutputOffset = (WORD)(sizeof(DEVNAMES) + (lstrlen(lpszPrinterName) + 1) * sizeof(TCHAR));
+				pv = pv + (lstrlen(lpszPrinterName) + 1) * sizeof(TCHAR);
+				ATL::Checked::tcscpy_s((LPTSTR)pv, lstrlen(lpszPortName) + 1, lpszPortName);
+				::GlobalUnlock(hDevNames);
 			}
 		}
-		return h;
+
+		return hDevNames;
 	}
 
 	HDC CreatePrinterDC(const DEVMODE* pdm = NULL) const
