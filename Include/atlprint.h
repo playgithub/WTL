@@ -185,25 +185,18 @@ public:
 	bool OpenDefaultPrinter(const DEVMODE* pDevMode = NULL)
 	{
 		ClosePrinter();
-		const int cchBuff = 512;
-		TCHAR buffer[cchBuff] = { 0 };
-		::GetProfileString(_T("windows"), _T("device"), _T(",,,"), buffer, cchBuff);
-		int nLen = lstrlen(buffer);
-		if (nLen != 0)
+
+		DWORD cchBuff = 0;
+		::GetDefaultPrinter(NULL, &cchBuff);
+		TCHAR* pszBuff = new TCHAR[cchBuff];
+		BOOL bRet = ::GetDefaultPrinter(pszBuff, &cchBuff);
+		if(bRet != FALSE)
 		{
-			LPTSTR lpsz = buffer;
-			while (*lpsz)
-			{
-				if (*lpsz == _T(','))
-				{
-					*lpsz = 0;
-					break;
-				}
-				lpsz = CharNext(lpsz);
-			}
 			PRINTER_DEFAULTS pdefs = { NULL, (DEVMODE*)pDevMode, PRINTER_ACCESS_USE };
-			::OpenPrinter(buffer, &m_hPrinter, (pDevMode == NULL) ? NULL : &pdefs);
+			::OpenPrinter(pszBuff, &m_hPrinter, (pDevMode == NULL) ? NULL : &pdefs);
 		}
+		delete [] pszBuff;
+
 		return m_hPrinter != NULL;
 	}
 
