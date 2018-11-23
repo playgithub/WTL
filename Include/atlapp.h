@@ -27,6 +27,10 @@
 	#error WTL requires that _ATL_NO_COMMODULE is not defined
 #endif
 
+#ifdef _ATL_NO_WIN_SUPPORT
+	#error WTL requires that _ATL_NO_WIN_SUPPORT is not defined
+#endif
+
 #if (_MSC_VER < 1400)
 	#error WTL10 requires C++ compiler version 14 (Visual C++ 2005) or higher
 #endif
