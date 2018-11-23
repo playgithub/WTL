@@ -316,7 +316,8 @@ function AddConfigurations(proj, strProjectName)
 			if(bDebug)
 			{
 				CLTool.RuntimeLibrary = rtMultiThreadedDebug;
-				CLTool.MinimalRebuild = true;
+				if(WizardVersion < 15.0)
+					CLTool.MinimalRebuild = true;
 				CLTool.DebugInformationFormat = debugEditAndContinue;
 				CLTool.BasicRuntimeChecks = runtimeBasicCheckAll;
 				CLTool.Optimization = optimizeDisabled;
