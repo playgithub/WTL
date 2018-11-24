@@ -58,7 +58,7 @@ template <class T>
 class CSplitterImpl
 {
 public:
-	enum { m_nPanesCount = 2, m_nPropMax = 10000, m_cxyStep = 10 };
+	enum { m_nPanesCount = 2, m_nPropMax = INT_MAX, m_cxyStep = 10 };
 
 	bool m_bVertical;
 	HWND m_hWndPane[m_nPanesCount];
@@ -201,7 +201,7 @@ public:
 	int GetSplitterPosPct() const
 	{
 		int cxyTotal = m_bVertical ? (m_rcSplitter.right - m_rcSplitter.left - m_cxySplitBar - m_cxyBarEdge) : (m_rcSplitter.bottom - m_rcSplitter.top - m_cxySplitBar - m_cxyBarEdge);
-		return ((cxyTotal > 0) && (m_xySplitterPos >= 0)) ? (::MulDiv(m_xySplitterPos, m_nPropMax, cxyTotal) / 100) : -1;
+		return ((cxyTotal > 0) && (m_xySplitterPos >= 0)) ? ::MulDiv(m_xySplitterPos, 100, cxyTotal) : -1;
 	}
 
 	bool SetSinglePaneMode(int nPane = SPLIT_PANE_NONE)
