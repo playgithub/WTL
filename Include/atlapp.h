@@ -95,10 +95,11 @@
 // CServerAppModule
 //
 // Global functions:
+//   AtlInitCommonControls()
 //   AtlGetDefaultGuiFont()
 //   AtlCreateControlFont()
 //   AtlCreateBoldFont()
-//   AtlInitCommonControls()
+//   AtlGetStringPtr()
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -152,6 +153,15 @@ DECLARE_TRACE_CATEGORY(atlTraceUI);
   __declspec(selectany) ATL::CTraceCategory atlTraceUI(_T("atlTraceUI"));
 #endif // _DEBUG
 
+// Common Controls initialization helper
+inline BOOL AtlInitCommonControls(DWORD dwFlags)
+{
+	INITCOMMONCONTROLSEX iccx = { sizeof(INITCOMMONCONTROLSEX), dwFlags };
+	BOOL bRet = ::InitCommonControlsEx(&iccx);
+	ATLASSERT(bRet);
+	return bRet;
+}
+
 // Default GUI font helper - "MS Shell Dlg" stock font
 inline HFONT AtlGetDefaultGuiFont()
 {
@@ -184,13 +194,14 @@ inline HFONT AtlCreateBoldFont(HFONT hFont = NULL)
 	return hFontBold;
 }
 
-// Common Controls initialization helper
-inline BOOL AtlInitCommonControls(DWORD dwFlags)
+// Resource string pointer
+inline LPCWSTR AtlGetStringPtr(UINT uID, int* pch = NULL)
 {
-	INITCOMMONCONTROLSEX iccx = { sizeof(INITCOMMONCONTROLSEX), dwFlags };
-	BOOL bRet = ::InitCommonControlsEx(&iccx);
-	ATLASSERT(bRet);
-	return bRet;
+	LPCWSTR lpstr = NULL;
+	int nRet = ::LoadStringW(ATL::_AtlBaseModule.GetResourceInstance(), uID, (LPWSTR)&lpstr, 0);
+	if(pch != NULL)
+		*pch = nRet;
+	return lpstr;
 }
 
 
