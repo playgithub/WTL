@@ -4173,6 +4173,7 @@ public:
 		MESSAGE_HANDLER(WM_SETFOCUS, OnSetFocus)
 		MESSAGE_HANDLER(WM_GETFONT, OnGetFont)
 		MESSAGE_HANDLER(WM_SETFONT, OnSetFont)
+		MESSAGE_HANDLER(WM_CONTEXTMENU, OnTabContextMenu)
 		NOTIFY_HANDLER(m_nTabID, TCN_SELCHANGE, OnTabChanged)
 		NOTIFY_ID_HANDLER(m_nTabID, OnTabNotification)
 		NOTIFY_CODE_HANDLER(TTN_GETDISPINFO, OnTabGetDispInfo)
@@ -4182,8 +4183,6 @@ public:
 		MESSAGE_HANDLER(WM_LBUTTONUP, OnTabLButtonUp)
 		MESSAGE_HANDLER(WM_CAPTURECHANGED, OnTabCaptureChanged)
 		MESSAGE_HANDLER(WM_MOUSEMOVE, OnTabMouseMove)
-		MESSAGE_HANDLER(WM_RBUTTONUP, OnTabRButtonUp)
-		MESSAGE_HANDLER(WM_SYSKEYDOWN, OnTabSysKeyDown)
 	END_MSG_MAP()
 
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -4256,6 +4255,40 @@ public:
 		return 0;
 	}
 
+	LRESULT OnTabContextMenu(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+	{
+		POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+		bool bAction = false;
+		if((HWND)wParam == m_tab.m_hWnd)
+		{
+			if((pt.x == -1) && (pt.y == -1))   // keyboard
+			{
+				RECT rect = { 0 };
+				m_tab.GetItemRect(m_nActivePage, &rect);
+				pt.x = rect.left;
+				pt.y = rect.bottom;
+				m_tab.ClientToScreen(&pt);
+				bAction = true;
+			}
+			else if(::WindowFromPoint(pt) == m_tab.m_hWnd)
+			{
+				bAction = true;
+			}
+		}
+
+		if(bAction)
+		{
+			T* pT = static_cast<T*>(this);
+			pT->OnContextMenu(m_nActivePage, pt);
+		}
+		else
+		{
+			bHandled = FALSE;
+		}
+
+		return 0;
+	}
+
 	LRESULT OnTabChanged(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/)
 	{
 		SetActivePage(m_tab.GetCurSel());
@@ -4310,10 +4343,9 @@ public:
 		{
 			if(m_bTabDrag)
 			{
-				TCHITTESTINFO hti = { 0 };
-				hti.pt.x = GET_X_LPARAM(lParam);
-				hti.pt.y = GET_Y_LPARAM(lParam);
-				int nItem = m_tab.HitTest(&hti);
+				T* pT = static_cast<T*>(this);
+				POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+				int nItem = pT->DragHitTest(pt);
 				if(nItem != -1)
 					MovePage(m_nActivePage, nItem);
 			}
@@ -4378,11 +4410,9 @@ public:
 
 			if(m_bTabDrag)
 			{
-				TCHITTESTINFO hti = { 0 };
-				hti.pt = pt;
-				int nItem = m_tab.HitTest(&hti);
-
 				T* pT = static_cast<T*>(this);
+				int nItem = pT->DragHitTest(pt);
+
 				pT->SetMoveCursor(nItem != -1);
 
 				if(m_nInsertItem != nItem)
@@ -4394,43 +4424,6 @@ public:
 
 				bHandled = TRUE;
 			}
-		}
-
-		return 0;
-	}
-
-	LRESULT OnTabRButtonUp(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& /*bHandled*/)
-	{
-		TCHITTESTINFO hti = { 0 };
-		hti.pt.x = GET_X_LPARAM(lParam);
-		hti.pt.y = GET_Y_LPARAM(lParam);
-		int nItem = m_tab.HitTest(&hti);
-		if(nItem != -1)
-		{
-			T* pT = static_cast<T*>(this);
-			pT->OnContextMenu(nItem, hti.pt);
-		}
-
-		return 0;
-	}
-
-	LRESULT OnTabSysKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled)
-	{
-		bool bShift = (::GetKeyState(VK_SHIFT) < 0);
-		if((wParam == VK_F10) && bShift)
-		{
-			if(m_nActivePage != -1)
-			{
-				RECT rect = { 0 };
-				m_tab.GetItemRect(m_nActivePage, &rect);
-				POINT pt = { rect.left, rect.bottom };
-				T* pT = static_cast<T*>(this);
-				pT->OnContextMenu(m_nActivePage, pt);
-			}
-		}
-		else
-		{
-			bHandled = FALSE;
 		}
 
 		return 0;
@@ -4705,6 +4698,30 @@ public:
 		pTTDI->lpszText = (LPTSTR)GetPageTitle((int)pTTDI->hdr.idFrom);
 	}
 
+	int DragHitTest(POINT pt) const
+	{
+		RECT rect = { };
+		GetClientRect(&rect);
+		if(::PtInRect(&rect, pt) == FALSE)
+			return -1;
+
+		m_tab.GetClientRect(&rect);
+		TCHITTESTINFO hti = { };
+		hti.pt.x = pt.x;
+		hti.pt.y = rect.bottom / 2;   // use middle to ignore
+		int nItem = m_tab.HitTest(&hti);
+		if(nItem == -1)
+		{
+			int nLast = m_tab.GetItemCount() - 1;
+			RECT rcItem = { };
+			m_tab.GetItemRect(nLast, &rcItem);
+			if(pt.x >= rcItem.right)
+				nItem = nLast;
+		}
+
+		return nItem;
+	}
+
 // Text for menu items and title bar - override to provide different strings
 	static LPCTSTR GetEmptyListText()
 	{
@@ -4733,8 +4750,6 @@ public:
 
 	void OnContextMenu(int nPage, POINT pt)
 	{
-		m_tab.ClientToScreen(&pt);
-
 		TBVCONTEXTMENUINFO cmi = { 0 };
 		cmi.hdr.hwndFrom = this->m_hWnd;
 		cmi.hdr.idFrom = nPage;
