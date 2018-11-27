@@ -4701,7 +4701,7 @@ public:
 	int DragHitTest(POINT pt) const
 	{
 		RECT rect = { };
-		GetClientRect(&rect);
+		this->GetClientRect(&rect);
 		if(::PtInRect(&rect, pt) == FALSE)
 			return -1;
 
