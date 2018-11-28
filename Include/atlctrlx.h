@@ -3567,6 +3567,15 @@ public:
 		m_nMenuItemsMax = (ID_WINDOW_TABLAST - ID_WINDOW_TABFIRST + 1)
 	};
 
+	enum { _nAutoScrollTimerID = 4321 };
+
+	enum AutoScroll
+	{
+		_AUTOSCROLL_NONE = 0,
+		_AUTOSCROLL_LEFT = -1,
+		_AUTOSCROLL_RIGHT = 1
+	};
+
 // Data members
 	ATL::CContainedWindowT<CTabCtrl> m_tab;
 	int m_cyTabHeight;
@@ -3588,6 +3597,9 @@ public:
 
 	CImageList m_ilDrag;
 
+	AutoScroll m_AutoScroll;
+	CUpDownCtrl m_ud;
+
 	bool m_bDestroyPageOnRemove:1;
 	bool m_bDestroyImageList:1;
 	bool m_bActivePageMenuItem:1;
@@ -3595,6 +3607,7 @@ public:
 	bool m_bEmptyMenuItem:1;
 	bool m_bWindowsMenuItem:1;
 	bool m_bNoTabDrag:1;
+	bool m_bNoTabDragAutoScroll:1;
 	// internal
 	bool m_bTabCapture:1;
 	bool m_bTabDrag:1;
@@ -3610,6 +3623,7 @@ public:
 			m_nMenuItemsCount(10), 
 			m_lpstrTitleBarBase(NULL), 
 			m_cchTitleBarLength(100), 
+	                m_AutoScroll(_AUTOSCROLL_NONE), 
 			m_bDestroyPageOnRemove(true), 
 			m_bDestroyImageList(true), 
 			m_bActivePageMenuItem(true), 
@@ -3617,6 +3631,7 @@ public:
 			m_bEmptyMenuItem(false), 
 			m_bWindowsMenuItem(false), 
 			m_bNoTabDrag(false), 
+	                m_bNoTabDragAutoScroll(false), 
 			m_bTabCapture(false), 
 			m_bTabDrag(false), 
 			m_bInternalFont(false)
@@ -4173,6 +4188,7 @@ public:
 		MESSAGE_HANDLER(WM_SETFOCUS, OnSetFocus)
 		MESSAGE_HANDLER(WM_GETFONT, OnGetFont)
 		MESSAGE_HANDLER(WM_SETFONT, OnSetFont)
+		MESSAGE_HANDLER(WM_TIMER, OnTimer)
 		MESSAGE_HANDLER(WM_CONTEXTMENU, OnTabContextMenu)
 		NOTIFY_HANDLER(m_nTabID, TCN_SELCHANGE, OnTabChanged)
 		NOTIFY_ID_HANDLER(m_nTabID, OnTabNotification)
@@ -4211,6 +4227,8 @@ public:
 			::DeleteObject(hFont);
 			m_bInternalFont = false;
 		}
+
+		m_ud.m_hWnd = NULL;
 
 		return 0;
 	}
@@ -4251,6 +4269,21 @@ public:
 
 		if((BOOL)lParam != FALSE)
 			pT->UpdateLayout();
+
+		return 0;
+	}
+
+	LRESULT OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled)
+	{
+		if(wParam == _nAutoScrollTimerID)
+		{
+			T* pT = static_cast<T*>(this);
+			pT->DoAutoScroll();
+		}
+		else
+		{
+			bHandled = FALSE;
+		}
 
 		return 0;
 	}
@@ -4366,7 +4399,11 @@ public:
 			if(m_bTabDrag)
 			{
 				m_bTabDrag = false;
+
 				T* pT = static_cast<T*>(this);
+				if(!m_bNoTabDragAutoScroll)
+					pT->StartStopAutoScroll(-1);
+
 				pT->DrawMoveMark(-1);
 
 				m_ilDrag.DragLeave(GetDesktopWindow());
@@ -4417,6 +4454,9 @@ public:
 
 				if(m_nInsertItem != nItem)
 					pT->DrawMoveMark(nItem);
+
+				if(!m_bNoTabDragAutoScroll)
+					pT->StartStopAutoScroll(pt.x);
 
 				m_ilDrag.DragShowNolock((nItem != -1) ? TRUE : FALSE);
 				m_tab.ClientToScreen(&pt);
@@ -4720,6 +4760,73 @@ public:
 		}
 
 		return nItem;
+	}
+
+	void StartStopAutoScroll(int x)
+	{
+		AutoScroll scroll = _AUTOSCROLL_NONE;
+		if(x != -1)
+		{
+			RECT rect = { };
+			m_tab.GetClientRect(&rect);
+			int dx = ::GetSystemMetrics(SM_CXVSCROLL);
+			if((x >= 0) && (x < dx))
+			{
+				RECT rcItem = {};
+				m_tab.GetItemRect(0, &rcItem);
+				if(rcItem.left < rect.left)
+					scroll = _AUTOSCROLL_LEFT;
+			}
+			else if((x >= (rect.right - dx)) && (x < rect.right))
+			{
+				RECT rcItem = {};
+				m_tab.GetItemRect(m_tab.GetItemCount() - 1, &rcItem);
+				if(rcItem.right > rect.right)
+					scroll = _AUTOSCROLL_RIGHT;
+			}
+		}
+
+		if(scroll != _AUTOSCROLL_NONE)
+		{
+			if(m_ud.m_hWnd == NULL)
+				m_ud = m_tab.GetWindow(GW_CHILD);
+
+			if(m_AutoScroll != scroll)
+			{
+				m_AutoScroll = scroll;
+				this->SetTimer(_nAutoScrollTimerID, 300);
+			}
+		}
+		else
+		{
+			this->KillTimer(_nAutoScrollTimerID);
+			m_AutoScroll = _AUTOSCROLL_NONE;
+		}
+	}
+
+	void DoAutoScroll()
+	{
+		ATLASSERT(m_AutoScroll != _AUTOSCROLL_NONE);
+
+		int nMin = -1, nMax = -1;
+		m_ud.GetRange(nMin, nMax);
+		int nPos = m_ud.GetPos();
+
+		int nNewPos = -1;
+		if((m_AutoScroll == _AUTOSCROLL_LEFT) && (nPos > nMin))
+			nNewPos = nPos - 1;
+		else if((m_AutoScroll == _AUTOSCROLL_RIGHT) && (nPos < nMax))
+			nNewPos = nPos + 1;
+		if(nNewPos != -1)
+		{
+			m_tab.SendMessage(WM_HSCROLL, MAKEWPARAM(SB_THUMBPOSITION, nNewPos));
+			m_tab.SendMessage(WM_HSCROLL, MAKEWPARAM(SB_ENDSCROLL, 0));
+
+			POINT pt = {};
+			::GetCursorPos(&pt);
+			m_tab.ScreenToClient(&pt);
+			m_tab.SendMessage(WM_MOUSEMOVE, NULL, MAKELPARAM(pt.x, pt.y));
+		}
 	}
 
 // Text for menu items and title bar - override to provide different strings
