@@ -56,19 +56,19 @@
 [!endif]
 [!if WTL_COM_SERVER]
 
-CServerAppModule _Module;
+[!output WTL_NS]CServerAppModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
 END_OBJECT_MAP()
 [!else]
 
-CAppModule _Module;
+[!output WTL_NS]CAppModule _Module;
 [!endif]
 [!if WTL_APPTYPE_DLG && !WTL_APPTYPE_DLG_MODAL]
 
 int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 {
-	CMessageLoop theLoop;
+	[!output WTL_NS]CMessageLoop theLoop;
 	_Module.AddMessageLoop(&theLoop);
 
 	[!output WTL_MAINDLG_CLASS] dlgMain;
@@ -105,7 +105,7 @@ public:
 	// thread proc
 	static DWORD WINAPI RunThread(LPVOID lpData)
 	{
-		CMessageLoop theLoop;
+		[!output WTL_NS]CMessageLoop theLoop;
 		_Module.AddMessageLoop(&theLoop);
 
 		_RunData* pData = (_RunData*)lpData;
@@ -212,7 +212,7 @@ public:
 
 int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 {
-	CMessageLoop theLoop;
+	[!output WTL_NS]CMessageLoop theLoop;
 	_Module.AddMessageLoop(&theLoop);
 
 	[!output WTL_FRAME_CLASS] wndMain;
@@ -246,9 +246,9 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	ATLASSERT(SUCCEEDED(hRes));
 
 [!if !WTL_USE_TOOLBAR || !WTL_USE_REBAR]
-	AtlInitCommonControls(ICC_BAR_CLASSES);	// add flags to support other controls
+	[!output WTL_NS]AtlInitCommonControls(ICC_BAR_CLASSES);	// add flags to support other controls
 [!else]
-	AtlInitCommonControls(ICC_COOL_CLASSES | ICC_BAR_CLASSES);	// add flags to support other controls
+	[!output WTL_NS]AtlInitCommonControls(ICC_COOL_CLASSES | ICC_BAR_CLASSES);	// add flags to support other controls
 [!endif]
 [!if WTL_COM_SERVER]
 
@@ -267,7 +267,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 
 [!endif]
 [!if WTL_ENABLE_AX]
-	AtlAxWinInit();
+	[!output ATL_NS]AtlAxWinInit();
 
 [!endif]
 [!if WTL_COM_SERVER]
@@ -313,7 +313,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 
 		if(bAutomation)
 		{
-			CMessageLoop theLoop;
+			[!output WTL_NS]CMessageLoop theLoop;
 			nRet = theLoop.Run();
 		}
 		else
@@ -324,7 +324,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 		}
 [!else]
 [!if WTL_RIBBON_SINGLE_UI]
-		if (RunTimeHelper::IsRibbonUIAvailable())
+		if ([!output WTL_NS]RunTimeHelper::IsRibbonUIAvailable())
 [!endif]
 [!if WTL_APPTYPE_MTSDI]
 		{
@@ -338,7 +338,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 [!endif]
 [!if WTL_RIBBON_SINGLE_UI]
 		else
-			AtlMessageBox(NULL, L"Cannot run with this version of Windows", IDR_MAINFRAME);
+			[!output WTL_NS]AtlMessageBox(NULL, L"Cannot run with this version of Windows", IDR_MAINFRAME);
 [!endif]
 [!endif]
 
@@ -358,7 +358,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	int nRet = 0;
 	// BLOCK: Run application
 [!if WTL_RIBBON_SINGLE_UI]
-	if (RunTimeHelper::IsRibbonUIAvailable())
+	if ([!output WTL_NS]RunTimeHelper::IsRibbonUIAvailable())
 [!endif]
 	{
 		C[!output SAFE_PROJECT_NAME]ThreadManager mgr;
@@ -366,15 +366,15 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	}
 [!if WTL_RIBBON_SINGLE_UI]
 	else
-		AtlMessageBox(NULL, L"Cannot run with this version of Windows", IDR_MAINFRAME);
+		[!output WTL_NS]AtlMessageBox(NULL, L"Cannot run with this version of Windows", IDR_MAINFRAME);
 [!endif]
 [!else]
 [!if WTL_RIBBON_SINGLE_UI]
 	int nRet = 0;
-	if (RunTimeHelper::IsRibbonUIAvailable())
+	if ([!output WTL_NS]RunTimeHelper::IsRibbonUIAvailable())
 		nRet = Run(lpstrCmdLine, nCmdShow);
 	else
-		AtlMessageBox(NULL, L"Cannot run with this version of Windows", IDR_MAINFRAME);
+		[!output WTL_NS]AtlMessageBox(NULL, L"Cannot run with this version of Windows", IDR_MAINFRAME);
 [!else]
 	int nRet = Run(lpstrCmdLine, nCmdShow);
 [!endif]

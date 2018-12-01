@@ -39,7 +39,7 @@ BOOL [!output WTL_VIEW_CLASS]::PreTranslateMessage(MSG* pMsg)
 	return (BOOL)SendMessage(WM_FORWARDMSG, 0, (LPARAM)pMsg);
 [!else]
 [!if WTL_VIEWTYPE_FORM]
-	return CWindow::IsDialogMessage(pMsg);
+	return [!output ATL_NS]CWindow::IsDialogMessage(pMsg);
 [!else]
 	pMsg;
 	return FALSE;
@@ -64,7 +64,7 @@ void [!output WTL_VIEW_CLASS]::OnFinalMessage(HWND /*hWnd*/)
 
 LRESULT [!output WTL_VIEW_CLASS]::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
-	CPaintDC dc(m_hWnd);
+	[!output WTL_NS]CPaintDC dc(m_hWnd);
 
 	//TODO: Add your drawing code here
 
