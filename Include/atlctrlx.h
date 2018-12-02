@@ -286,7 +286,7 @@ public:
 		// draw 3D border if required
 		if(bAuto3D)
 		{
-			RECT rect = { 0 };
+			RECT rect = {};
 			this->GetClientRect(&rect);
 
 			if(bPressed)
@@ -466,7 +466,7 @@ public:
 		{
 			POINT ptCursor = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
 			this->ClientToScreen(&ptCursor);
-			RECT rect = { 0 };
+			RECT rect = {};
 			this->GetWindowRect(&rect);
 			unsigned int uPressed = ::PtInRect(&rect, ptCursor) ? 1 : 0;
 			if(m_fPressed != uPressed)
@@ -585,7 +585,7 @@ public:
 
 	BOOL StartTrackMouseLeave()
 	{
-		TRACKMOUSEEVENT tme = { 0 };
+		TRACKMOUSEEVENT tme = {};
 		tme.cbSize = sizeof(tme);
 		tme.dwFlags = TME_LEAVE;
 		tme.hwndTrack = this->m_hWnd;
@@ -667,7 +667,7 @@ public:
 	void CheckSelectedItems(int nCurrItem)
 	{
 		// first check if this item is selected
-		LVITEM lvi = { 0 };
+		LVITEM lvi = {};
 		lvi.iItem = nCurrItem;
 		lvi.iSubItem = 0;
 		lvi.mask = LVIF_STATE;
@@ -721,7 +721,7 @@ public:
 	LRESULT OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled)
 	{
 		POINT ptMsg = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
-		LVHITTESTINFO lvh = { 0 };
+		LVHITTESTINFO lvh = {};
 		lvh.pt = ptMsg;
 		if((this->HitTest(&lvh) != -1) && (lvh.flags == LVHT_ONITEMSTATEICON) && (::GetKeyState(VK_CONTROL) >= 0))
 		{
@@ -933,7 +933,7 @@ public:
 		UINT uFormat = IsSingleLine() ? DT_SINGLELINE : DT_WORDBREAK;
 
 		CClientDC dc(this->m_hWnd);
-		RECT rect = { 0 };
+		RECT rect = {};
 		GetClientRect(&rect);
 		HFONT hFontOld = dc.SelectFont(m_hFontNormal);
 		RECT rcText = rect;
@@ -966,7 +966,7 @@ public:
 			return false;
 
 		CClientDC dc(this->m_hWnd);
-		RECT rcClient = { 0 };
+		RECT rcClient = {};
 		GetClientRect(&rcClient);
 		RECT rcAll = rcClient;
 
@@ -1105,7 +1105,7 @@ public:
 		}
 
 		CFontHandle font = (m_hFontNormal != NULL) ? m_hFontNormal : (HFONT)::GetStockObject(SYSTEM_FONT);
-		LOGFONT lf = { 0 };
+		LOGFONT lf = {};
 		font.GetLogFont(&lf);
 
 		if(IsUsingTagsBold())
@@ -1309,7 +1309,7 @@ public:
 
 	LRESULT OnSetCursor(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 	{
-		POINT pt = { 0, 0 };
+		POINT pt = {};
 		GetCursorPos(&pt);
 		this->ScreenToClient(&pt);
 		if(((m_lpstrHyperLink != NULL)  || IsCommandButton()) && ::PtInRect(&m_rcLink, pt))
@@ -1381,7 +1381,7 @@ public:
 
 		// Check if we should paint a label
 		const int cchBuff = 8;
-		TCHAR szBuffer[cchBuff] = { 0 };
+		TCHAR szBuffer[cchBuff] = {};
 		if(::GetClassName(this->m_hWnd, szBuffer, cchBuff))
 		{
 			if(lstrcmpi(szBuffer, _T("static")) == 0)
@@ -1452,7 +1452,7 @@ public:
 			if(lRet == ERROR_SUCCESS)
 			{
 				const int cchValue = 12;
-				TCHAR szValue[cchValue] = { 0 };
+				TCHAR szValue[cchValue] = {};
 				ULONG ulCount = cchValue;
 				lRet = rk.QueryStringValue(_T("Anchor Color"), szValue, &ulCount);
 				if(lRet == ERROR_SUCCESS)
@@ -1510,7 +1510,7 @@ public:
 			return false;
 
 		CClientDC dc(this->m_hWnd);
-		RECT rcClient = { 0 };
+		RECT rcClient = {};
 		this->GetClientRect(&rcClient);
 		m_rcLink = rcClient;
 		if(!m_bPaintLabel)
@@ -1633,7 +1633,7 @@ public:
 		HBRUSH hBrush = (HBRUSH)this->GetParent().SendMessage(WM_CTLCOLORSTATIC, (WPARAM)dc.m_hDC, (LPARAM)this->m_hWnd);
 		if(hBrush != NULL)
 		{
-			RECT rect = { 0 };
+			RECT rect = {};
 			this->GetClientRect(&rect);
 			dc.FillRect(&rect, hBrush);
 		}
@@ -1655,7 +1655,7 @@ public:
 			pT->CalcLabelParts(lpstrLeft, cchLeft, lpstrLink, cchLink, lpstrRight, cchRight);
 
 			// get label part rects
-			RECT rcClient = { 0 };
+			RECT rcClient = {};
 			this->GetClientRect(&rcClient);
 
 			dc.SetBkMode(TRANSPARENT);
@@ -1720,7 +1720,7 @@ public:
 
 	BOOL StartTrackMouseLeave()
 	{
-		TRACKMOUSEEVENT tme = { 0 };
+		TRACKMOUSEEVENT tme = {};
 		tme.cbSize = sizeof(tme);
 		tme.dwFlags = TME_LEAVE;
 		tme.hwndTrack = this->m_hWnd;
@@ -1893,7 +1893,7 @@ public:
 	HWND Create(HWND hWndParent, UINT nTextID = ATL_IDS_IDLEMESSAGE, DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | SBARS_SIZEGRIP, UINT nID = ATL_IDW_STATUS_BAR)
 	{
 		const int cchMax = 128;   // max text length is 127 for status bars (+1 for null)
-		TCHAR szText[cchMax] = { 0 };
+		TCHAR szText[cchMax] = {};
 		::LoadString(ModuleHelper::GetResourceInstance(), nTextID, szText, cchMax);
 		return Create(hWndParent, szText, dwStyle, nID);
 	}
@@ -1925,12 +1925,11 @@ public:
 		HFONT hOldFont = dc.SelectFont(this->GetFont());
 
 		// get status bar borders
-		int arrBorders[3] = { 0 };
+		int arrBorders[3] = {};
 		this->GetBorders(arrBorders);
 
 		const int cchBuff = 128;
-		TCHAR szBuff[cchBuff] = { 0 };
-		SIZE size = { 0, 0 };
+		TCHAR szBuff[cchBuff] = {};
 		int cxLeft = arrBorders[0];
 
 		// calculate right edge of each part
@@ -1944,6 +1943,7 @@ public:
 			else
 			{
 				::LoadString(ModuleHelper::GetResourceInstance(), pPanes[i], szBuff, cchBuff);
+				SIZE size = {};
 				dc.GetTextExtent(szBuff, lstrlen(szBuff), &size);
 				T* pT = static_cast<T*>(this);
 				(void)pT;   // avoid level 4 warning
@@ -2134,7 +2134,7 @@ public:
 		if(nRet != m_nPanes)
 			return FALSE;
 		// calculate offset
-		RECT rcClient = { 0 };
+		RECT rcClient = {};
 		this->GetClientRect(&rcClient);
 		int cxOff = rcClient.right - pPanesPos[m_nPanes - 1];
 		// Move panes left if size grip box is present
@@ -2358,7 +2358,7 @@ public:
 			T* pT = static_cast<T*>(this);
 			pT->Init();
 
-			RECT rect = { 0 };
+			RECT rect = {};
 			GetClientRect(&rect);
 			pT->UpdateLayout(rect.right, rect.bottom);
 		}
@@ -2376,7 +2376,7 @@ public:
 
 	void UpdateLayout()
 	{
-		RECT rcClient = { 0 };
+		RECT rcClient = {};
 		this->GetClientRect(&rcClient);
 		T* pT = static_cast<T*>(this);
 		pT->UpdateLayout(rcClient.right, rcClient.bottom);
@@ -2572,7 +2572,7 @@ public:
 		if(m_hFont == NULL)
 		{
 			// The same as AtlCreateControlFont() for horizontal pane
-			LOGFONT lf = { 0 };
+			LOGFONT lf = {};
 			ATLVERIFY(::SystemParametersInfo(SPI_GETICONTITLELOGFONT, sizeof(LOGFONT), &lf, 0) != FALSE);
 			if(IsVertical())
 				lf.lfEscapement = 900;   // 90 degrees
@@ -2590,7 +2590,7 @@ public:
 	void UpdateLayout(int cxWidth, int cyHeight)
 	{
 		ATLASSERT(::IsWindow(this->m_hWnd));
-		RECT rect = { 0 };
+		RECT rect = {};
 
 		if(IsVertical())
 		{
@@ -2632,7 +2632,7 @@ public:
 
 			m_tb.SetButtonStructSize();
 
-			TBBUTTON tbbtn = { 0 };
+			TBBUTTON tbbtn = {};
 			tbbtn.idCommand = pT->m_nCloseBtnID;
 			tbbtn.fsState = TBSTATE_ENABLED;
 			tbbtn.fsStyle = BTNS_BUTTON;
@@ -2660,7 +2660,7 @@ public:
 		CFontHandle font = pT->GetTitleFont();
 		if(font.IsNull())
 			font = (HFONT)::GetStockObject(SYSTEM_FONT);
-		LOGFONT lf = { 0 };
+		LOGFONT lf = {};
 		font.GetLogFont(lf);
 		if(IsVertical())
 		{
@@ -2686,7 +2686,7 @@ public:
 
 	void DrawPaneTitle(CDCHandle dc)
 	{
-		RECT rect = { 0 };
+		RECT rect = {};
 		this->GetClientRect(&rect);
 
 		UINT uBorder = BF_LEFT | BF_TOP | BF_ADJUST;
@@ -2729,7 +2729,7 @@ public:
 
 			RECT rcCalc = { rect.left, rect.bottom, rect.right, rect.top };
 			int cxFont = dc.DrawText(m_szTitle, -1, &rcCalc, DT_TOP | DT_SINGLELINE | DT_END_ELLIPSIS | DT_CALCRECT);
-			RECT rcText = { 0 };
+			RECT rcText = {};
 			rcText.left = (rect.right - rect.left - cxFont) / 2;
 			rcText.right = rcText.left + (rect.bottom - rect.top);
 			rcText.top = rect.bottom;
@@ -2751,7 +2751,7 @@ public:
 
 	void DrawPaneTitleBackground(CDCHandle dc)
 	{
-		RECT rect = { 0 };
+		RECT rect = {};
 		this->GetClientRect(&rect);
 		if(IsVertical())
 			rect.right = m_cxyHeader;
@@ -2769,7 +2769,7 @@ public:
 	// called only if pane is empty
 	void DrawPane(CDCHandle dc)
 	{
-		RECT rect = { 0 };
+		RECT rect = {};
 		this->GetClientRect(&rect);
 		if(IsVertical())
 			rect.left += m_cxyHeader;
@@ -3037,7 +3037,7 @@ public:
 		LVCompareParam* pParam = NULL;
 		ATLTRY(pParam = new LVCompareParam[nCount]);
 		PFNLVCOMPARE pFunc = NULL;
-		TCHAR pszTemp[pT->m_cchCmpTextMax] = { 0 };
+		TCHAR pszTemp[pT->m_cchCmpTextMax] = {};
 		bool bStrValue = false;
 
 		switch(wType)
@@ -3786,7 +3786,7 @@ public:
 		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT(IsValidPageIndex(nPage));
 
-		TCITEMEXTRA tcix = { 0 };
+		TCITEMEXTRA tcix = {};
 		tcix.tciheader.mask = TCIF_PARAM;
 		m_tab.GetItem(nPage, tcix);
 
@@ -3798,7 +3798,7 @@ public:
 		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT(IsValidPageIndex(nPage));
 
-		TCITEMEXTRA tcix = { 0 };
+		TCITEMEXTRA tcix = {};
 		tcix.tciheader.mask = TCIF_PARAM;
 		if(m_tab.GetItem(nPage, tcix) == FALSE)
 			return NULL;
@@ -3820,7 +3820,7 @@ public:
 			return false;
 
 		ATL::Checked::tcscpy_s(lpstrBuff, cchBuff, lpstrTitle);
-		TCITEMEXTRA tcix = { 0 };
+		TCITEMEXTRA tcix = {};
 		tcix.tciheader.mask = TCIF_PARAM;
 		if(m_tab.GetItem(nPage, tcix) == FALSE)
 			return false;
@@ -3851,7 +3851,7 @@ public:
 		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT(IsValidPageIndex(nPage));
 
-		TCITEMEXTRA tcix = { 0 };
+		TCITEMEXTRA tcix = {};
 		tcix.tciheader.mask = TCIF_PARAM;
 		m_tab.GetItem(nPage, tcix);
 
@@ -3863,7 +3863,7 @@ public:
 		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT(IsValidPageIndex(nPage));
 
-		TCITEMEXTRA tcix = { 0 };
+		TCITEMEXTRA tcix = {};
 		tcix.tciheader.mask = TCIF_PARAM;
 		m_tab.GetItem(nPage, tcix);
 		LPVOID pDataOld = tcix.tvpage.pData;
@@ -3879,7 +3879,7 @@ public:
 		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT(IsValidPageIndex(nPage));
 
-		TCITEMEXTRA tcix = { 0 };
+		TCITEMEXTRA tcix = {};
 		tcix.tciheader.mask = TCIF_IMAGE;
 		m_tab.GetItem(nPage, tcix);
 
@@ -3891,7 +3891,7 @@ public:
 		ATLASSERT(::IsWindow(this->m_hWnd));
 		ATLASSERT(IsValidPageIndex(nPage));
 
-		TCITEMEXTRA tcix = { 0 };
+		TCITEMEXTRA tcix = {};
 		tcix.tciheader.mask = TCIF_IMAGE;
 		m_tab.GetItem(nPage, tcix);
 		int nImageOld = tcix.tciheader.iImage;
@@ -3932,7 +3932,7 @@ public:
 
 		this->SetRedraw(FALSE);
 
-		TCITEMEXTRA tcix = { 0 };
+		TCITEMEXTRA tcix = {};
 		tcix.tciheader.mask = TCIF_TEXT | TCIF_IMAGE | TCIF_PARAM;
 		tcix.tciheader.pszText = lpstrTabText;
 		tcix.tciheader.iImage = nImage;
@@ -4296,7 +4296,7 @@ public:
 		{
 			if((pt.x == -1) && (pt.y == -1))   // keyboard
 			{
-				RECT rect = { 0 };
+				RECT rect = {};
 				m_tab.GetItemRect(m_nActivePage, &rect);
 				pt.x = rect.left;
 				pt.y = rect.bottom;
@@ -4490,7 +4490,7 @@ public:
 		LPTSTR lpstrTabText = buff.Allocate(m_cchTabTextLength + 1);
 		if(lpstrTabText == NULL)
 			return false;
-		TCITEMEXTRA tcix = { 0 };
+		TCITEMEXTRA tcix = {};
 		tcix.tciheader.mask = TCIF_TEXT | TCIF_IMAGE | TCIF_PARAM;
 		tcix.tciheader.pszText = lpstrTabText;
 		tcix.tciheader.cchTextMax = m_cchTabTextLength + 1;
@@ -4543,7 +4543,7 @@ public:
 	{
 		int nCount = m_tab.GetItemCount();
 		TCHAR szText[] = _T("NS");
-		TCITEMEXTRA tcix = { 0 };
+		TCITEMEXTRA tcix = {};
 		tcix.tciheader.mask = TCIF_TEXT;
 		tcix.tciheader.pszText = szText;
 		int nIndex = m_tab.InsertItem(nCount, tcix);
@@ -4570,7 +4570,7 @@ public:
 
 	void UpdateLayout()
 	{
-		RECT rect = { 0 };
+		RECT rect = {};
 		this->GetClientRect(&rect);
 
 		int cyOffset = 0;
@@ -4629,7 +4629,7 @@ public:
 
 		if(m_nInsertItem != -1)
 		{
-			RECT rect = { 0 };
+			RECT rect = {};
 			pT->GetMoveMarkRect(rect);
 			m_tab.InvalidateRect(&rect);
 		}
@@ -4640,7 +4640,7 @@ public:
 		{
 			CClientDC dc(m_tab.m_hWnd);
 
-			RECT rect = { 0 };
+			RECT rect = {};
 			pT->GetMoveMarkRect(rect);
 
 			CPen pen;
@@ -4669,7 +4669,7 @@ public:
 	{
 		m_tab.GetClientRect(&rect);
 
-		RECT rcItem = { 0 };
+		RECT rcItem = {};
 		m_tab.GetItemRect(m_nInsertItem, &rcItem);
 
 		if(m_nInsertItem <= m_nActivePage)
@@ -4693,7 +4693,7 @@ public:
 	{
 		ATLASSERT(IsValidPageIndex(nItem));
 
-		RECT rcItem = { 0 };
+		RECT rcItem = {};
 		m_tab.GetItemRect(nItem, &rcItem);
 		::InflateRect(&rcItem, 2, 2);   // make bigger to cover selected item
 
@@ -4848,7 +4848,7 @@ public:
 // Notifications - override to provide different behavior
 	void OnPageActivated(int nPage)
 	{
-		NMHDR nmhdr = { 0 };
+		NMHDR nmhdr = {};
 		nmhdr.hwndFrom = this->m_hWnd;
 		nmhdr.idFrom = nPage;
 		nmhdr.code = TBVN_PAGEACTIVATED;
@@ -4857,7 +4857,7 @@ public:
 
 	void OnContextMenu(int nPage, POINT pt)
 	{
-		TBVCONTEXTMENUINFO cmi = { 0 };
+		TBVCONTEXTMENUINFO cmi = {};
 		cmi.hdr.hwndFrom = this->m_hWnd;
 		cmi.hdr.idFrom = nPage;
 		cmi.hdr.code = TBVN_CONTEXTMENU;

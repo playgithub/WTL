@@ -394,7 +394,7 @@ namespace ModuleHelper
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// SecureHelper - WTL10 requires use if secure functions
+// SecureHelper - WTL10 requires use of secure functions
 // these are here only for compatibility with existing projects
 
 namespace SecureHelper

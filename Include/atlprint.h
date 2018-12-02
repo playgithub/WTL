@@ -871,7 +871,7 @@ public:
 	LRESULT OnPaint(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 	{
 		T* pT = static_cast<T*>(this);
-		RECT rc = { 0 };
+		RECT rc = {};
 
 		if(wParam != NULL)
 		{
@@ -891,7 +891,7 @@ public:
 // Painting helper
 	void DoPrePaint(CDCHandle dc, RECT& rc)
 	{
-		RECT rcClient = { 0 };
+		RECT rcClient = {};
 		this->GetClientRect(&rcClient);
 		RECT rcArea = rcClient;
 		T* pT = static_cast<T*>(this);
@@ -1011,7 +1011,7 @@ public:
 	LRESULT OnPaint(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 	{
 		T* pT = static_cast<T*>(this);
-		RECT rc = { 0 };
+		RECT rc = {};
 
 		if(wParam != NULL)
 		{
@@ -1052,7 +1052,7 @@ public:
 
 	void DoPrePaint(CDCHandle dc, RECT& rc)
 	{
-		RECT rcClient = { 0 };
+		RECT rcClient = {};
 		this->GetClientRect(&rcClient);
 		RECT rcArea = rcClient;
 		T* pT = static_cast<T*>(this);

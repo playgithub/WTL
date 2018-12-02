@@ -445,7 +445,7 @@ public:
 #ifdef _DEBUG
 		// block - check if this is really a rebar
 		{
-			TCHAR lpszClassName[sizeof(REBARCLASSNAME)] = { 0 };
+			TCHAR lpszClassName[sizeof(REBARCLASSNAME)] = {};
 			::GetClassName(hWndReBar, lpszClassName, sizeof(REBARCLASSNAME));
 			ATLASSERT(lstrcmp(lpszClassName, REBARCLASSNAME) == 0);
 		}
@@ -474,7 +474,7 @@ public:
 
 		// Calculate the size of the band
 		BOOL bRet = FALSE;
-		RECT rcTmp = { 0 };
+		RECT rcTmp = {};
 		if(nBtnCount > 0)
 		{
 			bRet = (BOOL)::SendMessage(hWndBand, TB_GETITEMRECT, nBtnCount - 1, (LPARAM)&rcTmp);
@@ -540,7 +540,7 @@ public:
 			rbBand.fMask = RBBIM_SIZE;
 			BOOL bRet = (BOOL)::SendMessage(m_hWndToolBar, RB_GETBANDINFO, i, (LPARAM)&rbBand);
 			ATLASSERT(bRet);
-			RECT rect = { 0 };
+			RECT rect = {};
 			::SendMessage(m_hWndToolBar, RB_GETBANDBORDERS, i, (LPARAM)&rect);
 			rbBand.cx += rect.left + rect.right;
 			bRet = (BOOL)::SendMessage(m_hWndToolBar, RB_SETBANDINFO, i, (LPARAM)&rbBand);
@@ -558,14 +558,14 @@ public:
 	BOOL CreateSimpleStatusBar(UINT nTextID = ATL_IDS_IDLEMESSAGE, DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | SBARS_SIZEGRIP, UINT nID = ATL_IDW_STATUS_BAR)
 	{
 		const int cchMax = 128;   // max text length is 127 for status bars (+1 for null)
-		TCHAR szText[cchMax] = { 0 };
+		TCHAR szText[cchMax] = {};
 		::LoadString(ModuleHelper::GetResourceInstance(), nTextID, szText, cchMax);
 		return CreateSimpleStatusBar(szText, dwStyle, nID);
 	}
 
 	void UpdateLayout(BOOL bResizeBars = TRUE)
 	{
-		RECT rect = { 0 };
+		RECT rect = {};
 		this->GetClientRect(&rect);
 
 		// position bars and offset their dimensions
@@ -588,7 +588,7 @@ public:
 				::SendMessage(m_hWndToolBar, WM_SIZE, 0, 0);
 				::InvalidateRect(m_hWndToolBar, NULL, TRUE);
 			}
-			RECT rectTB = { 0 };
+			RECT rectTB = {};
 			::GetWindowRect(m_hWndToolBar, &rectTB);
 			rect.top += rectTB.bottom - rectTB.top;
 		}
@@ -598,7 +598,7 @@ public:
 		{
 			if(bResizeBars != FALSE)
 				::SendMessage(m_hWndStatusBar, WM_SIZE, 0, 0);
-			RECT rectSB = { 0 };
+			RECT rectSB = {};
 			::GetWindowRect(m_hWndStatusBar, &rectSB);
 			rect.bottom -= rectSB.bottom - rectSB.top;
 		}
@@ -644,7 +644,7 @@ public:
 		else
 		{
 			const int cchBuff = 256;
-			TCHAR szBuff[cchBuff] = { 0 };
+			TCHAR szBuff[cchBuff] = {};
 			if(!(wFlags & MF_POPUP))
 			{
 				WORD wID = LOWORD(wParam);
@@ -697,7 +697,7 @@ public:
 		if((idCtrl != 0) && !(pDispInfo->uFlags & TTF_IDISHWND))
 		{
 			const int cchBuff = 256;
-			char szBuff[cchBuff] = { 0 };
+			char szBuff[cchBuff] = {};
 			int nRet = ::LoadStringA(ModuleHelper::GetResourceInstance(), idCtrl, szBuff, cchBuff);
 			for(int i = 0; i < nRet; i++)
 			{
@@ -720,7 +720,7 @@ public:
 		if((idCtrl != 0) && !(pDispInfo->uFlags & TTF_IDISHWND))
 		{
 			const int cchBuff = 256;
-			wchar_t szBuff[cchBuff] = { 0 };
+			wchar_t szBuff[cchBuff] = {};
 			int nRet = ::LoadStringW(ModuleHelper::GetResourceInstance(), idCtrl, szBuff, cchBuff);
 			for(int i = 0; i < nRet; i++)
 			{
@@ -760,18 +760,18 @@ public:
 		CMenuHandle menu;
 		bRet = menu.CreatePopupMenu();
 		ATLASSERT(bRet);
-		RECT rcClient = { 0 };
+		RECT rcClient = {};
 		bRet = wnd.GetClientRect(&rcClient);
 		ATLASSERT(bRet);
 		for(int i = 0; i < nCount; i++)
 		{
-			TBBUTTON tbb = { 0 };
+			TBBUTTON tbb = {};
 			bRet = (BOOL)wnd.SendMessage(TB_GETBUTTON, i, (LPARAM)&tbb);
 			ATLASSERT(bRet);
 			// skip hidden buttons
 			if((tbb.fsState & TBSTATE_HIDDEN) != 0)
 				continue;
-			RECT rcButton = { 0 };
+			RECT rcButton = {};
 			bRet = (BOOL)wnd.SendMessage(TB_GETITEMRECT, i, (LPARAM)&rcButton);
 			ATLASSERT(bRet);
 			bool bEnabled = ((tbb.fsState & TBSTATE_ENABLED) != 0);
@@ -785,7 +785,7 @@ public:
 				else if(cmi.bCmdBar)
 				{
 					const int cchBuff = 200;
-					TCHAR szBuff[cchBuff] = { 0 };
+					TCHAR szBuff[cchBuff] = {};
 					CMenuItemInfo mii;
 					mii.fMask = MIIM_TYPE | MIIM_SUBMENU;
 					mii.dwTypeData = szBuff;
@@ -801,9 +801,9 @@ public:
 				{
 					// get button's text
 					const int cchBuff = 200;
-					TCHAR szBuff[cchBuff] = { 0 };
+					TCHAR szBuff[cchBuff] = {};
 					LPCTSTR lpstrText = szBuff;
-					TBBUTTONINFO tbbi = { 0 };
+					TBBUTTONINFO tbbi = {};
 					tbbi.cbSize = sizeof(TBBUTTONINFO);
 					tbbi.dwMask = TBIF_TEXT;
 					tbbi.pszText = szBuff;
@@ -849,7 +849,7 @@ public:
 		wndFrom.MapWindowPoints(NULL, &rc);
 		// set up flags and rect
 		UINT uMenuFlags = TPM_LEFTBUTTON | TPM_VERTICAL | TPM_LEFTALIGN | TPM_TOPALIGN | TPM_VERPOSANIMATION;
-		TPMPARAMS TPMParams = { 0 };
+		TPMPARAMS TPMParams = {};
 		TPMParams.cbSize = sizeof(TPMPARAMS);
 		TPMParams.rcExclude = rc;
 		// check if this window has a command bar
@@ -882,7 +882,7 @@ public:
 		RECT rc = cmi.lpnm->rc;
 		wndFrom.MapWindowPoints(NULL, &rc);
 		// eat next message if click is on the same button
-		MSG msg = { 0 };
+		MSG msg = {};
 		if(::PeekMessage(&msg, this->m_hWnd, WM_LBUTTONDOWN, WM_LBUTTONDOWN, PM_NOREMOVE) && ::PtInRect(&rc, msg.pt))
 			::PeekMessage(&msg, this->m_hWnd, WM_LBUTTONDOWN, WM_LBUTTONDOWN, PM_REMOVE);
 	}
@@ -911,7 +911,7 @@ public:
 	HWND CreateEx(HWND hWndParent = NULL, ATL::_U_RECT rect = NULL, DWORD dwStyle = 0, DWORD dwExStyle = 0, LPVOID lpCreateParam = NULL)
 	{
 		const int cchName = 256;
-		TCHAR szWindowName[cchName] = { 0 };
+		TCHAR szWindowName[cchName] = {};
 		::LoadString(ModuleHelper::GetResourceInstance(), T::GetWndClassInfo().m_uCommonResourceID, szWindowName, cchName);
 		HMENU hMenu = ::LoadMenu(ModuleHelper::GetResourceInstance(), MAKEINTRESOURCE(T::GetWndClassInfo().m_uCommonResourceID));
 
@@ -1159,7 +1159,7 @@ public:
 	HWND CreateEx(HWND hWndParent = NULL, ATL::_U_RECT rect = NULL, DWORD dwStyle = 0, DWORD dwExStyle = 0, LPVOID lpCreateParam = NULL)
 	{
 		const int cchName = 256;
-		TCHAR szWindowName[cchName] = { 0 };
+		TCHAR szWindowName[cchName] = {};
 		::LoadString(ModuleHelper::GetResourceInstance(), T::GetWndClassInfo().m_uCommonResourceID, szWindowName, cchName);
 		HMENU hMenu = ::LoadMenu(ModuleHelper::GetResourceInstance(), MAKEINTRESOURCE(T::GetWndClassInfo().m_uCommonResourceID));
 
@@ -1256,7 +1256,7 @@ public:
 		DWORD dwStyle = WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
 		DWORD dwExStyle = WS_EX_CLIENTEDGE;
 
-		CLIENTCREATESTRUCT ccs = { 0 };
+		CLIENTCREATESTRUCT ccs = {};
 		ccs.hWindowMenu = hWindowMenu;
 		ccs.idFirstChild = nFirstChildID;
 
@@ -1411,7 +1411,7 @@ public:
 	HWND CreateEx(HWND hWndParent, ATL::_U_RECT rect = NULL, LPCTSTR lpcstrWindowName = NULL, DWORD dwStyle = 0, DWORD dwExStyle = 0, LPVOID lpCreateParam = NULL)
 	{
 		const int cchName = 256;
-		TCHAR szWindowName[cchName] = { 0 };
+		TCHAR szWindowName[cchName] = {};
 		if(lpcstrWindowName == NULL)
 		{
 			::LoadString(ModuleHelper::GetResourceInstance(), T::GetWndClassInfo().m_uCommonResourceID, szWindowName, cchName);
@@ -1505,7 +1505,7 @@ public:
 
 		if(!(lpWndPos->flags & SWP_NOSIZE))
 		{
-			RECT rectClient = { 0 };
+			RECT rectClient = {};
 			if(UpdateClientEdge(&rectClient) && ((this->GetStyle() & WS_MAXIMIZE) != 0))
 			{
 				::AdjustWindowRectEx(&rectClient, this->GetStyle(), FALSE, this->GetExStyle());
@@ -1659,7 +1659,7 @@ public:
 			T* pT = static_cast<T*>(this);
 			HWND hWnd = pT->GetDlgItem(lpMeasureItemStruct->CtlID);
 			CClientDC dc(hWnd);
-			TEXTMETRIC tm = { 0 };
+			TEXTMETRIC tm = {};
 			dc.GetTextMetrics(&tm);
 
 			lpMeasureItemStruct->itemHeight = tm.tmHeight;
@@ -2674,7 +2674,7 @@ public:
 				UIAddElement<CDynamicUpdateUI<T>::UPDUI_MENUPOPUP>(mii.wID);
 				if (bSetText)
 				{
-					TCHAR sText[64] = { 0 };
+					TCHAR sText[64] = {};
 					if (GetMenuString(hMenu, uItem, sText, 64, MF_BYPOSITION))
 						this->UISetText(mii.wID, sText);
 				}
@@ -2917,7 +2917,7 @@ public:
 		m_ptMinTrackSize.y = -1;
 
 		// Get initial dialog client size
-		RECT rectDlg = { 0 };
+		RECT rectDlg = {};
 		pT->GetClientRect(&rectDlg);
 		m_sizeDialog.cx = rectDlg.right;
 		m_sizeDialog.cy = rectDlg.bottom;
@@ -2936,7 +2936,7 @@ public:
 				if(wndGripper.IsWindow())
 				{
 					m_bGripper = true;
-					RECT rectCtl = { 0 };
+					RECT rectCtl = {};
 					wndGripper.GetWindowRect(&rectCtl);
 					::MapWindowPoints(NULL, pT->m_hWnd, (LPPOINT)&rectCtl, 2);
 					_AtlDlgResizeData data = { ATL_IDW_STATUS_BAR, DLSZ_MOVE_X | DLSZ_MOVE_Y | DLSZ_REPAINT | _DLSZ_GRIPPER, { rectCtl.left, rectCtl.top, rectCtl.right, rectCtl.bottom } };
@@ -2950,14 +2950,14 @@ public:
 		{
 			if((dwStyle & WS_CHILD) != 0)
 			{
-				RECT rect = { 0 };
+				RECT rect = {};
 				pT->GetClientRect(&rect);
 				m_ptMinTrackSize.x = rect.right - rect.left;
 				m_ptMinTrackSize.y = rect.bottom - rect.top;
 			}
 			else
 			{
-				RECT rect = { 0 };
+				RECT rect = {};
 				pT->GetWindowRect(&rect);
 				m_ptMinTrackSize.x = rect.right - rect.left;
 				m_ptMinTrackSize.y = rect.bottom - rect.top;
@@ -2998,7 +2998,7 @@ public:
 
 				ATL::CWindow ctl = pT->GetDlgItem(pMap->m_nCtlID);
 				ATLASSERT(ctl.IsWindow());
-				RECT rectCtl = { 0 };
+				RECT rectCtl = {};
 				ctl.GetWindowRect(&rectCtl);
 				::MapWindowPoints(NULL, pT->m_hWnd, (LPPOINT)&rectCtl, 2);
 
@@ -3057,7 +3057,7 @@ public:
 			}
 			else // one control entry
 			{
-				RECT rectGroup = { 0 };
+				RECT rectGroup = {};
 				pT->DlgResize_PositionControl(cxWidth, cyHeight, rectGroup, m_arrData[i], false);
 			}
 		}
@@ -3110,7 +3110,7 @@ public:
 		T* pT = static_cast<T*>(this);
 		ATLASSERT(::IsWindow(pT->m_hWnd));
 		ATL::CWindow ctl;
-		RECT rectCtl = { 0 };
+		RECT rectCtl = {};
 
 		ctl = pT->GetDlgItem(data.m_nCtlID);
 		if(!ctl.GetWindowRect(&rectCtl))
@@ -3137,7 +3137,7 @@ public:
 					if(pDataPrev != NULL)
 					{
 						ATL::CWindow ctlPrev = pT->GetDlgItem(pDataPrev->m_nCtlID);
-						RECT rcPrev = { 0 };
+						RECT rcPrev = {};
 						ctlPrev.GetWindowRect(&rcPrev);
 						::MapWindowPoints(NULL, pT->m_hWnd, (LPPOINT)&rcPrev, 2);
 						int dxAdjust = (rectCtl.left - rcPrev.right) - (data.m_rect.left - pDataPrev->m_rect.right);
@@ -3169,7 +3169,7 @@ public:
 					if(pDataPrev != NULL)
 					{
 						ATL::CWindow ctlPrev = pT->GetDlgItem(pDataPrev->m_nCtlID);
-						RECT rcPrev = { 0 };
+						RECT rcPrev = {};
 						ctlPrev.GetWindowRect(&rcPrev);
 						::MapWindowPoints(NULL, pT->m_hWnd, (LPPOINT)&rcPrev, 2);
 						int dxAdjust = (rectCtl.top - rcPrev.bottom) - (data.m_rect.top - pDataPrev->m_rect.bottom);
@@ -3506,7 +3506,7 @@ public:
 
 		if(wParam != NULL)
 		{
-			RECT rect = { 0 };
+			RECT rect = {};
 			pT->GetClientRect(&rect);
 			CMemoryDC dcMem((HDC)wParam, rect);
 			pT->DoPaint(dcMem.m_hDC);
