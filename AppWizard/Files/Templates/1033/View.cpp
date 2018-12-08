@@ -48,7 +48,7 @@ BOOL [!output WTL_VIEW_CLASS]::PreTranslateMessage(MSG* pMsg)
 }
 [!if WTL_VIEWTYPE_SCROLL]
 
-void [!output WTL_VIEW_CLASS]::DoPaint(CDCHandle dc)
+void [!output WTL_VIEW_CLASS]::DoPaint([!output WTL_NS]CDCHandle dc)
 {
 	//TODO: Add your drawing code here
 }

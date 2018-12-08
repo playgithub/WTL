@@ -65,10 +65,10 @@ public:
 [!if WTL_VIEWTYPE_SCROLL]
 [!if WTL_USE_CPP_FILES]
 
-	void DoPaint(CDCHandle dc);
+	void DoPaint([!output WTL_NS]CDCHandle dc);
 [!else]
 
-	void DoPaint(CDCHandle dc)
+	void DoPaint([!output WTL_NS]CDCHandle dc)
 	{
 		//TODO: Add your drawing code here
 	}
