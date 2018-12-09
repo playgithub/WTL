@@ -1395,7 +1395,7 @@ public:
 		{
 			// Maximize and redraw everything
 			if(hWnd != NULL)
-				MDIMaximize(hWnd);
+				this->MDIMaximize(hWnd);
 			wndParent.SetRedraw(TRUE);
 			wndParent.RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
 			::SetFocus(this->GetMDIFrame());   // focus will be set back to this window
