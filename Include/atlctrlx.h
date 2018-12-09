@@ -934,7 +934,7 @@ public:
 
 		CClientDC dc(this->m_hWnd);
 		RECT rect = {};
-		GetClientRect(&rect);
+		this->GetClientRect(&rect);
 		HFONT hFontOld = dc.SelectFont(m_hFontNormal);
 		RECT rcText = rect;
 		dc.DrawText(_T("NS"), -1, &rcText, DT_LEFT | uFormat | DT_CALCRECT);
@@ -967,7 +967,7 @@ public:
 
 		CClientDC dc(this->m_hWnd);
 		RECT rcClient = {};
-		GetClientRect(&rcClient);
+		this->GetClientRect(&rcClient);
 		RECT rcAll = rcClient;
 
 		if(IsUsingTags())
@@ -2359,7 +2359,7 @@ public:
 			pT->Init();
 
 			RECT rect = {};
-			GetClientRect(&rect);
+			this->GetClientRect(&rect);
 			pT->UpdateLayout(rect.right, rect.bottom);
 		}
 
