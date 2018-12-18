@@ -4291,6 +4291,7 @@ public:
 	LRESULT OnTabContextMenu(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
 		POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+		int nPage = m_nActivePage;
 		bool bAction = false;
 		if((HWND)wParam == m_tab.m_hWnd)
 		{
@@ -4305,6 +4306,11 @@ public:
 			}
 			else if(::WindowFromPoint(pt) == m_tab.m_hWnd)
 			{
+				TCHITTESTINFO hti = {};
+				hti.pt = pt;
+				ScreenToClient(&hti.pt);
+				nPage = m_tab.HitTest(&hti);
+
 				bAction = true;
 			}
 		}
@@ -4312,7 +4318,7 @@ public:
 		if(bAction)
 		{
 			T* pT = static_cast<T*>(this);
-			pT->OnContextMenu(m_nActivePage, pt);
+			pT->OnContextMenu(nPage, pt);
 		}
 		else
 		{
@@ -4740,20 +4746,20 @@ public:
 
 	int DragHitTest(POINT pt) const
 	{
-		RECT rect = { };
+		RECT rect = {};
 		this->GetClientRect(&rect);
 		if(::PtInRect(&rect, pt) == FALSE)
 			return -1;
 
 		m_tab.GetClientRect(&rect);
-		TCHITTESTINFO hti = { };
+		TCHITTESTINFO hti = {};
 		hti.pt.x = pt.x;
 		hti.pt.y = rect.bottom / 2;   // use middle to ignore
 		int nItem = m_tab.HitTest(&hti);
 		if(nItem == -1)
 		{
 			int nLast = m_tab.GetItemCount() - 1;
-			RECT rcItem = { };
+			RECT rcItem = {};
 			m_tab.GetItemRect(nLast, &rcItem);
 			if(pt.x >= rcItem.right)
 				nItem = nLast;
@@ -4767,7 +4773,7 @@ public:
 		AutoScroll scroll = _AUTOSCROLL_NONE;
 		if(x != -1)
 		{
-			RECT rect = { };
+			RECT rect = {};
 			m_tab.GetClientRect(&rect);
 			int dx = ::GetSystemMetrics(SM_CXVSCROLL);
 			if((x >= 0) && (x < dx))
