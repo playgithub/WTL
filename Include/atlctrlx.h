@@ -4308,7 +4308,7 @@ public:
 			{
 				TCHITTESTINFO hti = {};
 				hti.pt = pt;
-				ScreenToClient(&hti.pt);
+				this->ScreenToClient(&hti.pt);
 				nPage = m_tab.HitTest(&hti);
 
 				bAction = true;
