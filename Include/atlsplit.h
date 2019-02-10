@@ -481,6 +481,13 @@ public:
 			{
 				RECT rect1 = rect;
 				if(m_bVertical)
+					rect1.right = rect1.left + 1;
+				else
+					rect1.bottom = rect1.top + 1;
+				dc.FillRect(&rect1, COLOR_WINDOW);
+
+				rect1 = rect;
+				if(m_bVertical)
 					rect1.left = rect1.right - 1;
 				else
 					rect1.top = rect1.bottom - 1;
