@@ -295,7 +295,18 @@ function main()
 				if(bDebug)
 					WScript.Echo("Destination: " + strDestFolder);
 				if(!FileSys.FolderExists(strDestFolder))
-					continue;
+				{
+					try
+					{
+						FileSys.CreateFolder(strDestFolder);
+					}
+					catch(e)
+					{
+					}
+
+					if(!FileSys.FolderExists(strDestFolder))
+						continue;
+				}
 
 				var strDataDestFolder = "";
 				if(bCopyFiles)
