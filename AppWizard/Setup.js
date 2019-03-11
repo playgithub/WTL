@@ -268,7 +268,7 @@ function main()
 			fileBat.WriteLine(strLine);
 			fileBat.Close();
 
-			Shell.ShellExecute(strBatFile, null, null, "open", 0);
+			WSShell.Run(strBatFile, 0, true);
 		}
 		catch(e)
 		{
@@ -278,9 +278,6 @@ function main()
 			WScript.Echo("ERROR: Cannot create/use tmp batch file (" + strError + ")");
 			continue;
 		}
-
-		// This is needed to allow batch file to finish
-		WScript.sleep(300);
 
 		try
 		{
@@ -343,8 +340,18 @@ function main()
 			WScript.Echo("ERROR: Cannot read tmp file (" + strError + ")");
 		}
 
-		FileSys.DeleteFile(strBatFile);
-		FileSys.DeleteFile(strLogFile);
+		try
+		{
+			FileSys.DeleteFile(strBatFile);
+			FileSys.DeleteFile(strLogFile);
+		}
+		catch(e)
+		{
+			var strError = "no info";
+			if(e.description.length != 0)
+				strError = e.description;
+			WScript.Echo("ERROR: Cannot delete tmp file (" + strError + ")");
+		}
 	}
 
 	if(!strVersion)
