@@ -3913,6 +3913,15 @@ public:
 
 		return bRet;
 	}
+
+	// multi-selection only
+	BOOL SelectAllItems(bool bSelect = true)
+	{
+		ATLASSERT(::IsWindow(this->m_hWnd));
+		ATLASSERT((this->GetStyle() & LVS_SINGLESEL) == 0);
+
+		return SetItemState(-1, bSelect ? LVIS_SELECTED : 0, LVIS_SELECTED);
+	}
 };
 
 typedef CListViewCtrlT<ATL::CWindow>   CListViewCtrl;
