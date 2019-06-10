@@ -3436,6 +3436,6 @@ public:
 	}
 };
 
-}; // namespace WTL
+} // namespace WTL
 
 #endif // __ATLGDI_H__

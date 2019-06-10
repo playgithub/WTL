@@ -2369,7 +2369,7 @@ public:
 ///////////////////////////////////////////////////////////////////////////////
 // CPrintDialogExImpl - new print dialog for Windows 2000
 
-}; // namespace WTL
+} // namespace WTL
 
 #include <atlcom.h>
 
@@ -6227,6 +6227,6 @@ public:
 
 #endif // (_WIN32_WINNT >= 0x0600) || defined(_WTL_TASKDIALOG)
 
-}; // namespace WTL
+} // namespace WTL
 
 #endif // __ATLDLGS_H__

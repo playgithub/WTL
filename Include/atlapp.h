@@ -136,7 +136,7 @@
 
 // Forward declaration for ATL11 fix
 #if (_ATL_VER >= 0x0B00)
-  namespace ATL { HRESULT AtlGetCommCtrlVersion(LPDWORD pdwMajor, LPDWORD pdwMinor); };
+  namespace ATL { HRESULT AtlGetCommCtrlVersion(LPDWORD pdwMajor, LPDWORD pdwMinor); }
 #endif
 
 #ifndef WM_MOUSEHWHEEL
@@ -152,7 +152,7 @@
 namespace WTL
 {
 
-DECLARE_TRACE_CATEGORY(atlTraceUI);
+DECLARE_TRACE_CATEGORY(atlTraceUI)
 #ifdef _DEBUG
   __declspec(selectany) ATL::CTraceCategory atlTraceUI(_T("atlTraceUI"));
 #endif // _DEBUG
@@ -367,7 +367,7 @@ namespace RunTimeHelper
 #endif
 		return uSize;
 	}
-};
+} // namespace RunTimeHelper
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -394,7 +394,7 @@ namespace ModuleHelper
 	{
 		return ATL::_AtlWinModule.ExtractCreateWndData();
 	}
-};
+} // namespace ModuleHelper
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -497,7 +497,7 @@ namespace SecureHelper
 		va_end(args);
 		return nRes;
 	}
-}; // namespace SecureHelper
+} // namespace SecureHelper
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -530,7 +530,7 @@ namespace MinCrtHelper
 	{
 		return _tcsrchr(str, ch);
 	}
-}; // namespace MinCrtHelper
+} // namespace MinCrtHelper
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -563,7 +563,7 @@ namespace GenericWndClass
 	{
 		return ::UnregisterClass(GetName(), ModuleHelper::GetModuleInstance());
 	}
-}; // namespace GenericWndClass
+} // namespace GenericWndClass
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1082,7 +1082,7 @@ public:
 
 typedef ATL::CRegKey CRegKeyEx;
 
-}; // namespace WTL
+} // namespace WTL
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1196,7 +1196,7 @@ inline HRESULT AtlGetShellVersion(LPDWORD pdwMajor, LPDWORD pdwMinor)
 	return hRet;
 }
 
-}; // namespace ATL
+} // namespace ATL
 
 #endif // (_ATL_VER >= 0x0B00)
 

@@ -1096,6 +1096,6 @@ public:
 
 #endif // __ATLSCRL_H__
 
-}; // namespace WTL
+} // namespace WTL
 
 #endif // __ATLPRINT_H__
