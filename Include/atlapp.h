@@ -148,6 +148,13 @@
   #define _WTL_STACK_ALLOC_THRESHOLD   512
 #endif
 
+// Used to declare overriden virtual functions
+#if (__cplusplus >= 201103L) || (defined(_MSC_VER) && _MSC_VER >= 1900)
+  #define _WTL_OVERRIDE override
+#else
+  #define _WTL_OVERRIDE
+#endif
+
 
 namespace WTL
 {
