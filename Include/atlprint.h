@@ -19,6 +19,8 @@
 	#error atlprint.h requires atlwin.h to be included first
 #endif
 
+#include <winspool.h>
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Classes in this file:

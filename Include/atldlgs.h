@@ -19,7 +19,6 @@
 	#error atldlgs.h requires atlwin.h to be included first
 #endif
 
-#include <commdlg.h>
 #include <shlobj.h>
 
 #if (_WIN32_WINNT >= 0x0600)

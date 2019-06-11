@@ -67,6 +67,9 @@
 #include <commctrl.h>
 #pragma comment(lib, "comctl32.lib")
 
+#include <commdlg.h>
+#include <shellapi.h>
+
 // Check for VS2005 without newer WinSDK
 #if (_MSC_VER == 1400) && !defined(RB_GETEXTENDEDSTYLE)
 	#error WTL10 requires WinSDK 6.0 ot higher
