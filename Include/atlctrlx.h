@@ -4543,7 +4543,7 @@ public:
 
 	LRESULT OnTabChanged(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/)
 	{
-		if(m_bTabCloseButton)
+		if(m_bTabCloseButton && (m_btnClose.m_hWnd != NULL))
 		{
 			T* pT = static_cast<T*>(this);
 			RECT rcClose = {};
