@@ -21,6 +21,7 @@
 		.code1 {
 			font-family: Courier;
 			font-size: 10pt;
+			margin-left:4ch
 		}
 	</style>
 </head>
@@ -32,7 +33,7 @@
 		<td>
 			<span class="wtl10"><b>Windows Template Library - WTL 10</b></span>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			version 10.0.10025 (2020-01-25)
+			version 10.0.10075 (2020-03-15)
 		</td>
 	</tr>
 	<tr>
@@ -66,6 +67,7 @@
 	<li><a href="#Packing List">Packing List</a></li>
 	<li><a href="#Class Overview">Class Overview</a></li>
 	<li><a href="#ATL/WTL AppWizard">ATL/WTL AppWizard</a></li>
+	<li><a href="#WTL in MFC">How to use WTL in an MFC project</a></li>
 	<li><a href="#WTL Releases">WTL Releases</a></li>
 </ul>
 <p style=margin:0px><br></p>
@@ -1470,6 +1472,19 @@
 <p style=margin:0px><br></p>
 
 <p style=margin:0px>ATL/WTL AppWizard supports VC++ 2005, 2008, 2010, 2012, 2013, 2015, 2017, and 2019.</p>
+<p style=margin:0px><br></p>
+<p style=margin:0px><br></p>
+
+<h3 style=margin:0px><a name="WTL in MFC"></a>How to use WTL in an MFC project</h3>
+
+<p>If you want to use WTL in an MFC project, you need to put these 2 lines before including atlapp.h:</p>
+<p class="code1">
+	namespace ATL { using ::CString; };<br>
+	#define _WTL_NO_AUTOMATIC_NAMESPACE
+</p>
+<p>The first line tells WTL to use CString from global namespace, because CString is defined that way in MFC. 
+The second line prevents name collisions between WTL and MFC. Use the WTL namespace prefix explicitly.</p>
+
 <p style=margin:0px><br></p>
 <p style=margin:0px><br></p>
 
