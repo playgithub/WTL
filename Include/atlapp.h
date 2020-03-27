@@ -600,7 +600,9 @@ public:
 	MSG m_msg;
 
 	CMessageLoop()
-	{ }
+	{
+		memset(&m_msg, 0, sizeof(m_msg));
+	}
 
 	virtual ~CMessageLoop()
 	{ }
@@ -773,6 +775,9 @@ public:
 	DWORD m_dwMainThreadID;
 	ATL::CSimpleMap<DWORD, CMessageLoop*>* m_pMsgLoopMap;
 	ATL::CSimpleArray<HWND>* m_pSettingChangeNotify;
+
+	CAppModule() : m_dwMainThreadID(0), m_pMsgLoopMap(NULL), m_pSettingChangeNotify(NULL)
+	{ }
 
 // Overrides of CComModule::Init and Term
 	HRESULT Init(ATL::_ATL_OBJMAP_ENTRY* pObjMap, HINSTANCE hInstance, const GUID* pLibID = NULL)
@@ -997,6 +1002,9 @@ public:
 	bool m_bActivity;
 	DWORD m_dwTimeOut;
 	DWORD m_dwPause;
+
+	CServerAppModule() : m_hEventShutdown(NULL), m_bActivity(false), m_dwTimeOut(5000), m_dwPause(1000)
+	{ }
 
 // Override of CAppModule::Init
 	HRESULT Init(ATL::_ATL_OBJMAP_ENTRY* pObjMap, HINSTANCE hInstance, const GUID* pLibID = NULL)

@@ -373,6 +373,7 @@ struct CharFormat : CHARFORMAT2
 	// Copy constructor
 	CharFormat(const CharFormat& cf)
 	{
+		CharFormat();
 		::CopyMemory(this, &cf, sizeof(CHARFORMAT2));
 	}
 
@@ -903,6 +904,7 @@ class CollectionImplBase
 public:
 	CollectionImplBase()
 	{
+		memset(&m_apItems, 0, sizeof(m_apItems));
 		for (int i = 0; i < t_size; i++)
 			m_apItems[i] = new ItemProperty<TCollection>(i, static_cast<TCollection*>(this));
 	}

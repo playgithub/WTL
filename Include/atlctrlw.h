@@ -2280,7 +2280,7 @@ public:
 				}
 				else
 				{
-					HBRUSH hBrushBackground = ::GetSysColorBrush((bSelected && !(bDisabled && bChecked)) ? COLOR_MENUHILIGHT : COLOR_MENU);
+					HBRUSH hBrushBackground = ::GetSysColorBrush((bSelected && !bChecked) ? COLOR_MENUHILIGHT : COLOR_MENU);
 					HBRUSH hBrushDisabledImage = ::GetSysColorBrush(COLOR_3DSHADOW);
 					pT->DrawBitmapDisabled(dc, iButton, point, hBrushBackground, hBrushBackground, hBrushDisabledImage);
 				}
