@@ -226,10 +226,6 @@ public:
 		_chChevronShortcut = _T('/')
 	};
 
-#ifndef DT_HIDEPREFIX
-	enum { DT_HIDEPREFIX = 0x00100000 };
-#endif // !DT_HIDEPREFIX
-
 // Data members
 	HMENU m_hMenu;
 	HIMAGELIST m_hImageList;
@@ -3303,7 +3299,7 @@ public:
 	BEGIN_MSG_MAP(CMDICommandBarCtrlImpl)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
-		MESSAGE_HANDLER(_GetThemeChangedMsg(), OnThemeChanged)
+		MESSAGE_HANDLER(WM_THEMECHANGED, OnThemeChanged)
 		MESSAGE_HANDLER(WM_SIZE, OnSize)
 		MESSAGE_HANDLER(WM_NCCALCSIZE, OnNcCalcSize)
 		MESSAGE_HANDLER(WM_NCPAINT, OnNcPaint)
@@ -3961,14 +3957,6 @@ public:
 			if((nBtn == -1) || (nBtn == 2))
 				dc.DrawFrameControl(&pRects[2], DFC_CAPTION, DFCS_CAPTIONMIN | ((m_nBtnPressed == 2) ? DFCS_PUSHED : 0));
 		}
-	}
-
-	static UINT _GetThemeChangedMsg()
-	{
-#ifndef WM_THEMECHANGED
-		static const UINT WM_THEMECHANGED = 0x031A;
-#endif // !WM_THEMECHANGED
-		return WM_THEMECHANGED;
 	}
 
 	void _OpenThemeData()
