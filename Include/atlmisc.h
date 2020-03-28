@@ -547,7 +547,7 @@ public:
 		if(!GetFileName(szBuff, MAX_PATH))
 			return FALSE;
 
-		if((lstrlen(szBuff) >= cchLength) || (cchLength < 1))
+		if(lstrlen(szBuff) >= cchLength)
 			return FALSE;
 
 		// find the last dot

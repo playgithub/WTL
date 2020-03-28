@@ -815,6 +815,12 @@ public:
 	{
 		CEnhMetaFileInfo emfinfo(m_meta);
 		ENHMETAHEADER* pmh = emfinfo.GetEnhMetaFileHeader();
+		if(pmh == NULL)
+		{
+			ATLASSERT(FALSE);
+			return;
+		}
+
 		int nOffsetX = MulDiv(m_sizeCurPhysOffset.cx, rc.right-rc.left, pmh->szlDevice.cx);
 		int nOffsetY = MulDiv(m_sizeCurPhysOffset.cy, rc.bottom-rc.top, pmh->szlDevice.cy);
 
