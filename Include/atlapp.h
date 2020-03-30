@@ -634,7 +634,7 @@ public:
 	{
 		BOOL bDoIdle = TRUE;
 		int nIdleCount = 0;
-		BOOL bRet;
+		BOOL bRet = FALSE;
 
 		for(;;)
 		{
@@ -673,21 +673,6 @@ public:
 		return (int)m_msg.wParam;
 	}
 
-	static BOOL IsIdleMessage(MSG* pMsg)
-	{
-		// These messages should NOT cause idle processing
-		switch(pMsg->message)
-		{
-		case WM_MOUSEMOVE:
-		case WM_NCMOUSEMOVE:
-		case WM_PAINT:
-		case 0x0118:	// WM_SYSTIMER (caret blink)
-			return FALSE;
-		}
-
-		return TRUE;
-	}
-
 // Overrideables
 	// Override to change message filtering
 	virtual BOOL PreTranslateMessage(MSG* pMsg)
@@ -712,6 +697,22 @@ public:
 				pIdleHandler->OnIdle();
 		}
 		return FALSE;   // don't continue
+	}
+
+	// override to change non-idle messages
+	virtual BOOL IsIdleMessage(MSG* pMsg) const
+	{
+		// These messages should NOT cause idle processing
+		switch(pMsg->message)
+		{
+		case WM_MOUSEMOVE:
+		case WM_NCMOUSEMOVE:
+		case WM_PAINT:
+		case 0x0118:	// WM_SYSTIMER (caret blink)
+			return FALSE;
+		}
+
+		return TRUE;
 	}
 };
 
