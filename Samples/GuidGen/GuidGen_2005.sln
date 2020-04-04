@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuidGen", "GuidGen80.vcproj", "{1A98BE97-763C-4724-9A72-8E8C96DA7A36}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuidGen", "GuidGen_2005.vcproj", "{1A98BE97-763C-4724-9A72-8E8C96DA7A36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
