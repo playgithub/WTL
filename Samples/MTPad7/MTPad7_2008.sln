@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MTPad", "MTPad7_2005.vcproj", "{22B5B9CD-D556-4A0B-B3BB-F9DA41B55FD5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MTPad", "MTPad7_2008.vcproj", "{22B5B9CD-D556-4A0B-B3BB-F9DA41B55FD5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
