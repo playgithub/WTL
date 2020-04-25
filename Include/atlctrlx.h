@@ -3941,7 +3941,7 @@ public:
 		this->RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_UPDATENOW | RDW_ALLCHILDREN);
 
 		HWND hWndFocus = ::GetFocus();
-		CWindow wndTop = GetTopLevelWindow();
+		ATL::CWindow wndTop = this->GetTopLevelWindow();
 		if((hWndFocus == wndTop.m_hWnd) || ((wndTop.IsChild(hWndFocus) != FALSE) && (hWndFocus != m_tab.m_hWnd)))
 			::SetFocus(GetPageHWND(m_nActivePage));
 
