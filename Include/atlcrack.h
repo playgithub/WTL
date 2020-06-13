@@ -1908,6 +1908,42 @@ public: \
 
 #endif // (WINVER >= 0x0601)
 
+#if (WINVER >= 0x0605)
+
+// void OnDpiChangedBeforeParent()
+#define MSG_WM_DPICHANGED_BEFOREPARENT(func) \
+	if (uMsg == WM_DPICHANGED_BEFOREPARENT) \
+	{ \
+		this->SetMsgHandled(TRUE); \
+		func(); \
+		lResult = 0; \
+		if(this->IsMsgHandled()) \
+			return TRUE; \
+	}
+
+// void OnDpiChangedAfterParent()
+#define MSG_WM_DPICHANGED_AFTERPARENT(func) \
+	if (uMsg == WM_DPICHANGED_AFTERPARENT) \
+	{ \
+		this->SetMsgHandled(TRUE); \
+		func(); \
+		lResult = 0; \
+		if(this->IsMsgHandled()) \
+			return TRUE; \
+	}
+
+// BOOL OnGetDpiScaledSize(UINT uDpi, PSIZE pSize)
+#define MSG_WM_GETDPISCALEDSIZE(func) \
+if (uMsg == WM_GETDPISCALEDSIZE) \
+{ \
+	this->SetMsgHandled(TRUE); \
+	lResult = (LRESULT)func((UINT)wParam, (PSIZE)lParam); \
+	if(this->IsMsgHandled()) \
+		return TRUE; \
+}
+
+#endif // (WINVER >= 0x0605)
+
 ///////////////////////////////////////////////////////////////////////////////
 // ATL defined messages
 
