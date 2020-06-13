@@ -1045,7 +1045,7 @@ public: \
 			return TRUE; \
 	}
 
-// void OnMDIActivate(CWindow wndActivate, CWindow wndDeactivate)
+// void OnMDIActivate(CWindow wndDeactivate, CWindow wndActivate)
 #define MSG_WM_MDIACTIVATE(func) \
 	if (uMsg == WM_MDIACTIVATE) \
 	{ \
