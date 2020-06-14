@@ -4680,7 +4680,7 @@ public:
 	CTreeItemT<TBase> GetDropHilight() const;
 	CTreeItemT<TBase> GetRoot() const;
 	CTreeItemT<TBase> GetLastVisible() const;
-	CTreeItemT<TBase> GetNextSelected(HTREEITEM hItem) const;
+	CTreeItemT<TBase> GetNextSelected() const;
 	BOOL HasChildren() const;
 	BOOL Delete();
 	BOOL Expand(UINT nCode = TVE_EXPAND);
@@ -4972,10 +4972,10 @@ inline CTreeItemT<TBase> CTreeItemT<TBase>::GetLastVisible() const
 }
 
 template <class TBase>
-inline CTreeItemT<TBase> CTreeItemT<TBase>::GetNextSelected(HTREEITEM hItem) const
+inline CTreeItemT<TBase> CTreeItemT<TBase>::GetNextSelected() const
 {
 	ATLASSERT(m_pTreeView != NULL);
-	return m_pTreeView->GetNextSelectedItem(hItem);
+	return m_pTreeView->GetNextSelectedItem(m_hTreeItem);
 }
 
 template <class TBase>
