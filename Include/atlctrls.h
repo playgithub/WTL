@@ -3876,6 +3876,12 @@ public:
 		return (int)::SendMessage(this->m_hWnd, LVM_MAPIDTOINDEX, uID, 0L);
 	}
 
+	BOOL IsItemVisible(int nItem) const
+	{
+		ATLASSERT(::IsWindow(this->m_hWnd));
+		return (BOOL)::SendMessage(this->m_hWnd, LVM_ISITEMVISIBLE, nItem, 0L);
+	}
+
 #if (_WIN32_WINNT >= 0x0600)
 	int HitTestEx(LPLVHITTESTINFO lpHitTestInfo) const
 	{
