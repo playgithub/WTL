@@ -3908,19 +3908,27 @@ public:
 #endif // (_WIN32_WINNT >= 0x0600)
 
 	// Note: selects only one item
-	BOOL SelectItem(int nIndex)
+	BOOL SelectItem(int nIndex)   // -1 to select none
 	{
 		ATLASSERT(::IsWindow(this->m_hWnd));
 
-		// multi-selection only: de-select all items
-		if((this->GetStyle() & LVS_SINGLESEL) == 0)
-			SetItemState(-1, 0, LVIS_SELECTED);
-
-		BOOL bRet = SetItemState(nIndex, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
-		if(bRet)
+		BOOL bRet = FALSE;
+		if(nIndex != -1)
 		{
-			SetSelectionMark(nIndex);
-			bRet = EnsureVisible(nIndex, FALSE);
+			// multi-selection only: de-select all items
+			if((this->GetStyle() & LVS_SINGLESEL) == 0)
+				SetItemState(-1, 0, LVIS_SELECTED);
+
+			bRet = SetItemState(nIndex, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
+			if(bRet)
+			{
+				SetSelectionMark(nIndex);
+				bRet = EnsureVisible(nIndex, FALSE);
+			}
+		}
+		else   // no item specified, just de-select
+		{
+			bRet = SetItemState(-1, 0, LVIS_SELECTED);
 		}
 
 		return bRet;
