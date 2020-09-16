@@ -572,7 +572,7 @@ namespace GenericWndClass
 ///////////////////////////////////////////////////////////////////////////////
 // CMessageFilter - Interface for message filter support
 
-class CMessageFilter
+class ATL_NO_VTABLE CMessageFilter
 {
 public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg) = 0;
@@ -582,7 +582,7 @@ public:
 ///////////////////////////////////////////////////////////////////////////////
 // CIdleHandler - Interface for idle processing
 
-class CIdleHandler
+class ATL_NO_VTABLE CIdleHandler
 {
 public:
 	virtual BOOL OnIdle() = 0;
