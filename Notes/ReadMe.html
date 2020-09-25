@@ -30,31 +30,32 @@
 
 <table class="table1" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
 	<tr>
-		<td>
-			<span class="wtl10"><b>Windows Template Library - WTL 10</b></span>
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			version 10.0.10077 (2020-03-17)
+		<td class="wtl10">
+			<b>Windows Template Library - WTL 10</b>
+		</td>
+		<td align=right>
+			version 10.0.10268 (2020-09-24)
 		</td>
 	</tr>
 	<tr>
-		<td><hr></td>
+		<td colspan=2><hr></td>
 	</tr>
 	<tr>
-		<td>Copyright &#169; 2020 Microsoft Corporation, WTL Team. All rights reserved.</td>
+		<td colspan=2>Copyright &#169; 2020 Microsoft Corporation, WTL Team. All rights reserved.</td>
 	</tr>
 	<tr>
-		<td><br></td>
+		<td colspan=2><br></td>
 	</tr>
 	<tr>
-		<td>
-			This file is a part of the Windows Template Library.<br>
+		<td colspan=2>
+			This file is a part of the Windows Template Library. 
 			The use and distribution terms for this software are covered by the<br>
-			Microsoft Public License (<a target="_blank" href="http://opensource.org/licenses/MS-PL">http://opensource.org/licenses/MS-PL</a>)<br>
+			Microsoft Public License (<a target="_blank" href="http://opensource.org/licenses/MS-PL">http://opensource.org/licenses/MS-PL</a>) 
 			which can be found in the file MS-PL.txt at the root folder.
 		</td>
 	</tr>
 	<tr>
-		<td><hr></td>
+		<td colspan=2><hr></td>
 	</tr>
 </table>
 <p style=margin:0px><br></p>
@@ -1410,12 +1411,12 @@
   <tr>
     <td><b>RibbonUI::CollectionCtrlImpl</b></td>
     <td>impl</td>
-    <td>specializable class for ribbon collection controls</td>
+    <td>for ribbon collection controls</td>
   </tr>
   <tr>
     <td><b>RibbonUI::ToolbarGalleryCtrlImpl</b></td>
     <td>base impl</td>
-    <td>base class for ribbon toolbar gallery controls</td>
+    <td>for ribbon toolbar gallery controls</td>
   </tr>
   <tr>
     <td><b>RibbonUI::CRibbonImpl</b></td>
@@ -1527,8 +1528,144 @@ The second line prevents name collisions between WTL and MFC. Use the WTL namesp
 <p style=margin:0px><br></p>
 
 <h4>Changes Between WTL 10 and 9.1</h4>
-<p style=margin:0px>TODO</p>
+<p style=margin:0px>New and improved:</p>
+<blockquote style='margin-top:0px;margin-bottom:0px'>
+	<p style=margin:0px>
+		Full compatibility with VS2017 and VS2019<br>
+		Full C++ Standards compliance and support for compiling with /permissive- flag<br>
+		Full support for strict const-qualification conformance (/Zc:strictStrings)<br>
+		New classes: CRegProperty and CRegPropertyImpl<> for properties stored in registry<br>
+		New class: CSimpleFileDialog - fixed common dialog that does not use OFN_ENABLEHOOK<br>
+		Added support for MFC Dynamic Dialog Layout resource format<br>
+		App Wizard:
+	</p>
+	<ul style='margin-top:0px;margin-bottom:0px'>
+		<li>Added support for VS2017 and VS2019</li>
+		<li>Removed options for manifest (always there) and Unicode (always on)</li>
+		<li>Added option for WinXP support</li>
+		<li>Added support for _NO_AUTOMATIC_NAMESPACE</li>
+	</ul>
+</blockquote>
 <p style=margin:0px><br></p>
+
+<p style=margin:0px>Fixes and enhancements:</p>
+<blockquote style='margin-top:0px;margin-bottom:0px'>
+	<p style=margin:0px>General:</p>
+		<ul style='margin-top:0px;margin-bottom:0px'>
+			<li>Added AtlGetStringPtr() function - get a pointer to read-only resource string</li>
+			<li>Changed CMessageLoop::IsIdleMessage() to be virtual, so it can be overridden in a derived class</li>
+			<li>Added DECLARE_FRAME_WND_CLASS2(), DECLARE_FRAME_WND_CLASS_EX2(), and DECLARE_FRAME_WND_SUPERCLASS2() for templated classes, and used DECLARE_FRAME_WND_CLASS2() for CFrameWindowImplBase</li>
+			<li>CMemDlgTemplateT: Added new window traits for dialog controls to avoid painting problems with WS_CLIPCHILDREN and WS_CLIPSIBLINGS</li>
+			<li>CWindowEx: Added methods for Dialog-only messages</li>
+			<li>Fix for #315 WTL::RunTimeHelper::IsWin7 works incorrectly on Windows 10 if versionhelpers.h is not used</li>
+			<li>Fix for bug #300 Error in CZoomScrollWindowImpl with setting SetZoomMode(ZOOMMODE_IN)</li>
+			<li>Fix for bug #298 InitDialogBaseUnits takes LOGFONT by value</li>
+			<li>Fix for CResource::LoadEx() - wrong order for parameters to ::FindResourceEx()</li>
+			<li>Fix for warning C4555: expression has no effect when using BEGIN_MSG_MAP_EX and BEGIN_DDX_MAP</li>
+			<li>Fix for bug #266 Icon loading for hi-dpi environments</li>
+			<li>Fix for bug #319 atlprint.h: Incorrect offsets in DEVNAMES struct</li>
+			<li>Samples: Updated for WTL10, renamed project files to indicate VS version, code and file cleanup</li>
+		</ul>
+	<p style=margin:0px><br></p>
+
+	<p style=margin:0px>Controls:</p>
+		<ul style='margin-top:0px;margin-bottom:0px'>
+			<li>Added CListViewCtrl::SelectAllItems()</li>
+			<li>Improved CListViewCtrl::SelectItem() to call SetSelectionMark() and remove selection</li>
+			<li>Added another variant of CListViewCtrl::Scroll()</li>
+			<li>Fix for bug #321 Missing HTREEITEM parameter to TreeView GetNextSelected() methods</li>
+			<li>Added CEdit methods for new Edit messages added in Windows 10.0.17763</li>
+			<li>CRichEditCtrl: Added GetTypographyOptions() and SetTypographyOptions() that were missing</li>
+			<li>Added CString variant of CMultiPaneStatusBarCtrlImpl::GetPaneText()</li>
+			<li>Fix for bug #268 CImageListManaged throws ATL assert when using attach or operator =</li>
+		</ul>
+	<p style=margin:0px><br></p>
+
+	<p style=margin:0px>Splitter:</p>
+		<ul style='margin-top:0px;margin-bottom:0px'>
+			<li>CSplitterImpl: Increased m_nPropMax to handle super-high resolutions</li>
+			<li>CSplitterWindowImpl: Added new 'flat' splitter bar drawing style</li>
+			<li>Used DECLARE_WND_CLASS_EX2() for CSplitterWindowT</li>
+		</ul>
+	<p style=margin:0px><br></p>
+
+	<p style=margin:0px>TabView:</p>
+		<ul style='margin-top:0px;margin-bottom:0px'>
+			<li>Added support for auto scroll when dragging tabs to reposition them</li>
+			<li>Extended drag area to the whole client area of CTabViewImpl</li>
+			<li>Added hover close buttons to tabs</li>
+			<li>SetActivePage() - set focus only if main window is active</li>
+			<li>OnTabContextMenu() to pass the correct tab item to OnContextMenu()</li>
+			<li>CTabViewImpl: Uses ShowWindow() with TRUE/FALSE instead of SW_SHOW/SW_HIDE</li>
+		</ul>
+	<p style=margin:0px><br></p>
+
+	<p style=margin:0px>Ribbon:</p>
+		<ul style='margin-top:0px;margin-bottom:0px'>
+			<li>Fix for bug #317 SpinnerCtrlImpl - Failed to update string properties</li>
+			<li>Don't use function pointers to templated functions</li>
+		</ul>
+
+	<p style=margin:0px>Cracked Handlers:</p>
+		<ul style='margin-top:0px;margin-bottom:0px'>
+			<li>Added MSG_WM_NCMOUSEHOVER() and MSG_WM_NCMOUSELEAVE()</li>
+			<li>Added MSG_WM_GESTURE, MSG_WM_GESTURENOTIFY, MSG_WM_DPICHANGED, MSG_WM_APPCOMMAND</li>
+			<li>Fix for bug #322 atlcrack.h: Incorrect signature in comment for MSG_WM_MDIACTIVATE</li>
+			<li>Fix for bug #302 MSG_WM_WTSSESSION_CHANGE should crack lParam as session Id</li>
+			<li>Fix for bug #284 MSG_WM_XBUTTONDOWN inconsistent with MSDN</li>
+			<li>Fix for bug #286 MSG_WM_KEYDOWN cracks wParam as TCHAR, should be a virtual key</li>
+		</ul>
+	<p style=margin:0px><br></p>
+
+	<p style=margin:0px>Clang specific fixes:</p>
+		<ul style='margin-top:0px;margin-bottom:0px'>
+			<li>Use C++-style instead of C-style struct initialization</li>
+			<li>Remove superfluous semicolons</li>
+			<li>Add comment for implicit fallthrough in switch statements</li>
+		</ul>
+	<p style=margin:0px><br></p>
+
+	<p style=margin:0px>AppWizard:</p>
+		<ul style='margin-top:0px;margin-bottom:0px'>
+			<li>Removed project name from the view file and class name</li>
+			<li>Fixed warning for different types in x64 for modal dialog project</li>
+			<li>Improved Setup.js to handle multiple installations of VS2017 and VS2019</li>
+			<li>Setup.js - Fix for VS2019 Community setup which does not create vcprojects folder</li>
+			<li>Removed deprecated MinimalRebuild compiler option for VS2017 and higher</li>
+		</ul>
+</blockquote>
+<p style=margin:0px><br></p>
+
+<p style=margin:0px>Removed legacy features:</p>
+<blockquote style='margin-top:0px;margin-bottom:0px'>
+	<p style=margin:0px>
+	Removed support for older version of Visual Studio and old SDKs<br>
+	Removed support for WinCE (and AppWizardCE)<br>
+	Removed support for _ATL_MIN_CRT and use of MinCrtHelper<br>
+	Removed WTL implementation of CPoint/CSize/CRect/CString (use ATL)<br>
+	Removed use of _WTYPES_NS and _CSTRING_NS<br>
+	Define _WTL_NEW_PAGE_NOTIFY_HANDLERS always<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;(added _WTL_FORCE_OLD_PAGE_NOTIFY_HANDLERS to turn it off)<br>
+	Removed use of _ATL_NO_OLD_NAMES, _ATL_USE_NEW_PRINTER_INFO, _ATL_NO_COM<br>
+	Removed _ATL_USE_CSTRING_FLOAT and _ATL_USE_DDX_FLOAT (use float always)<br>
+	Removed use of _ATL_NO_MSIMG<br>
+	Removed support for RichEdit 1.0<br>
+	atlfind.h: Removed shadow buffer and added a warning/assert instead<br>
+	Removed use of _TrackMouseEvent() and used TrackMouseEvent() directly<br>
+	Removed use of CRegKeyEx (not needed any more)<br>
+	Removed support for _SECURE_ATL and use of SecureHelper functions (now always secure)<br>
+	Always use themes - Moved uxtheme.h and uxtheme.lib to atlapp.h<br>
+	Removed AtlIsOldWindows() and its use in the code<br>
+	AppWizard:
+	</p>
+	<ul style='margin-top:0px;margin-bottom:0px'></li>
+		<li>Removed support for older versions of Visual Studio and VC++ Express</li>
+		<li>Removed support and comments for obsolete stuff</li>
+		<li>Renamed files to WTL10AppWiz.*</li>
+	</ul>
+</blockquote>
+<p style=margin:0px><br></p>
+
 
 <h4>Changes Between WTL 9.1 and 9.0</h4>
 <p style=margin:0px>New and improved:</p>
@@ -1571,6 +1708,7 @@ The second line prevents name collisions between WTL and MFC. Use the WTL namesp
 	</p>
 </blockquote>
 <p style=margin:0px><br></p>
+
 
 <h4>Changes Between WTL 9.0 and 8.0</h4>
 <p style=margin:0px>New and improved:</p>
@@ -1695,6 +1833,7 @@ The second line prevents name collisions between WTL and MFC. Use the WTL namesp
 	</ul>
 </blockquote>
 <p style=margin:0px><br></p>
+
 
 <h4>Changes Between WTL 8.0 and 7.5</h4>
 <p style=margin:0px>New and improved:</p>
@@ -1859,6 +1998,7 @@ The second line prevents name collisions between WTL and MFC. Use the WTL namesp
 </blockquote>
 <p style=margin:0px><br></p>
 <p style=margin:0px><br></p>
+
 
 <p style=margin:0px><b>Changes Between WTL 7.5 and 7.1</b></p>
 <p style=margin:0px><br></p>
@@ -2044,6 +2184,7 @@ The second line prevents name collisions between WTL and MFC. Use the WTL namesp
 </blockquote>
 <p style=margin:0px><br></p>
 
+
 <h4>Changes Between WTL 7.1 and 7.0</h4>
 <p style=margin:0px>New and improved:</p>
 <blockquote style='margin-top:0px;margin-bottom:0px'>
@@ -2207,6 +2348,7 @@ The second line prevents name collisions between WTL and MFC. Use the WTL namesp
 	</ul>
 </blockquote>
 <p style=margin:0px><br></p>
+
 
 <h4>Changes Between WTL 7.0 and 3.1</h4>
 <p style=margin:0px>New classes and features:</p>
@@ -2395,6 +2537,7 @@ The second line prevents name collisions between WTL and MFC. Use the WTL namesp
 	</ul>
 </blockquote>
 <p style=margin:0px><br></p>
+
 
 <h4>Changes Between WTL 3.1 and 3.0</h4>
 <p style=margin:0px>New classes:</p>
