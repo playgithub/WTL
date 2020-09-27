@@ -24,11 +24,11 @@
 #endif
 
 #ifdef _ATL_NO_COMMODULE
-	#error WTL requires that _ATL_NO_COMMODULE is not defined
+	#error WTL doesn't support _ATL_NO_COMMODULE
 #endif
 
 #ifdef _ATL_NO_WIN_SUPPORT
-	#error WTL requires that _ATL_NO_WIN_SUPPORT is not defined
+	#error WTL doesn't support _ATL_NO_WIN_SUPPORT
 #endif
 
 #if (_MSC_VER < 1400)

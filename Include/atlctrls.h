@@ -23,7 +23,7 @@
 #include <richole.h>
 
 #if (_RICHEDIT_VER < 0x0300)
-	#error WTL10 requires RichEdit version 3 or higher
+	#error WTL10 requires _RICHEDIT_VER >= 0x0300
 #endif
 
 // protect template members from windowsx.h macros
