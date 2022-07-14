@@ -1841,7 +1841,7 @@ public:
 		return bOld;
 	}
 
-// Add elements
+// Add/Remove elements
 	BOOL UIAddMenuBar(HWND hWnd)                // menu bar (main menu)
 	{
 		if(hWnd == NULL)
@@ -1850,6 +1850,16 @@ public:
 		e.m_hWnd = hWnd;
 		e.m_wType = UPDUI_MENUBAR;
 		return m_UIElements.Add(e);
+	}
+
+	BOOL UIRemoveMenuBar(HWND hWnd)                // menu bar (main menu)
+	{
+		if (hWnd == NULL)
+			return FALSE;
+		_AtlUpdateUIElement e;
+		e.m_hWnd = hWnd;
+		e.m_wType = UPDUI_MENUBAR;
+		return m_UIElements.Remove(e);
 	}
 
 	BOOL UIAddToolBar(HWND hWnd)                // toolbar
@@ -1862,6 +1872,16 @@ public:
 		return m_UIElements.Add(e);
 	}
 
+	BOOL UIRemoveToolBar(HWND hWnd)                // toolbar
+	{
+		if (hWnd == NULL)
+			return FALSE;
+		_AtlUpdateUIElement e;
+		e.m_hWnd = hWnd;
+		e.m_wType = UPDUI_TOOLBAR;
+		return m_UIElements.Remove(e);
+	}
+
 	BOOL UIAddStatusBar(HWND hWnd)              // status bar
 	{
 		if(hWnd == NULL)
@@ -1872,6 +1892,16 @@ public:
 		return m_UIElements.Add(e);
 	}
 
+	BOOL UIRemoveStatusBar(HWND hWnd)              // status bar
+	{
+		if (hWnd == NULL)
+			return FALSE;
+		_AtlUpdateUIElement e;
+		e.m_hWnd = hWnd;
+		e.m_wType = UPDUI_STATUSBAR;
+		return m_UIElements.Remove(e);
+	}
+
 	BOOL UIAddChildWindowContainer(HWND hWnd)   // child window
 	{
 		if(hWnd == NULL)
@@ -1880,6 +1910,16 @@ public:
 		e.m_hWnd = hWnd;
 		e.m_wType = UPDUI_CHILDWINDOW;
 		return m_UIElements.Add(e);
+	}
+
+	BOOL UIRemoveChildWindowContainer(HWND hWnd)   // child window
+	{
+		if (hWnd == NULL)
+			return FALSE;
+		_AtlUpdateUIElement e;
+		e.m_hWnd = hWnd;
+		e.m_wType = UPDUI_CHILDWINDOW;
+		return m_UIElements.Remove(e);
 	}
 
 // Message map for popup menu updates and accelerator blocking
